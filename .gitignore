@@ -8,6 +8,10 @@ target/
 *.log
 *.gz
 
+.mvn
+mvnw
+*.cmd
+
 ### STS ###
 .apt_generated
 .classpath
