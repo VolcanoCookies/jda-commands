@@ -16,6 +16,8 @@ public class ArgumentList {
 	
 	protected final List<CommandArgument> commandArguments;
 	
+	protected final boolean lastIsArbitraryNumber;
+	
 	/**
 	 * Generate usage string based on arguments
 	 *
@@ -49,19 +51,29 @@ public class ArgumentList {
 					.substring(argumentData.rawArgumentStartIndex[size() - 1]);
 		}
 		
-		if (argumentData.size() < size()) {
+		if (argumentData.size() - (lastIsArbitraryNumber ? 1 : 0) < size()) {
 			throw new MissingArgumentsException(argumentData, argumentData.currentArg, size());
 		}
 		
-		int i = 0;
 		data.parsedArguments = new Object[argumentData.size()];
-		for (CommandArgument argument : commandArguments) {
-			data.parsedArguments[i++] = argument.parseValue(argumentData);
+		
+		for (int i = 0; i < argumentData.size(); i++) {
+			
+			if (i >= size()) {
+				
+				if (lastIsArbitraryNumber) {
+					data.parsedArguments[i] = commandArguments.get(size() - 1).parseValue(argumentData);
+				} else {
+					throw new TooManyArgumentsException(argumentData, argumentData.currentArg);
+				}
+				
+			} else {
+				data.parsedArguments[i] = commandArguments.get(i).parseValue(argumentData);
+			}
+			
 			argumentData.nextArgument();
 		}
-		if (argumentData.nextArgument()) {
-			throw new TooManyArgumentsException(argumentData, argumentData.currentArg);
-		}
+		
 		return data;
 		
 	}
