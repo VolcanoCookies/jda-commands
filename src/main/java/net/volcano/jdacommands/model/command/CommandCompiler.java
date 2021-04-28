@@ -10,7 +10,6 @@ import net.volcano.jdacommands.model.command.arguments.CommandArgument;
 import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,23 +62,37 @@ public class CommandCompiler {
 		// Build the arguments for this command
 		List<CommandArgument> arguments = new ArrayList<>();
 		boolean firstIsEvent = false;
-		for (Parameter param : method.getParameters()) {
+		boolean lastIsArray = false;
+		var params = method.getParameters();
+		for (int i = 0; i < params.length; i++) {
 			
-			if (param.getType() == CommandEvent.class) {
+			if (i == 0 && params[i].getType() == CommandEvent.class) {
 				firstIsEvent = true;
 				continue;
 			}
 			
-			var codec = registry.getCodec(param.getType());
+			var isArray = params[i].getType().isArray();
+			
+			if (isArray && i != params.length - 1) {
+				throw new IllegalArgumentException("Cannot have array argument as non last parameter");
+			}
+			
+			var type = isArray ? params[i].getType().componentType() : params[i].getType();
+			
+			var codec = registry.getCodec(type);
 			if (codec == null) {
-				throw new IllegalArgumentException("Unsupported type for command argument; " + param.getType());
+				throw new IllegalArgumentException("Unsupported type for command argument; " + type);
 			} else {
-				arguments.add(codec.encodeArgument(param));
+				arguments.add(codec.encodeArgument(params[i], type));
+			}
+			
+			if (isArray) {
+				lastIsArray = true;
 			}
 			
 		}
 		
-		ArgumentList argumentList = new ArgumentList(arguments);
+		ArgumentList argumentList = new ArgumentList(arguments, lastIsArray);
 		builder.arguments(argumentList);
 		
 		// Build command help
