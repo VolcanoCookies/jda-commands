@@ -6,17 +6,21 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.volcano.jdacommands.constants.Reactions;
 
+import java.io.File;
 import java.util.List;
 
 public class EmbedDescriptionPager extends EmbedPager {
 	
 	private final List<String> pages;
 	
-	public EmbedDescriptionPager(long expiration, List<String> pages, EmbedBuilder embedBuilder, int currentPage) {
+	private final File download;
+	
+	public EmbedDescriptionPager(long expiration, List<String> pages, EmbedBuilder embedBuilder, int currentPage, File download) {
 		super(expiration);
 		this.pages = pages;
 		baseEmbed = embedBuilder;
 		this.currentPage = currentPage;
+		this.download = download;
 	}
 	
 	@Override
@@ -35,6 +39,10 @@ public class EmbedDescriptionPager extends EmbedPager {
 					message.addReaction(Reactions.PAGE_BACK),
 					message.addReaction(Reactions.PAGE_FORWARD),
 					message.addReaction(Reactions.PAGE_END))
+					.queue();
+		}
+		if (download != null) {
+			message.addReaction(Reactions.DOWNLOAD)
 					.queue();
 		}
 	}

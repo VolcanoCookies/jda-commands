@@ -56,7 +56,7 @@ public class EmbedFieldPagerBuilder extends EmbedPagerBuilder {
 		}
 		fields.add(list);
 		
-		return new EmbedFieldPager(getExpiration(), fields, embedBuilder.clearFields(), 0);
+		return new EmbedFieldPager(getExpiration(), fields, embedBuilder.clearFields(), 0, getDownload());
 	}
 	
 	public void setFieldsPerPage(int fieldsPerPage) {

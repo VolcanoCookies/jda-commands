@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.volcano.jdacommands.constants.Reactions;
 
+import java.io.File;
 import java.util.List;
 
 @Getter
@@ -16,11 +17,12 @@ public class EmbedFieldPager extends EmbedPager {
 	
 	private List<List<MessageEmbed.Field>> fields;
 	
-	public EmbedFieldPager(long expiration, List<List<MessageEmbed.Field>> fields, EmbedBuilder embedBuilder, int currentPage) {
+	public EmbedFieldPager(long expiration, List<List<MessageEmbed.Field>> fields, EmbedBuilder embedBuilder, int currentPage, File download) {
 		super(expiration);
 		this.fields = fields;
 		baseEmbed = embedBuilder;
 		this.currentPage = currentPage;
+		this.download = download;
 	}
 	
 	@Override
@@ -39,6 +41,10 @@ public class EmbedFieldPager extends EmbedPager {
 					message.addReaction(Reactions.PAGE_BACK),
 					message.addReaction(Reactions.PAGE_FORWARD),
 					message.addReaction(Reactions.PAGE_END))
+					.queue();
+		}
+		if (download != null) {
+			message.addReaction(Reactions.DOWNLOAD)
 					.queue();
 		}
 	}

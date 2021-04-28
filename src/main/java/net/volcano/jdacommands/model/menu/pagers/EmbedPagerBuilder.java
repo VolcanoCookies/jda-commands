@@ -16,6 +16,7 @@ import net.volcano.jdautils.utils.StringUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.io.File;
 import java.time.*;
 import java.time.temporal.TemporalAccessor;
 import java.util.LinkedList;
@@ -42,6 +43,8 @@ public abstract class EmbedPagerBuilder {
 	private MessageEmbed.ImageInfo image;
 	
 	private long expiration;
+	
+	private File download;
 	
 	public EmbedPagerBuilder() {
 	}

@@ -38,7 +38,7 @@ public class EmbedDescriptionPagerBuilder extends EmbedPagerBuilder {
 			}
 		}
 		
-		return new EmbedDescriptionPager(getExpiration(), pages, embedBuilder, 0);
+		return new EmbedDescriptionPager(getExpiration(), pages, embedBuilder, 0, getDownload());
 	}
 	
 	public void addPage(String page) {

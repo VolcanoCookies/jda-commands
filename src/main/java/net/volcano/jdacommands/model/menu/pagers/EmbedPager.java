@@ -10,6 +10,8 @@ import net.volcano.jdacommands.constants.Reactions;
 import net.volcano.jdautils.constants.EmbedLimit;
 import net.volcano.jdautils.utils.StringUtil;
 
+import java.io.File;
+
 @Getter
 @Setter
 public abstract class EmbedPager extends Menu {
@@ -19,6 +21,8 @@ public abstract class EmbedPager extends Menu {
 	protected int currentPage = 0;
 	
 	protected EmbedBuilder baseEmbed;
+	
+	protected File download;
 	
 	public EmbedPager(long expiration) {
 		this.expiration = expiration;
@@ -46,6 +50,13 @@ public abstract class EmbedPager extends Menu {
 					case Reactions.PAGE_BACK -> currentPage = Math.max(currentPage - 1, 0);
 					case Reactions.PAGE_FORWARD -> currentPage = Math.min(currentPage + 1, getSize() - 1);
 					case Reactions.PAGE_END -> currentPage = Math.max(0, getSize() - 1);
+					case Reactions.DOWNLOAD -> {
+						if (download != null) {
+							event.getChannel()
+									.sendFile(download)
+									.queue(message -> download = null); // Disable download after first one
+						}
+					}
 					default -> {
 						onOtherReaction(event);
 						return;
