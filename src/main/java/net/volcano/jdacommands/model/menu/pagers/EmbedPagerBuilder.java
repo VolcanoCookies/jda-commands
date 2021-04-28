@@ -16,7 +16,6 @@ import net.volcano.jdautils.utils.StringUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.io.File;
 import java.time.*;
 import java.time.temporal.TemporalAccessor;
 import java.util.LinkedList;
@@ -44,7 +43,7 @@ public abstract class EmbedPagerBuilder {
 	
 	private long expiration;
 	
-	private File download;
+	private byte[] download;
 	
 	public EmbedPagerBuilder() {
 	}
@@ -95,6 +94,11 @@ public abstract class EmbedPagerBuilder {
 		
 		return buildEmbed(new MessageEmbed(url, title, description, EmbedType.RICH, timestamp,
 				color, thumbnail, null, author, null, footer, image, new LinkedList<>(fields)));
+	}
+	
+	public EmbedPagerBuilder setDownload(CharSequence content) {
+		download = content.toString().getBytes();
+		return this;
 	}
 	
 	/**

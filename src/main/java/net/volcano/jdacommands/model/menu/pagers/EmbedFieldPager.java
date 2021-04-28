@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.volcano.jdacommands.constants.Reactions;
 
-import java.io.File;
 import java.util.List;
 
 @Getter
@@ -17,7 +16,7 @@ public class EmbedFieldPager extends EmbedPager {
 	
 	private List<List<MessageEmbed.Field>> fields;
 	
-	public EmbedFieldPager(long expiration, List<List<MessageEmbed.Field>> fields, EmbedBuilder embedBuilder, int currentPage, File download) {
+	public EmbedFieldPager(long expiration, List<List<MessageEmbed.Field>> fields, EmbedBuilder embedBuilder, int currentPage, byte[] download) {
 		super(expiration);
 		this.fields = fields;
 		baseEmbed = embedBuilder;
