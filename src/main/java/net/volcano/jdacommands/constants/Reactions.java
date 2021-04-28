@@ -14,4 +14,6 @@ public class Reactions {
 	public static final String PAGE_END = "⏩";
 	public static final String PAGE_START = "⏪";
 	
+	public static final String TOGGLE = "🔀";
+	
 }
