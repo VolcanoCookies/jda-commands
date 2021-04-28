@@ -46,6 +46,10 @@ public abstract class EmbedPager extends Menu {
 					case Reactions.PAGE_BACK -> currentPage = Math.max(currentPage - 1, 0);
 					case Reactions.PAGE_FORWARD -> currentPage = Math.min(currentPage + 1, getSize() - 1);
 					case Reactions.PAGE_END -> currentPage = Math.max(0, getSize() - 1);
+					default -> {
+						onOtherReaction(event);
+						return;
+					}
 				}
 				
 				if (prevPage != currentPage) {
@@ -60,6 +64,10 @@ public abstract class EmbedPager extends Menu {
 			}
 			
 		}
+	}
+	
+	public void onOtherReaction(GenericMessageReactionEvent event) {
+	
 	}
 	
 	public String generateFooter() {
