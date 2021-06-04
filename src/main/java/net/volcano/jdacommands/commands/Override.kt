@@ -14,7 +14,8 @@ class Override {
 	@BotOwnerCanAlwaysExecute
 	@CommandMethod(
 		path = ["override"],
-		permissions = ["override"]
+		permissions = ["override"],
+		global = true
 	)
 	@Help(description = "Override all permission checks.", category = "admin")
 	fun override(event: CommandEvent): RestAction<Message> {

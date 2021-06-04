@@ -11,7 +11,11 @@ import kotlin.system.exitProcess
 class Kill {
 
 	@BotOwnerCanAlwaysExecute
-	@CommandMethod(path = ["kill"], permissions = ["kill"])
+	@CommandMethod(
+		path = ["kill"],
+		permissions = ["kill"],
+		global = true
+	)
 	@Help(description = "Kill the instance.", category = "admin")
 	fun kill(event: CommandEvent) {
 
