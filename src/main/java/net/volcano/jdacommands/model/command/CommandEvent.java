@@ -22,6 +22,8 @@ import net.volcano.jdautils.utils.UserUtil;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -267,6 +269,52 @@ public class CommandEvent extends MessageReceivedEvent {
 	@Nullable
 	public String getGuildId() {
 		return isFromGuild() ? getGuild().getId() : null;
+	}
+	
+	/**
+	 * Check if the command author has the specified permissions.
+	 * <p>
+	 * This checks the server the command was ran in, or globally if ran in dms.
+	 *
+	 * @param permissions the permissions to check for.
+	 * @return {@code true} if, and only if, the author has all the permissions.
+	 */
+	public boolean hasPermissions(Collection<String> permissions) {
+		return hasPermissions(null, permissions);
+	}
+	
+	/**
+	 * Check if the command author has the specified permissions.
+	 * <p>
+	 * This checks the server the command was ran in, or globally if ran in dms.
+	 *
+	 * @param permissions the permissions to check for.
+	 * @return {@code true} if, and only if, the author has all the permissions.
+	 */
+	public boolean hasPermissions(String... permissions) {
+		return hasPermissions(null, permissions);
+	}
+	
+	/**
+	 * Check if the command author has the specified permissions.
+	 *
+	 * @param guild       the guild to check in, or null for global.
+	 * @param permissions the permissions to check for.
+	 * @return {@code true} if, and only if, the author has all the permissions.
+	 */
+	public boolean hasPermissions(@Nullable Guild guild, Collection<String> permissions) {
+		return client.getPermissionProvider().hasPermissions(permissions, getAuthor(), guild);
+	}
+	
+	/**
+	 * Check if the command author has the specified permissions.
+	 *
+	 * @param guild       the guild to check in, or null for global.
+	 * @param permissions the permissions to check for.
+	 * @return {@code true} if, and only if, the author has all the permissions.
+	 */
+	public boolean hasPermissions(@Nullable Guild guild, String... permissions) {
+		return hasPermissions(guild, Arrays.asList(permissions));
 	}
 	
 }
