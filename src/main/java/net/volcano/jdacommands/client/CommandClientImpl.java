@@ -2,6 +2,7 @@ package net.volcano.jdacommands.client;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -25,13 +26,20 @@ import net.volcano.jdacommands.model.command.arguments.ParsedData;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 import net.volcano.jdacommands.model.command.arguments.implementation.CodecRegistryImpl;
 import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
+import net.volcano.jdautils.constants.Colors;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,10 +67,16 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	
 	private final ReactionMenuClient reactionMenuClient;
 	
-	public CommandClientImpl(PermissionProvider permissionProvider,
+	private final Font font;
+	private final FontMetrics metrics;
+	
+	private final String ownerId;
+	
+	public CommandClientImpl(JDA jda,
+	                         PermissionProvider permissionProvider,
 	                         PrefixProvider prefixProvider,
 	                         UserProvider userProvider,
-	                         ReactionMenuClient reactionMenuClient) {
+	                         ReactionMenuClient reactionMenuClient) throws IOException, FontFormatException, ExecutionException, InterruptedException {
 		
 		this.permissionProvider = permissionProvider;
 		this.prefixProvider = prefixProvider;
@@ -75,6 +89,19 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		commandCompiler = new CommandCompiler(codecRegistry);
 		
 		codecRegistry.loadDefaults();
+		
+		InputStream stream = new FileInputStream("Montserrat-Regular.ttf");
+		font = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(48f);
+		metrics = new BufferedImage(1, 1, 1)
+				.createGraphics()
+				.getFontMetrics(font);
+		
+		ownerId = jda.retrieveApplicationInfo()
+				.submit()
+				.get()
+				.getOwner()
+				.getId();
+		
 	}
 	
 	@Override
@@ -133,26 +160,6 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			}
 			
 		});
-	}
-	
-	protected void terminate(CommandEvent event, CommandException exception) {
-		
-		if (exception instanceof MissingPermissionsException) {
-			
-			event.getMessage()
-					.addReaction("❌")
-					.queue();
-			
-		} else {
-			if (exception.isSensitive()) {
-				event.respondPrivate(exception.getErrorEmbed())
-						.queue();
-			} else {
-				event.respond(exception.getErrorEmbed())
-						.queue();
-			}
-		}
-		
 	}
 	
 	/**
@@ -321,12 +328,14 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	@Override
 	public void executeCommand(CommandEvent event) {
 		
-		// Check if the user has permissions
-		if (!permissionProvider.hasPermissions(event.command.getPermissions(), event.getAuthor(), event.isFromGuild() ? event.getGuild() : null)) {
-			Set<String> missingPermissions = new HashSet<>(event.command.getPermissions());
-			missingPermissions.removeAll(permissionProvider.getPermissions(event.getAuthor(), event.isFromGuild() ? event.getGuild() : null));
-			terminate(event, new MissingPermissionsException(missingPermissions, event.command.isGlobalPermissions()));
-			return;
+		if (!event.command.getBotOwnerCanAlwaysExecute() && !ownerId.equals(event.getAuthor().getId())) {
+			// Check if the user has permissions
+			if (!permissionProvider.hasPermissions(event.command.getPermissions(), event.getAuthor(), event.isFromGuild() ? event.getGuild() : null)) {
+				Set<String> missingPermissions = new HashSet<>(event.command.getPermissions());
+				missingPermissions.removeAll(permissionProvider.getPermissions(event.getAuthor(), event.isFromGuild() ? event.getGuild() : null));
+				terminate(event, new MissingPermissionsException(missingPermissions, event.command.isGlobalPermissions()));
+				return;
+			}
 		}
 		
 		// Check if the command is from the correct source
@@ -387,6 +396,43 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 							.build())
 					.queue();
 		}
+	}
+	
+	private BufferedImage generateErrorImage(String message, int errorStart, int errorLength) {
+		
+		var pre = message.substring(0, errorStart);
+		var err = message.substring(errorStart, errorStart + errorLength);
+		var post = message.substring(errorStart + errorLength);
+		
+		var startLen = metrics.stringWidth(pre);
+		var errorLen = metrics.stringWidth(err);
+		
+		var width = metrics.stringWidth(message);
+		var height = metrics.getHeight();
+		
+		RenderingHints rh = new RenderingHints(
+				RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		var graphics = image.createGraphics();
+		graphics.setFont(font);
+		graphics.setRenderingHints(rh);
+		
+		Color backgroundColor = new Color(0x23272a);
+		
+		graphics.setColor(backgroundColor);
+		graphics.fillRect(0, 0, width, height);
+		graphics.setColor(Color.WHITE);
+		graphics.drawString(pre, 0, height - metrics.getDescent());
+		graphics.setColor(Colors.ERROR);
+		graphics.drawString(err, startLen, height - metrics.getDescent());
+		graphics.setColor(Color.WHITE);
+		graphics.drawString(post, startLen + errorLen, height - metrics.getDescent());
+		
+		graphics.dispose();
+		
+		return image;
 	}
 	
 }
