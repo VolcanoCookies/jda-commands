@@ -24,7 +24,7 @@ class Help {
 				event.client.permissionProvider.hasPermissions(
 					it.permissions,
 					event.author.id,
-					if (!it.isGlobalPermissions) event.guildId else null
+					if (!it.globalPermissions) event.guildId else null
 				)
 			}
 			.let {
