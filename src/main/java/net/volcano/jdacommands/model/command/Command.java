@@ -33,7 +33,7 @@ public class Command {
 	/**
 	 * The required permissions for this command
 	 */
-	protected final Set<String> permissions;
+	public final Set<String> permissions;
 	
 	/**
 	 * The source for this command
