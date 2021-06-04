@@ -101,7 +101,7 @@ public class Command {
 		/**
 		 * The category this command belongs to
 		 */
-		protected final Category category;
+		protected final String category;
 		
 	}
 	
@@ -149,44 +149,6 @@ public class Command {
 		PRIVATE,
 		GUILD,
 		BOTH
-	}
-	
-	/**
-	 * The different help categories.
-	 */
-	public enum Category {
-		
-		GENERAL("ℹ️"),
-		CONTROL("⚙️"),
-		FIREWALL("🔥"),
-		ROLE_MENU("➖"),
-		SERVER_PROTECTION("🛡️"),
-		PERMISSIONS("⚛️"),
-		SERVER_SETTINGS("⚜️"),
-		PROJECT("📄"),
-		DATABASE("📊"),
-		UTILITY("🛠️"),
-		MODERATION("🚨");
-		
-		private final String value;
-		
-		Category(String value) {
-			this.value = value;
-		}
-		
-		public String value() {
-			return value;
-		}
-		
-		public static Category fromValue(String value) {
-			for (Category category : values()) {
-				if (value.equals(category.value())) {
-					return category;
-				}
-			}
-			return null;
-		}
-		
 	}
 	
 	public ParsedData parseArguments(ArgumentParsingData parsingData) throws ArgumentParsingException {
