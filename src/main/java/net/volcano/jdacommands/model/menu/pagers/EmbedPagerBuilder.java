@@ -645,6 +645,45 @@ public abstract class EmbedPagerBuilder {
 	}
 	
 	/**
+	 * Adds a Field to the embed.
+	 * Inline = false
+	 *
+	 * <p>Note: If a blank string is provided to either {@code name} or {@code value}, the blank string is replaced
+	 * with {@link EmbedPagerBuilder#ZERO_WIDTH_SPACE}.
+	 *
+	 * <p><b><a href="https://raw.githubusercontent.com/DV8FromTheWorld/JDA/assets/assets/docs/embeds/07-addField.png">Example of Inline</a></b>
+	 * <p><b><a href="https://raw.githubusercontent.com/DV8FromTheWorld/JDA/assets/assets/docs/embeds/08-addField.png">Example if Non-inline</a></b>
+	 *
+	 * @param name  the name of the Field, displayed in bold above the {@code value}.
+	 * @param value the contents of the field.
+	 * @return the builder after the field has been added
+	 * @throws IllegalArgumentException <ul>
+	 *                                  <li>If only {@code name} or {@code value} is set. Both must be set.</li>
+	 *                                  <li>If the length of {@code name} is greater than {@link MessageEmbed#TITLE_MAX_LENGTH}.</li>
+	 *                                  <li>If the length of {@code value} is greater than {@link MessageEmbed#VALUE_MAX_LENGTH}.</li>
+	 *                                  </ul>
+	 */
+	@Nonnull
+	public EmbedPagerBuilder addField(@Nullable String name, @Nullable String value) {
+		
+		if (name == null && value == null) {
+			return this;
+		}
+		
+		if (value != null && value.length() > EmbedLimit.EMBED_FIELD_VALUE_LIMIT) {
+			List<String> split = StringUtil.splitAt(value, EmbedLimit.EMBED_FIELD_VALUE_LIMIT, "\n");
+			fields.add(new MessageEmbed.Field(name, split.get(0), false));
+			for (int i = 1; i < split.size(); i++) {
+				fields.add(new MessageEmbed.Field("\\a", split.get(i), false));
+			}
+		} else {
+			fields.add(new MessageEmbed.Field(name, value, false));
+		}
+		
+		return this;
+	}
+	
+	/**
 	 * Adds a inline Field to the embed.
 	 *
 	 * <p>Note: If a blank string is provided to either {@code name} or {@code value}, the blank string is replaced
