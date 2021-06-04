@@ -333,7 +333,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			if (!permissionProvider.hasPermissions(event.command.getPermissions(), event.getAuthor(), event.isFromGuild() ? event.getGuild() : null)) {
 				Set<String> missingPermissions = new HashSet<>(event.command.getPermissions());
 				missingPermissions.removeAll(permissionProvider.getPermissions(event.getAuthor(), event.isFromGuild() ? event.getGuild() : null));
-				terminate(event, new MissingPermissionsException(missingPermissions, event.command.isGlobalPermissions()));
+				terminate(event, new MissingPermissionsException(missingPermissions, event.isFromGuild() ? event.getGuild() : null));
 				return;
 			}
 		}
