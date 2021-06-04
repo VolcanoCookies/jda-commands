@@ -71,6 +71,8 @@ public class Command {
 	 */
 	protected final CommandFunction method;
 	
+	protected final Boolean botOwnerCanAlwaysExecute;
+	
 	@Builder
 	@Getter
 	@Nullable

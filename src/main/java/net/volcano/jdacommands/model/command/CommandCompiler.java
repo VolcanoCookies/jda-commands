@@ -1,10 +1,7 @@
 package net.volcano.jdacommands.model.command;
 
 import net.dv8tion.jda.api.requests.RestAction;
-import net.volcano.jdacommands.model.command.annotations.CommandController;
-import net.volcano.jdacommands.model.command.annotations.CommandMethod;
-import net.volcano.jdacommands.model.command.annotations.DetailedHelp;
-import net.volcano.jdacommands.model.command.annotations.Help;
+import net.volcano.jdacommands.model.command.annotations.*;
 import net.volcano.jdacommands.model.command.arguments.ArgumentList;
 import net.volcano.jdacommands.model.command.arguments.CommandArgument;
 import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
@@ -136,6 +133,12 @@ public class CommandCompiler {
 		builder.source(commandMethod.source());
 		builder.sensitive(commandMethod.sensitive());
 		builder.globalPermissions(commandMethod.global());
+		
+		if (method.isAnnotationPresent(BotOwnerCanAlwaysExecute.class)) {
+			builder.botOwnerCanAlwaysExecute(true);
+		} else {
+			builder.botOwnerCanAlwaysExecute(false);
+		}
 		
 		return builder.build();
 		
