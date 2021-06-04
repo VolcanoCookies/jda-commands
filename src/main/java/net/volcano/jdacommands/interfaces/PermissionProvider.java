@@ -28,6 +28,12 @@ public interface PermissionProvider {
 		return hasPermissions(permissions, user.getId(), guild == null ? null : guild.getId());
 	}
 	
+	boolean isOverriding(String userId);
+	
+	void startOverriding(String userId);
+	
+	void stopOverriding(String userId);
+	
 }
 
 
