@@ -1,6 +1,7 @@
 package net.volcano.jdacommands.commands
 
 import net.dv8tion.jda.api.requests.RestAction
+import net.volcano.jdacommands.model.command.Command
 import net.volcano.jdacommands.model.command.CommandEvent
 import net.volcano.jdacommands.model.command.annotations.BotOwnerCanAlwaysExecute
 import net.volcano.jdacommands.model.command.annotations.CommandController
@@ -25,6 +26,12 @@ class Help {
 					event.author.id,
 					if (!it.isGlobalPermissions) event.guildId else null
 				)
+			}
+			.let {
+				if (event.isFromGuild)
+					it.filter { c -> c.source != Command.Source.PRIVATE }
+				else
+					it.filter { c -> c.source != Command.Source.GUILD }
 			}
 
 		val pager = EmbedFieldPagerBuilder()
