@@ -50,7 +50,7 @@ interface UserProvider {
 	 *
 	 * Receiver has to ensure type
 	 */
-	fun getUserEntry(user: User): Any {
+	fun getUserEntry(user: User): Any? {
 		return getUserEntry(user.id)
 	}
 
@@ -59,6 +59,6 @@ interface UserProvider {
 	 *
 	 * Receiver has to ensure type
 	 */
-	fun getUserEntry(userId: String): Any
+	fun getUserEntry(userId: String): Any?
 
 }
