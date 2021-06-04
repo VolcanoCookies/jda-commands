@@ -3,6 +3,7 @@ package net.volcano.jdacommands.commands
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.requests.RestAction
 import net.volcano.jdacommands.model.command.CommandEvent
+import net.volcano.jdacommands.model.command.annotations.BotOwnerCanAlwaysExecute
 import net.volcano.jdacommands.model.command.annotations.CommandController
 import net.volcano.jdacommands.model.command.annotations.CommandMethod
 import net.volcano.jdacommands.model.command.annotations.Help
@@ -10,6 +11,7 @@ import net.volcano.jdacommands.model.command.annotations.Help
 @CommandController
 class Override {
 
+	@BotOwnerCanAlwaysExecute
 	@CommandMethod(
 		path = ["override"],
 		permissions = ["override"]

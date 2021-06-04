@@ -2,6 +2,7 @@ package net.volcano.jdacommands.commands
 
 import net.dv8tion.jda.api.requests.RestAction
 import net.volcano.jdacommands.model.command.CommandEvent
+import net.volcano.jdacommands.model.command.annotations.BotOwnerCanAlwaysExecute
 import net.volcano.jdacommands.model.command.annotations.CommandController
 import net.volcano.jdacommands.model.command.annotations.CommandMethod
 import net.volcano.jdacommands.model.command.annotations.Help
@@ -9,10 +10,11 @@ import net.volcano.jdacommands.model.menu.pagers.EmbedFieldPagerBuilder
 import net.volcano.jdautils.constants.Colors
 import net.volcano.jdautils.utils.StringUtil
 
-@CommandController(path = ["help"], permissions = ["help"])
+@CommandController
 class Help {
 
-	@CommandMethod
+	@BotOwnerCanAlwaysExecute
+	@CommandMethod(path = ["help"], permissions = ["help"])
 	@Help(description = "Show this embed.")
 	fun help(event: CommandEvent): RestAction<*> {
 
