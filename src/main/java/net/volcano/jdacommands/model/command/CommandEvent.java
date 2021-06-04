@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.volcano.jdacommands.exceptions.command.run.MissingPermissionsException;
 import net.volcano.jdacommands.interfaces.CommandClient;
 import net.volcano.jdacommands.model.command.arguments.ParsedData;
 import net.volcano.jdacommands.model.menu.Confirmation;
@@ -24,6 +25,7 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -315,6 +317,66 @@ public class CommandEvent extends MessageReceivedEvent {
 	 */
 	public boolean hasPermissions(@Nullable Guild guild, String... permissions) {
 		return hasPermissions(guild, Arrays.asList(permissions));
+	}
+	
+	/**
+	 * Check if the command author has the specified permissions.
+	 * <p>
+	 * This checks the server the command was ran in, or globally if ran in dms.
+	 * <p>
+	 * This method will throw an error if the author does not have the permissions provided.
+	 *
+	 * @param permissions the permissions to check for.
+	 * @throws MissingPermissionsException if the author does not have the required permissions.
+	 */
+	public void checkPermissions(Collection<String> permissions) throws MissingPermissionsException {
+		checkPermissions(null, permissions);
+	}
+	
+	/**
+	 * Check if the command author has the specified permissions.
+	 * <p>
+	 * This checks the server the command was ran in, or globally if ran in dms.
+	 * <p>
+	 * This method will throw an error if the author does not have the permissions provided.
+	 *
+	 * @param permissions the permissions to check for.
+	 * @throws MissingPermissionsException if the author does not have the required permissions.
+	 */
+	public void checkPermissions(String... permissions) throws MissingPermissionsException {
+		checkPermissions(null, permissions);
+	}
+	
+	/**
+	 * Check if the command author has the specified permissions.
+	 * <p>
+	 * This checks the server the command was ran in, or globally if ran in dms.
+	 * <p>
+	 * This method will throw an error if the author does not have the permissions provided.
+	 *
+	 * @param permissions the permissions to check for.
+	 * @param guild       the guild to check in, or null for global.
+	 * @throws MissingPermissionsException if the author does not have the required permissions.
+	 */
+	public void checkPermissions(@Nullable Guild guild, Collection<String> permissions) throws MissingPermissionsException {
+		if (!hasPermissions(guild, permissions)) {
+			throw new MissingPermissionsException(new HashSet<>(permissions), guild);
+		}
+	}
+	
+	/**
+	 * Check if the command author has the specified permissions.
+	 * <p>
+	 * This checks the server the command was ran in, or globally if ran in dms.
+	 * <p>
+	 * This method will throw an error if the author does not have the permissions provided.
+	 *
+	 * @param permissions the permissions to check for.
+	 * @param guild       the guild to check in, or null for global.
+	 * @throws MissingPermissionsException if the author does not have the required permissions.
+	 */
+	public void checkPermissions(@Nullable Guild guild, String... permissions) throws MissingPermissionsException {
+		checkPermissions(guild, Arrays.asList(permissions));
 	}
 	
 }
