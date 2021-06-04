@@ -13,10 +13,7 @@ import net.volcano.jdacommands.exceptions.command.run.CommandException;
 import net.volcano.jdacommands.exceptions.command.run.CommandRuntimeException;
 import net.volcano.jdacommands.exceptions.command.run.IncorrectSourceException;
 import net.volcano.jdacommands.exceptions.command.run.MissingPermissionsException;
-import net.volcano.jdacommands.interfaces.CommandClient;
-import net.volcano.jdacommands.interfaces.PermissionProvider;
-import net.volcano.jdacommands.interfaces.PrefixProvider;
-import net.volcano.jdacommands.interfaces.UserProvider;
+import net.volcano.jdacommands.interfaces.*;
 import net.volcano.jdacommands.model.command.Command;
 import net.volcano.jdacommands.model.command.CommandCompiler;
 import net.volcano.jdacommands.model.command.CommandEvent;
@@ -61,6 +58,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	private final PermissionProvider permissionProvider;
 	private final PrefixProvider prefixProvider;
 	private final UserProvider userProvider;
+	private final GuildProvider guildProvider;
 	
 	private final CommandCompiler commandCompiler;
 	private final CodecRegistry codecRegistry;
@@ -76,12 +74,15 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	                         PermissionProvider permissionProvider,
 	                         PrefixProvider prefixProvider,
 	                         UserProvider userProvider,
+	                         GuildProvider guildProvider,
 	                         ReactionMenuClient reactionMenuClient) throws IOException, FontFormatException, ExecutionException, InterruptedException {
 		
 		this.permissionProvider = permissionProvider;
 		this.prefixProvider = prefixProvider;
 		this.userProvider = userProvider;
+		this.guildProvider = guildProvider;
 		this.reactionMenuClient = reactionMenuClient;
+		
 		executorService = new ScheduledThreadPoolExecutor(1);
 		executorService.setMaximumPoolSize(10);
 		
