@@ -11,7 +11,9 @@ interface UserProvider {
 	 * @param userId the user to check
 	 * @return `true` if the user is banned from running ANY commands
 	 */
-	fun isCommandBanned(userId: String?): Boolean
+	fun isCommandBanned(userId: String): Boolean {
+		return isCommandBanned(userId, null)
+	}
 
 	/**
 	 * Check if a user is banned from running commands
@@ -30,7 +32,7 @@ interface UserProvider {
 	 * @param guildId the guild to check in
 	 * @return `true` if the user is banned from running ANY commands in the guild
 	 */
-	fun isCommandBanned(userId: String?, guildId: String?): Boolean
+	fun isCommandBanned(userId: String, guildId: String?): Boolean
 
 	/**
 	 * Check if a user is banned from running commands in a specific guild
@@ -40,11 +42,7 @@ interface UserProvider {
 	 * @return `true` if the user is banned from running ANY commands in the guild
 	 */
 	fun isCommandBanned(user: User, guild: Guild?): Boolean {
-		return if (guild != null) {
-			isCommandBanned(user.id, guild.id)
-		} else {
-			isCommandBanned(user.id)
-		}
+		return isCommandBanned(user.id, guild?.id)
 	}
 
 	/**
