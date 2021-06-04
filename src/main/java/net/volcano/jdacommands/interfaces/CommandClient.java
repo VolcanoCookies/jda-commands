@@ -17,6 +17,8 @@ public interface CommandClient {
 	
 	UserProvider getUserProvider();
 	
+	GuildProvider getGuildProvider();
+	
 	PrefixProvider getPrefixProvider();
 	
 	PermissionProvider getPermissionProvider();
