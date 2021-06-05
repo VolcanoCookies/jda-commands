@@ -348,6 +348,16 @@ public abstract class EmbedPagerBuilder {
 	}
 	
 	/**
+	 * Sets the Timestamp of the embed to now.
+	 *
+	 * @return the builder after the timestamp has been set
+	 */
+	@Nonnull
+	public EmbedPagerBuilder setTimestampToNow() {
+		return setTimestamp(Instant.now());
+	}
+	
+	/**
 	 * Sets the Color of the embed.
 	 *
 	 * <a href="https://raw.githubusercontent.com/DV8FromTheWorld/JDA/assets/assets/docs/embeds/02-setColor.png" target="_blank">Example</a>
