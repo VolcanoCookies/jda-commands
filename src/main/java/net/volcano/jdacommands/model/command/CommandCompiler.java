@@ -1,6 +1,7 @@
 package net.volcano.jdacommands.model.command;
 
 import net.dv8tion.jda.api.requests.RestAction;
+import net.volcano.jdacommands.exceptions.command.CommandCompileException;
 import net.volcano.jdacommands.model.command.annotations.*;
 import net.volcano.jdacommands.model.command.arguments.ArgumentList;
 import net.volcano.jdacommands.model.command.arguments.CommandArgument;
@@ -8,7 +9,6 @@ import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CommandCompiler {
 	
@@ -18,7 +18,7 @@ public class CommandCompiler {
 		this.registry = registry;
 	}
 	
-	public Set<Command> compile(Object controller) {
+	public Set<Command> compile(Object controller) throws CommandCompileException {
 		
 		CommandController module = controller.getClass().getAnnotation(CommandController.class);
 		
@@ -26,21 +26,25 @@ public class CommandCompiler {
 			throw new IllegalArgumentException("Object is not a command!");
 		}
 		
-		return Arrays.stream(controller.getClass()
-				.getMethods())
-				.filter(method -> method.isAnnotationPresent(CommandMethod.class))
-				.map(method -> compileCommand(controller, module, method))
-				.collect(Collectors.toSet());
+		Set<Command> set = new HashSet<>();
+		for (Method method : controller.getClass()
+				.getMethods()) {
+			if (method.isAnnotationPresent(CommandMethod.class)) {
+				Command command = compileCommand(controller, module, method);
+				set.add(command);
+			}
+		}
+		return set;
 		
 	}
 	
-	public Command compileCommand(Object o, CommandController controller, Method method) {
+	public Command compileCommand(Object o, CommandController controller, Method method) throws CommandCompileException {
 		
 		CommandMethod commandMethod = method.getAnnotation(CommandMethod.class);
 		Command.CommandBuilder builder = Command.builder();
 		
 		if (method.getReturnType() != Void.TYPE && method.getReturnType() != RestAction.class) {
-			throw new IllegalArgumentException("Command method needs to return RestAction or Void!");
+			throw new CommandCompileException(method, "Command method needs to return RestAction or Void!");
 		}
 		
 		List<String> paths = new ArrayList<>();
@@ -49,7 +53,7 @@ public class CommandCompiler {
 				String path = controllerPath + " " + commandPath;
 				path = path.replaceAll(" +", " ").trim();
 				if (path.length() == 0) {
-					throw new IllegalArgumentException("Command path cannot be empty");
+					throw new CommandCompileException(method, "Command path cannot be empty");
 				}
 				paths.add(path);
 			}
@@ -71,14 +75,19 @@ public class CommandCompiler {
 			var isArray = params[i].getType().isArray();
 			
 			if (isArray && i != params.length - 1) {
-				throw new IllegalArgumentException("Cannot have array argument as non last parameter");
+				throw new CommandCompileException(method, "Cannot have array argument as non last parameter");
 			}
 			
-			var type = isArray ? params[i].getType().componentType() : params[i].getType();
+			Class<?> type;
+			if (isArray) {
+				type = params[i].getType().componentType();
+			} else {
+				type = params[i].getType();
+			}
 			
 			var codec = registry.getCodec(type);
 			if (codec == null) {
-				throw new IllegalArgumentException("Unsupported type for command argument; " + type);
+				throw new CommandCompileException(method, "Unsupported type for command argument; " + type);
 			} else {
 				arguments.add(codec.encodeArgument(params[i], type));
 			}
