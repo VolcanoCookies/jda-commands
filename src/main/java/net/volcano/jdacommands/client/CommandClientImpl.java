@@ -105,6 +105,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 				.getOwner()
 				.getId();
 		
+		log.info("Initialized command client.");
+		
 	}
 	
 	@Override

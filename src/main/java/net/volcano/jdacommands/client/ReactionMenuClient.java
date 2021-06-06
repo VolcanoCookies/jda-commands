@@ -1,5 +1,6 @@
 package net.volcano.jdacommands.client;
 
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent;
@@ -16,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 public class ReactionMenuClient extends ListenerAdapter {
 	
@@ -24,6 +26,8 @@ public class ReactionMenuClient extends ListenerAdapter {
 	public ReactionMenuClient() {
 		
 		new ScheduledThreadPoolExecutor(1).scheduleAtFixedRate(this::removeOld, 10, 10, TimeUnit.MINUTES);
+		
+		log.info("Initialized reaction menu client.");
 		
 	}
 	
