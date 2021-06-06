@@ -15,10 +15,6 @@ public class UserCodec extends Codec<User> {
 	@Override
 	public CommandArgument<User> buildArgument(Parameter parameter) {
 		
-		if (parameter.getType() != User.class) {
-			throw new IllegalArgumentException("Invalid codec used for type.");
-		}
-		
 		var builder = UserArgument.builder();
 		
 		if (parameter.isAnnotationPresent(Nullable.class)) {
