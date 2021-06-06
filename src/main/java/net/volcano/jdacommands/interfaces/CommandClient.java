@@ -2,6 +2,7 @@ package net.volcano.jdacommands.interfaces;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.volcano.jdacommands.client.ReactionMenuClient;
+import net.volcano.jdacommands.exceptions.command.CommandCompileException;
 import net.volcano.jdacommands.exceptions.command.parsing.ArgumentParsingException;
 import net.volcano.jdacommands.exceptions.command.parsing.CommandNotFoundException;
 import net.volcano.jdacommands.model.command.Command;
@@ -35,7 +36,7 @@ public interface CommandClient {
 	
 	boolean registerCommand(Command command);
 	
-	boolean registerController(Object controller);
+	boolean registerController(Object controller) throws CommandCompileException;
 	
 	ParsedData findAndParse(MessageReceivedEvent event, String content) throws CommandNotFoundException, ArgumentParsingException;
 	

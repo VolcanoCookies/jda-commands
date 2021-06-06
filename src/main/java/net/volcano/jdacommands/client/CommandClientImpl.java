@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.volcano.jdacommands.constants.Reactions;
+import net.volcano.jdacommands.exceptions.command.CommandCompileException;
 import net.volcano.jdacommands.exceptions.command.parsing.*;
 import net.volcano.jdacommands.exceptions.command.run.CommandException;
 import net.volcano.jdacommands.exceptions.command.run.CommandRuntimeException;
@@ -239,7 +240,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	 * @return whether or not a change occurred to the command set
 	 */
 	@Override
-	public boolean registerController(Object controller) {
+	public boolean registerController(Object controller) throws CommandCompileException {
 		boolean change = false;
 		for (Command command : commandCompiler.compile(controller)) {
 			change = change || registerCommand(command);
