@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -77,7 +76,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	                         PrefixProvider prefixProvider,
 	                         UserProvider userProvider,
 	                         GuildProvider guildProvider,
-	                         ReactionMenuClient reactionMenuClient) throws IOException, FontFormatException, ExecutionException, InterruptedException {
+	                         ReactionMenuClient reactionMenuClient) throws ExecutionException, InterruptedException, IOException, FontFormatException {
 		
 		this.permissionProvider = permissionProvider;
 		this.prefixProvider = prefixProvider;
@@ -93,7 +92,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		
 		codecRegistry.loadDefaults();
 		
-		InputStream stream = new FileInputStream("Montserrat-Regular.ttf");
+		InputStream stream = getClass().getClassLoader().getResourceAsStream("Montserrat-Regular.ttf");
 		font = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(48f);
 		metrics = new BufferedImage(1, 1, 1)
 				.createGraphics()
