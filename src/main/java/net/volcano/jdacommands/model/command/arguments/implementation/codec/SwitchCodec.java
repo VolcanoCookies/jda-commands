@@ -4,7 +4,6 @@ import net.volcano.jdacommands.model.command.arguments.implementation.argument.S
 import net.volcano.jdacommands.model.command.arguments.interfaces.Codec;
 
 import java.lang.reflect.Parameter;
-import java.lang.reflect.ParameterizedType;
 
 public class SwitchCodec extends Codec<Enum<?>> {
 	
@@ -12,7 +11,11 @@ public class SwitchCodec extends Codec<Enum<?>> {
 	public SwitchArgument buildArgument(Parameter parameter) {
 		var builder = SwitchArgument.builder();
 		
-		var enumClass = ((Class<Enum>) ((ParameterizedType) parameter.getParameterizedType()).getActualTypeArguments()[0]);
+		if (!(parameter.getParameterizedType() instanceof Class)) {
+			throw new IllegalArgumentException("Parameter type not instance of class");
+		}
+		
+		var enumClass = ((Class<Enum>) parameter.getParameterizedType());
 		
 		builder.options(enumClass.getEnumConstants());
 		

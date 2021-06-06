@@ -20,8 +20,15 @@ public class CodecRegistryImpl implements CodecRegistry {
 	
 	@Override
 	public <T> void registerCodec(Codec<T> codec) {
-		Class<?> clazz = (Class<?>) ((ParameterizedType) codec.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-		codecMap.put(clazz, codec);
+		try {
+			Class<?> clazz = (Class<?>) ((ParameterizedType) codec.getClass().getGenericSuperclass())
+					.getActualTypeArguments()[0];
+			codecMap.put(clazz, codec);
+		} catch (ClassCastException e) {
+			Class<?> clazz = (Class<?>) ((ParameterizedType) ((ParameterizedType) codec.getClass().getGenericSuperclass())
+					.getActualTypeArguments()[0]).getRawType();
+			codecMap.put(clazz, codec);
+		}
 	}
 	
 }
