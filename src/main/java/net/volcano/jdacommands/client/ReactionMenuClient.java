@@ -8,6 +8,7 @@ import net.volcano.jdacommands.constants.Reactions;
 import net.volcano.jdacommands.model.menu.Confirmation;
 import net.volcano.jdacommands.model.menu.pagers.Menu;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
@@ -15,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+@Service
 public class ReactionMenuClient extends ListenerAdapter {
 	
 	private final ConcurrentHashMap<String, Menu> menus = new ConcurrentHashMap<>();

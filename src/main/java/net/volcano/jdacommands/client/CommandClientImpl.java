@@ -24,6 +24,7 @@ import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentPa
 import net.volcano.jdacommands.model.command.arguments.implementation.CodecRegistryImpl;
 import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
 import net.volcano.jdautils.constants.Colors;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -44,6 +45,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Getter
+@Service
 public class CommandClientImpl extends ListenerAdapter implements CommandClient {
 	
 	private static final Pattern aliasSplitPattern = Pattern.compile("\\S+", Pattern.MULTILINE);
