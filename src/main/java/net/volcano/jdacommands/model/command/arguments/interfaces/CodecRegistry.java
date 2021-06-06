@@ -14,7 +14,9 @@ public interface CodecRegistry {
 	default void loadDefaults() {
 		registerCodec(new BooleanCodec());
 		registerCodec(new MemberCodec());
-		registerCodec(new NumberCodec());
+		registerCodec(new LongCodec());
+		registerCodec(new IntegerCodec());
+		registerCodec(new DoubleCodec());
 		registerCodec(new RegexCodec());
 		registerCodec(new RoleCodec());
 		registerCodec(new StringCodec());

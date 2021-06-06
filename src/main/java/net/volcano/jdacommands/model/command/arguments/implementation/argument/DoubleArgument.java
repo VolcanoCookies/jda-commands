@@ -6,16 +6,16 @@ import net.volcano.jdacommands.model.command.arguments.CommandArgument;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 
 @SuperBuilder
-public class NumberArgument extends CommandArgument<Long> {
+public class DoubleArgument extends CommandArgument<Double> {
 	
-	protected final long min;
-	protected final long max;
+	protected final double min;
+	protected final double max;
 	
 	@Override
-	public Long parseValue(ArgumentParsingData data) throws InvalidArgumentsException {
+	public Double parseValue(ArgumentParsingData data) throws InvalidArgumentsException {
 		
 		if (!data.getArg().matches("-?\\d+")) {
-			throw new InvalidArgumentsException(data, "Expected a non-decimal number");
+			throw new InvalidArgumentsException(data, "Expected a number");
 		}
 		
 		boolean isNegative = false;
@@ -26,7 +26,7 @@ public class NumberArgument extends CommandArgument<Long> {
 		String arg = isNegative ? data.getArg().substring(1) : data.getArg();
 		
 		try {
-			long val = Long.parseLong(arg);
+			double val = Double.parseDouble(arg.replaceFirst(",", "."));
 			val = isNegative ? -val : val;
 			
 			if (val < min) {
@@ -37,7 +37,7 @@ public class NumberArgument extends CommandArgument<Long> {
 			
 			return val;
 		} catch (NumberFormatException e) {
-			throw new InvalidArgumentsException(data, "Could not parse as number, has to be non-decimal number less than ±2^32");
+			throw new InvalidArgumentsException(data, "Could not parse as number, has to be decimal number");
 		}
 	}
 	
