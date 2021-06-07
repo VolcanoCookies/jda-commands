@@ -38,7 +38,8 @@ class Help {
 		pager.setTitle("__**Help**__")
 		pager.setFooter("<Required> [Optional]")
 		pager.setFieldsPerPage(24)
-		commands.groupBy { it.help.category }
+		commands.filter { it.help != null }
+			.groupBy { it.help.category }
 			.forEach { (cat, com) ->
 				pager.addField("", "__**Category: ${StringUtil.capitalize(cat)}**__")
 				com.forEach { pager.addField("**${it.usageFormatted}**", it.descriptionFormatted) }
