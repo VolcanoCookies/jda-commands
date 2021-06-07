@@ -223,7 +223,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	public boolean registerCommand(Command command) {
 		boolean change = false;
 		for (String path : command.getPaths()) {
-			change = change || root.addCommand(command, path);
+			change = change || root.addCommand(command, path.split(" "));
 			log.info("Registered command at " + path);
 		}
 		allCommands.add(command);
