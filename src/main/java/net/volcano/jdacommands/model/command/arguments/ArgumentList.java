@@ -38,8 +38,6 @@ public class ArgumentList {
 	
 	public ParsedData parseArguments(ArgumentParsingData argumentData) throws ArgumentParsingException {
 		
-		var data = new ParsedData(argumentData.rawArguments);
-		
 		// If the input raw argument size is bigger than the expected argument size,
 		// And the last argument is a "Take All" argument,
 		// Trim the raw argument to the expected size, and merge all arguments beyond that size into the last one
@@ -76,6 +74,8 @@ public class ArgumentList {
 		if (argumentData.size() - (lastIsArbitraryNumber ? 1 : 0) < size()) {
 			throw new MissingArgumentsException(argumentData, argumentData.currentArg, size());
 		}
+		
+		var data = new ParsedData(argumentData.rawArguments);
 		
 		data.parsedArguments = new Object[argumentData.size()];
 		
