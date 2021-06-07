@@ -37,9 +37,9 @@ public class ArgumentParsingData {
 			var rawArgumentBuilder = RawArgument.builder();
 			
 			String token = matcher.group();
-			if ((token.startsWith("'") || token.startsWith("\"")) &&
+			if (token.matches("^(['\"].*['\"])$") &&
 					token.length() > 2) {
-				rawArgumentBuilder.inParenthesis(true);
+				rawArgumentBuilder.inQuotations(true);
 				rawArgumentBuilder.value(token.substring(1, token.length() - 1));
 			}
 			rawArgumentBuilder.startIndex(matcher.start());

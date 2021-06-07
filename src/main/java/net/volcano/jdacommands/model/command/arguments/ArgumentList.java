@@ -47,12 +47,12 @@ public class ArgumentList {
 			
 			// Check if any of the arguments after, and including, the last one are in parenthesis
 			// If none are, we can merge them, else throw TooManyArgumentsException
-			boolean inParanthesis = false;
+			boolean inQuotations = false;
 			for (int i = size() - 1; i < argumentData.size(); i++) {
-				inParanthesis = argumentData.rawArguments[i].inParenthesis || inParanthesis;
+				inQuotations = argumentData.rawArguments[i].inQuotations || inQuotations;
 			}
 			
-			if (!inParanthesis) {
+			if (!inQuotations) {
 				// The last argument is not in parenthesis so we can merge it with anything following it
 				argumentData.rawArguments = Arrays.copyOfRange(argumentData.rawArguments, 0, size());
 				var builder = RawArgument.builder();
@@ -60,7 +60,7 @@ public class ArgumentList {
 				var lastArgument = argumentData.rawArguments[size() - 1];
 				
 				builder.startIndex(lastArgument.startIndex);
-				builder.inParenthesis(true);
+				builder.inQuotations(true);
 				builder.value(argumentData.event
 						.getMessage()
 						.getContentRaw()

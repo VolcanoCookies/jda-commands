@@ -7,11 +7,11 @@ public class RawArgument {
 	
 	public final String value;
 	public final int startIndex;
-	public final boolean inParenthesis;
+	public final boolean inQuotations;
 	
-	RawArgument(String value, int startIndex, boolean inParenthesis) {
+	RawArgument(String value, int startIndex, boolean inQuotations) {
 		this.value = value;
 		this.startIndex = startIndex;
-		this.inParenthesis = inParenthesis;
+		this.inQuotations = inQuotations;
 	}
 }
