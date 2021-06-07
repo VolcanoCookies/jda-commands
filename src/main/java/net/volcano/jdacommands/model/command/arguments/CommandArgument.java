@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import net.volcano.jdacommands.exceptions.command.parsing.InvalidArgumentsException;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
+import net.volcano.jdautils.utils.StringUtil;
 
 import java.lang.reflect.Parameter;
 
@@ -41,5 +42,7 @@ public abstract class CommandArgument<T> {
 	 */
 	public abstract T parseValue(ArgumentParsingData data) throws InvalidArgumentsException;
 	
-	public abstract String getUsage();
+	public String getUsage() {
+		return "<" + StringUtil.cameCaseToSpaces(StringUtil.capitalize(parameter.getName())) + ">";
+	}
 }
