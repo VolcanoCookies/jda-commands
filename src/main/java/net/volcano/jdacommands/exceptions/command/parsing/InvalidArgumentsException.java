@@ -30,7 +30,7 @@ public class InvalidArgumentsException extends ArgumentParsingException {
 	
 	@Override
 	protected EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
-		embedBuilder.setTitle("Error: Invalid arguments");
+		embedBuilder.setTitle("Error: Invalid arguments.");
 		embedBuilder.addField("Hint", hint, false);
 		embedBuilder.setImage("attachment://errorImage.png");
 		return embedBuilder;
