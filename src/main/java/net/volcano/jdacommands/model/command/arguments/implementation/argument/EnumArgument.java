@@ -28,6 +28,6 @@ public class EnumArgument extends CommandArgument<Enum<?>> {
 	
 	@Override
 	public String getUsage() {
-		return "<" + ListUtil.asString(", ", options, Enum::name) + ">";
+		return "<" + ListUtil.asString(" | ", options, e -> StringUtil.capitalize(e.name().toLowerCase())) + ">";
 	}
 }
