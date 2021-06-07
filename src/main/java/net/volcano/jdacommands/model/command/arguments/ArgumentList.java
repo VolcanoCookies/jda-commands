@@ -59,9 +59,7 @@ public class ArgumentList {
 				
 				builder.startIndex(lastArgument.startIndex);
 				builder.inQuotations(true);
-				builder.value(argumentData.event
-						.getMessage()
-						.getContentRaw()
+				builder.value(argumentData.rawContent
 						.substring(argumentData.rawArguments[size() - 1].startIndex));
 				// Set the last argument to be a combination of all the ones that exceeded it
 				argumentData.rawArguments[size() - 1] = builder.build();
