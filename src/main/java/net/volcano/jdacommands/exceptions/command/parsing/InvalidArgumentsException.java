@@ -2,7 +2,16 @@ package net.volcano.jdacommands.exceptions.command.parsing;
 
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.volcano.jdacommands.ErrorImageGenerator;
+import net.volcano.jdacommands.model.EmbedAttachment;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
+
+import javax.imageio.ImageIO;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 @Getter
 public class InvalidArgumentsException extends ArgumentParsingException {
@@ -20,18 +29,31 @@ public class InvalidArgumentsException extends ArgumentParsingException {
 	}
 	
 	@Override
-	protected void getErrorEmbed(EmbedBuilder embedBuilder) {
+	protected EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
 		embedBuilder.setTitle("Error: Invalid arguments");
-		int aroundStartIndex = data.rawArguments[argumentIndex].startIndex;
-		int aroundEndIndex = aroundStartIndex + data.getArg().length();
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("`");
-		stringBuilder.append(data.rawContent, aroundStartIndex, aroundEndIndex);
-		stringBuilder.append("`");
-		stringBuilder.insert(0, data.rawContent, Math.max(0, aroundStartIndex - 20), aroundStartIndex);
-		stringBuilder.append(data.rawContent, aroundEndIndex, Math.min(aroundEndIndex + 20, data.rawContent.length()));
-		embedBuilder.setDescription(stringBuilder.toString());
 		embedBuilder.addField("Hint", hint, false);
+		
+		embedBuilder.setThumbnail("attachment://errorImage.png");
+		
+		return embedBuilder;
 	}
+	
+	@Override
+	public List<EmbedAttachment> getAttachments() {
+		var indexOffset = data.event.getMessage().getContentDisplay().length() - data.rawContent.length();
+		
+		int startIndex = data.rawArguments[argumentIndex].startIndex + indexOffset;
+		int lengthLeft = data.rawContent.length() - startIndex;
+		
+		var errorImage = ErrorImageGenerator.generateErrorImage(data.event.getMessage().getContentDisplay(), startIndex, lengthLeft);
+		var os = new ByteArrayOutputStream();
+		try {
+			ImageIO.write(errorImage, "png", os);
+			return Collections.singletonList(new EmbedAttachment(new ByteArrayInputStream(os.toByteArray()), "errorImage.png"));
+		} catch (IOException e) {
+			return Collections.emptyList();
+		}
+	}
+	
 }
 

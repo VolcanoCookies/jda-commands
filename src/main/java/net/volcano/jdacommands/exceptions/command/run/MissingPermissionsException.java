@@ -22,8 +22,9 @@ public class MissingPermissionsException extends CommandException {
 	}
 	
 	@Override
-	protected void getErrorEmbed(EmbedBuilder embedBuilder) {
+	protected EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
 		embedBuilder.setTitle("Error: Missing " + (guild == null ? "global" : "local") + " permissions");
 		embedBuilder.setDescription("Missing; " + ListUtil.asString(", ", missingFlags, Objects::toString));
+		return embedBuilder;
 	}
 }

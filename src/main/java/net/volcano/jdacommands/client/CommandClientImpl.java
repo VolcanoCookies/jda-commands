@@ -15,6 +15,7 @@ import net.volcano.jdacommands.exceptions.command.run.CommandRuntimeException;
 import net.volcano.jdacommands.exceptions.command.run.IncorrectSourceException;
 import net.volcano.jdacommands.exceptions.command.run.MissingPermissionsException;
 import net.volcano.jdacommands.interfaces.*;
+import net.volcano.jdacommands.model.EmbedAttachment;
 import net.volcano.jdacommands.model.command.Command;
 import net.volcano.jdacommands.model.command.CommandCompiler;
 import net.volcano.jdacommands.model.command.CommandEvent;
@@ -24,14 +25,11 @@ import net.volcano.jdacommands.model.command.arguments.ParsedData;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 import net.volcano.jdacommands.model.command.arguments.implementation.CodecRegistryImpl;
 import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
-import net.volcano.jdautils.constants.Colors;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -67,9 +65,6 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	
 	private final ReactionMenuClient reactionMenuClient;
 	
-	private final Font font;
-	private final FontMetrics metrics;
-	
 	private final String ownerId;
 	
 	public CommandClientImpl(JDA jda,
@@ -92,12 +87,6 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		commandCompiler = new CommandCompiler(codecRegistry);
 		
 		codecRegistry.loadDefaults();
-		
-		InputStream stream = getClass().getClassLoader().getResourceAsStream("Montserrat-Regular.ttf");
-		font = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(48f);
-		metrics = new BufferedImage(1, 1, 1)
-				.createGraphics()
-				.getFontMetrics(font);
 		
 		ownerId = jda.retrieveApplicationInfo()
 				.submit()
@@ -437,52 +426,23 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		if (e.isSensitive()) {
 			event.getAuthor()
 					.openPrivateChannel()
-					.flatMap(c -> c.sendMessage(e.getErrorEmbed()
-							.build()))
+					.flatMap(c -> {
+						var action = c.sendMessage(e.getErrorEmbed().build());
+						for (EmbedAttachment attachment : e.getAttachments()) {
+							action = action.addFile(attachment.inputStream, attachment.name);
+						}
+						return action;
+					})
 					.queue();
 		} else {
-			event.getChannel()
-					.sendMessage(e.getErrorEmbed()
-							.build())
-					.queue();
+			
+			var action = event.getChannel().sendMessage(e.getErrorEmbed().build());
+			for (EmbedAttachment attachment : e.getAttachments()) {
+				action = action.addFile(attachment.inputStream, attachment.name);
+			}
+			
+			action.queue();
 		}
-	}
-	
-	private BufferedImage generateErrorImage(String message, int errorStart, int errorLength) {
-		
-		var pre = message.substring(0, errorStart);
-		var err = message.substring(errorStart, errorStart + errorLength);
-		var post = message.substring(errorStart + errorLength);
-		
-		var startLen = metrics.stringWidth(pre);
-		var errorLen = metrics.stringWidth(err);
-		
-		var width = metrics.stringWidth(message);
-		var height = metrics.getHeight();
-		
-		RenderingHints rh = new RenderingHints(
-				RenderingHints.KEY_TEXT_ANTIALIASING,
-				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		var graphics = image.createGraphics();
-		graphics.setFont(font);
-		graphics.setRenderingHints(rh);
-		
-		Color backgroundColor = new Color(0x23272a);
-		
-		graphics.setColor(backgroundColor);
-		graphics.fillRect(0, 0, width, height);
-		graphics.setColor(Color.WHITE);
-		graphics.drawString(pre, 0, height - metrics.getDescent());
-		graphics.setColor(Colors.ERROR);
-		graphics.drawString(err, startLen, height - metrics.getDescent());
-		graphics.setColor(Color.WHITE);
-		graphics.drawString(post, startLen + errorLen, height - metrics.getDescent());
-		
-		graphics.dispose();
-		
-		return image;
 	}
 	
 }

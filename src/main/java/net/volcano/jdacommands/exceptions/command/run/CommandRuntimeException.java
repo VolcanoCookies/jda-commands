@@ -9,8 +9,9 @@ public class CommandRuntimeException extends CommandException {
 	private final String message;
 	
 	@Override
-	protected void getErrorEmbed(EmbedBuilder embedBuilder) {
+	protected EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
 		embedBuilder.setTitle("Error: Runtime exception");
 		embedBuilder.setDescription(message);
+		return embedBuilder;
 	}
 }
