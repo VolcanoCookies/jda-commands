@@ -32,9 +32,13 @@ public class CommandFunction {
 			args[i] = data.parsedArguments[includeEvent ? i - 1 : i];
 		}
 		
-		returned = method.invoke(instance, args);
-		if (returned instanceof RestAction) {
-			return (RestAction<?>) returned;
+		try {
+			returned = method.invoke(instance, args);
+			if (returned instanceof RestAction) {
+				return (RestAction<?>) returned;
+			}
+		} catch (InvocationTargetException e) {
+			e.getTargetException().printStackTrace();
 		}
 		return null;
 	}
