@@ -29,7 +29,7 @@ public class CommandFunction {
 			args[i++] = event;
 		}
 		for (; i < argumentCount; i++) {
-			args[i] = data.parsedArguments[i];
+			args[i] = data.parsedArguments[includeEvent ? i - 1 : i];
 		}
 		
 		returned = method.invoke(instance, args);
