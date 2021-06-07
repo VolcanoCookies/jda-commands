@@ -81,7 +81,7 @@ public abstract class EmbedPager extends Menu {
 	
 	public String generateFooter() {
 		MessageEmbed embed = baseEmbed.build();
-		return StringUtil.trim("Page " + (getCurrentPage() + 1) + " of " + getSize() + (embed.getFooter() != null ? " | " + embed.getFooter() : ""),
+		return StringUtil.trim("Page " + (getCurrentPage() + 1) + " of " + getSize() + (embed.getFooter() != null ? " | " + embed.getFooter().getText() : ""),
 				EmbedLimit.EMBED_FOOTER_LIMIT);
 	}
 	
