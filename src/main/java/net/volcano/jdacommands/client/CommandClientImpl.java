@@ -51,9 +51,9 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	private static final Pattern aliasSplitPattern = Pattern.compile("\\S+", Pattern.MULTILINE);
 	private static final Pattern argumentPattern = Pattern.compile("\"[^\"]+\"|'[^']+'|\\S+", Pattern.DOTALL | Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 	
-	private final Set<Command> commands = new HashSet<>();
+	private final Set<Command> allCommands = new HashSet<>();
 	
-	private final CommandNode root = new CommandNode();
+	private final CommandNode root = new CommandNode(true);
 	
 	private final ScheduledThreadPoolExecutor executorService;
 	
@@ -124,7 +124,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		String content = event.getMessage().getContentRaw();
 		
 		// Check if the message starts with the prefix
-		if (!content.startsWith(prefix)) {
+		if (!content.startsWith(prefix) || content.matches("^<[^A-z].*$")) {
 			return;
 		}
 		
@@ -162,6 +162,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 						.addReaction(Reactions.WARNING)
 						.queue();
 				
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			
 		});
@@ -231,6 +233,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			change = change || root.addCommand(command, path);
 			log.info("Registered command at " + path);
 		}
+		allCommands.add(command);
 		return change;
 	}
 	
@@ -278,6 +281,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		// Get the path
 		Matcher matcher = aliasSplitPattern.matcher(content);
 		List<String> path = new ArrayList<>();
+		List<Integer> pathIndexes = new ArrayList<>();
 		while (matcher.find()) {
 			String token = matcher.group();
 			if ((token.startsWith("'") || token.startsWith("\"")) &&
@@ -285,16 +289,19 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 				token = token.substring(1, token.length() - 1);
 			}
 			path.add(token);
+			pathIndexes.add(matcher.end());
 		}
 		
-		Set<Command> commands = root.findCommands(path.toArray(new String[0]));
+		var pair = root.findCommands(path.toArray(new String[0]));
+		
+		Set<Command> commands = pair.getFirst();
 		
 		// Check if there are any possible command candidates
 		if (commands.isEmpty()) {
 			throw new CommandNotFoundException();
 		}
 		
-		var parsingData = new ArgumentParsingData(event, content.substring(matcher.end()));
+		var parsingData = new ArgumentParsingData(event, pair.getSecond() == 0 ? "" : content.substring(pathIndexes.get(pathIndexes.size() - 1 - pair.getSecond())));
 		
 		if (commands.size() > 1) {
 			List<Command> possibleCommands = new ArrayList<>();
@@ -334,7 +341,17 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	@Override
 	public void executeCommand(CommandEvent event) {
 		
-		if (!event.command.getBotOwnerCanAlwaysExecute() && !ownerId.equals(event.getAuthor().getId())) {
+		if (event.command.getBotOwnerCanAlwaysExecute()) {
+			if (!ownerId.equals(event.getAuthor().getId())) {
+				// Check if the user has permissions
+				if (!permissionProvider.hasPermissions(event.command.getPermissions(), event.getAuthor(), event.isFromGuild() ? event.getGuild() : null)) {
+					Set<String> missingPermissions = new HashSet<>(event.command.getPermissions());
+					missingPermissions.removeAll(permissionProvider.getPermissions(event.getAuthor(), event.isFromGuild() ? event.getGuild() : null));
+					terminate(event, new MissingPermissionsException(missingPermissions, event.isFromGuild() ? event.getGuild() : null));
+					return;
+				}
+			}
+		} else {
 			// Check if the user has permissions
 			if (!permissionProvider.hasPermissions(event.command.getPermissions(), event.getAuthor(), event.isFromGuild() ? event.getGuild() : null)) {
 				Set<String> missingPermissions = new HashSet<>(event.command.getPermissions());
@@ -352,6 +369,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		}
 		
 		try {
+			log.info(event.getAuthor().getAsTag() + " ran " + event.getMessage().getContentDisplay());
 			RestAction<?> action = event.command.call(event);
 			if (action != null) {
 				action.queue();

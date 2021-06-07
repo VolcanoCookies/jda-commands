@@ -1,8 +1,12 @@
 package net.volcano.jdacommands.model.command;
 
+import net.volcano.jdautils.Pair;
+
 import java.util.*;
 
 public class CommandNode {
+	
+	private final boolean isRoot;
 	
 	/**
 	 * The {@link Command}'s on this node.
@@ -13,6 +17,14 @@ public class CommandNode {
 	 */
 	private final Map<String, CommandNode> map = new HashMap<>();
 	
+	public CommandNode(boolean isRoot) {
+		this.isRoot = isRoot;
+	}
+	
+	public CommandNode() {
+		isRoot = false;
+	}
+	
 	/**
 	 * Add a command to this node, or any of its children
 	 *
@@ -21,15 +33,17 @@ public class CommandNode {
 	 * @return {@code true} if any change occurred
 	 */
 	public boolean addCommand(Command command, String... path) {
-		if (path.length == 0) {
+		if (isRoot && path.length == 0) {
 			throw new IllegalArgumentException("Path cannot be empty.");
-		} else if (path.length == 1) {
+		}
+		
+		if (path.length == 0) {
 			return commands.add(command);
 		}
 		if (!map.containsKey(path[0])) {
 			map.put(path[0], new CommandNode());
 		}
-		return map.get(path[0]).addCommand(command, Arrays.copyOfRange(path, 1, path.length));
+		return map.get(path[0]).addCommand(command, path.length == 1 ? new String[0] : Arrays.copyOfRange(path, 1, path.length));
 	}
 	
 	/**
@@ -38,16 +52,16 @@ public class CommandNode {
 	 * @param path the path to go down
 	 * @return a set of commands found at the end
 	 */
-	public Set<Command> findCommands(String... path) {
+	public Pair<Set<Command>, Integer> findCommands(String... path) {
 		if (path.length == 0) {
-			return commands;
+			return new Pair<>(commands, 0);
 		}
 		
 		if (map.containsKey(path[0])) {
 			return map.get(path[0])
 					.findCommands(Arrays.copyOfRange(path, 1, path.length));
 		} else {
-			return commands;
+			return new Pair<>(commands, path.length);
 		}
 	}
 	
