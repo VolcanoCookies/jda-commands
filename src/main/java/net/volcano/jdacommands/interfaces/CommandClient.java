@@ -28,7 +28,7 @@ public interface CommandClient {
 	
 	CodecRegistry getCodecRegistry();
 	
-	Set<Command> getCommands();
+	Set<Command> getAllCommands();
 	
 	ScheduledThreadPoolExecutor getExecutorService();
 	
