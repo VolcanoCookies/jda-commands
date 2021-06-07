@@ -41,6 +41,9 @@ public class ArgumentParsingData {
 					token.length() > 2) {
 				rawArgumentBuilder.inQuotations(true);
 				rawArgumentBuilder.value(token.substring(1, token.length() - 1));
+			} else {
+				rawArgumentBuilder.inQuotations(false);
+				rawArgumentBuilder.value(token);
 			}
 			rawArgumentBuilder.startIndex(matcher.start());
 			argumentList.add(rawArgumentBuilder.build());
