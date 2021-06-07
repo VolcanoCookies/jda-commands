@@ -156,6 +156,7 @@ public class Command {
 	public ParsedData parseArguments(ArgumentParsingData parsingData) throws ArgumentParsingException {
 		ParsedData data = arguments.parseArguments(parsingData);
 		data.command = this;
+		data.event = parsingData.event;
 		return data;
 	}
 	
