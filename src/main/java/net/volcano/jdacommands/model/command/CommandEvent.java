@@ -283,7 +283,7 @@ public class CommandEvent extends MessageReceivedEvent {
 	@Nullable
 	@Override
 	public Guild getGuild() {
-		return isFromGuild() ? getGuild() : null;
+		return isFromGuild() ? getTextChannel().getGuild() : null;
 	}
 	
 	@Nullable
