@@ -162,6 +162,10 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 						.addReaction(Reactions.WARNING)
 						.queue();
 				
+			} catch (MissingPermissionsException e) {
+				event.getMessage()
+						.addReaction(Reactions.NO_PERMISSIONS)
+						.queue();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -276,7 +280,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	 */
 	@Override
 	public ParsedData findAndParse(MessageReceivedEvent event, String content) throws CommandNotFoundException,
-			ArgumentParsingException {
+			ArgumentParsingException, MissingPermissionsException {
 		
 		// Get the path
 		Matcher matcher = aliasSplitPattern.matcher(content);
@@ -304,8 +308,21 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		var parsingData = new ArgumentParsingData(event, pair.getSecond() == 0 ? "" : content.substring(pathIndexes.get(pathIndexes.size() - 1 - pair.getSecond())));
 		
 		if (commands.size() > 1) {
-			List<Command> possibleCommands = new ArrayList<>();
+			List<Command> permittedCommands = new ArrayList<>();
 			for (Command command : commands) {
+				if (permissionProvider.hasPermissions(command.permissions, event.getAuthor(), event.isFromGuild() ? event.getGuild() : null)) {
+					permittedCommands.add(command);
+				}
+			}
+			
+			// If there are no permitted commands
+			// Add all non-permitted to get the closest matching argument wise to know what missing permissions to return.
+			if (permittedCommands.isEmpty()) {
+				permittedCommands.addAll(commands);
+			}
+			
+			List<Command> possibleCommands = new ArrayList<>();
+			for (Command command : permittedCommands) {
 				if (parsingData.size() == command.getArguments().size()) {
 					possibleCommands.add(command);
 				}
@@ -329,10 +346,19 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 						.parseArguments(parsingData.clone());
 			}
 			
+			var any = parseAny(possibleCommands, parsingData);
+			// Check if the user has permissions for this command
+			if (!permissionProvider.hasPermissions(any.command.permissions, event.getAuthor(), event.isFromGuild() ? event.getGuild() : null)) {
+				throw new MissingPermissionsException(any.command.permissions, event.isFromGuild() ? event.getGuild() : null);
+			}
+			
 			return parseAny(possibleCommands, parsingData);
 		} else {
 			// Exactly one command
 			Command command = commands.iterator().next();
+			if (!permissionProvider.hasPermissions(command.permissions, event.getAuthor(), event.isFromGuild() ? event.getGuild() : null)) {
+				throw new MissingPermissionsException(command.permissions, event.isFromGuild() ? event.getGuild() : null);
+			}
 			return command.parseArguments(parsingData);
 		}
 		

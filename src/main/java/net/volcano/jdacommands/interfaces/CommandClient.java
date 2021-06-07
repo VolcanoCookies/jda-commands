@@ -5,6 +5,7 @@ import net.volcano.jdacommands.client.ReactionMenuClient;
 import net.volcano.jdacommands.exceptions.command.CommandCompileException;
 import net.volcano.jdacommands.exceptions.command.parsing.ArgumentParsingException;
 import net.volcano.jdacommands.exceptions.command.parsing.CommandNotFoundException;
+import net.volcano.jdacommands.exceptions.command.run.MissingPermissionsException;
 import net.volcano.jdacommands.model.command.Command;
 import net.volcano.jdacommands.model.command.CommandCompiler;
 import net.volcano.jdacommands.model.command.CommandEvent;
@@ -38,7 +39,7 @@ public interface CommandClient {
 	
 	boolean registerController(Object controller) throws CommandCompileException;
 	
-	ParsedData findAndParse(MessageReceivedEvent event, String content) throws CommandNotFoundException, ArgumentParsingException;
+	ParsedData findAndParse(MessageReceivedEvent event, String content) throws CommandNotFoundException, ArgumentParsingException, MissingPermissionsException;
 	
 	default void call(CommandEvent event) {
 		try {
