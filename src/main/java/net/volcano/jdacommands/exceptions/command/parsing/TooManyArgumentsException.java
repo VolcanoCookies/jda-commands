@@ -30,7 +30,7 @@ public class TooManyArgumentsException extends ArgumentParsingException {
 		var indexOffset = data.event.getMessage().getContentDisplay().length() - data.rawContent.length();
 		
 		int startIndex = data.rawArguments[argumentIndex].startIndex + indexOffset;
-		int lengthLeft = data.rawContent.length() - startIndex;
+		int lengthLeft = data.rawContent.length() - startIndex + indexOffset;
 		
 		var errorImage = ErrorImageGenerator.generateErrorImage(data.event.getMessage().getContentDisplay(), startIndex, lengthLeft);
 		var os = new ByteArrayOutputStream();
