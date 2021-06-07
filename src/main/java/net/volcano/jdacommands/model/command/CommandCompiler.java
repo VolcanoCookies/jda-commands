@@ -6,6 +6,7 @@ import net.volcano.jdacommands.model.command.annotations.*;
 import net.volcano.jdacommands.model.command.arguments.ArgumentList;
 import net.volcano.jdacommands.model.command.arguments.CommandArgument;
 import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
+import net.volcano.jdautils.utils.ClassUtil;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -73,6 +74,9 @@ public class CommandCompiler {
 			}
 			
 			var isArray = params[i].getType().isArray();
+			var isEnum = params[i].getType().isEnum();
+			var isPrimitive = params[i].getType().isPrimitive();
+			//var isGeneric = ((ParameterizedType) ((ParameterizedType) params[i].getType().getGenericSuperclass()).getActualTypeArguments()[0]).getActualTypeArguments()[0] instanceof WildcardType;
 			
 			if (isArray && i != params.length - 1) {
 				throw new CommandCompileException(method, "Cannot have array argument as non last parameter");
@@ -81,8 +85,13 @@ public class CommandCompiler {
 			Class<?> type;
 			if (isArray) {
 				type = params[i].getType().componentType();
+			} else if (isEnum) {
+				type = Enum.class;
+			} else if (isPrimitive) {
+				type = ClassUtil.dePrimitivize(params[i].getType());
 			} else {
 				type = params[i].getType();
+				
 			}
 			
 			var codec = registry.getCodec(type);

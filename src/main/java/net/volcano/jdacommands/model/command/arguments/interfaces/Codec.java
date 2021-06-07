@@ -13,7 +13,8 @@ public abstract class Codec<T> {
 	protected Class<? extends CommandArgument<T>> argumentClass;
 	
 	public CommandArgument<T> encodeArgument(Parameter parameter, Type type) {
-		if (type != ClassUtil.getGenericType(getClass())) {
+		
+		if (type != ClassUtil.stripWildcard(ClassUtil.getGenericType(getClass()))) {
 			throw new IllegalArgumentException("Invalid codec used for type.");
 		}
 		var arg = buildArgument(parameter);
