@@ -223,7 +223,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	public boolean registerCommand(Command command) {
 		boolean change = false;
 		for (String path : command.getPaths()) {
-			change = change || root.addCommand(command, path.split(" "));
+			change = root.addCommand(command, path.split(" ")) || change;
 			log.info("Registered command at " + path);
 		}
 		allCommands.add(command);
@@ -240,7 +240,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	public boolean registerController(Object controller) throws CommandCompileException {
 		boolean change = false;
 		for (Command command : commandCompiler.compile(controller)) {
-			change = change || registerCommand(command);
+			change = registerCommand(command) || change;
 		}
 		return change;
 	}

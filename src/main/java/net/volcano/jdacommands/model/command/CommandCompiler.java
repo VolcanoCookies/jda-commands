@@ -27,12 +27,12 @@ public class CommandCompiler {
 			throw new IllegalArgumentException("Object is not a command!");
 		}
 		
+		var methods = controller.getClass().getDeclaredMethods();
+		
 		Set<Command> set = new HashSet<>();
-		for (Method method : controller.getClass()
-				.getMethods()) {
+		for (Method method : controller.getClass().getDeclaredMethods()) {
 			if (method.isAnnotationPresent(CommandMethod.class)) {
-				Command command = compileCommand(controller, module, method);
-				set.add(command);
+				set.add(compileCommand(controller, module, method));
 			}
 		}
 		return set;
