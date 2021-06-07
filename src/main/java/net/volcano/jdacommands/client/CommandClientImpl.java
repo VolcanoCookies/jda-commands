@@ -310,7 +310,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		if (commands.size() > 1) {
 			List<Command> permittedCommands = new ArrayList<>();
 			for (Command command : commands) {
-				if (permissionProvider.hasPermissions(command.permissions, event.getAuthor(), event.isFromGuild() ? event.getGuild() : null)) {
+				if (command.hasPermissions(this, event)) {
 					permittedCommands.add(command);
 				}
 			}
@@ -348,7 +348,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			
 			var any = parseAny(possibleCommands, parsingData);
 			// Check if the user has permissions for this command
-			if (!permissionProvider.hasPermissions(any.command.permissions, event.getAuthor(), event.isFromGuild() ? event.getGuild() : null)) {
+			if (!any.command.hasPermissions(this, event)) {
 				throw new MissingPermissionsException(any.command.permissions, event.isFromGuild() ? event.getGuild() : null);
 			}
 			
@@ -356,7 +356,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		} else {
 			// Exactly one command
 			Command command = commands.iterator().next();
-			if (!permissionProvider.hasPermissions(command.permissions, event.getAuthor(), event.isFromGuild() ? event.getGuild() : null)) {
+			if (!command.hasPermissions(this, event)) {
 				throw new MissingPermissionsException(command.permissions, event.isFromGuild() ? event.getGuild() : null);
 			}
 			return command.parseArguments(parsingData);

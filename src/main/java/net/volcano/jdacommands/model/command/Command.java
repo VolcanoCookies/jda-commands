@@ -5,7 +5,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.RestAction;
+import net.volcano.jdacommands.client.CommandClientImpl;
 import net.volcano.jdacommands.exceptions.command.parsing.ArgumentParsingException;
 import net.volcano.jdacommands.exceptions.command.run.CommandRuntimeException;
 import net.volcano.jdacommands.interfaces.CommandClient;
@@ -174,6 +176,17 @@ public class Command {
 		};
 	}
 	
+	public boolean hasPermissions(CommandClientImpl client, MessageReceivedEvent event) {
+		
+		//TODO Fix to use CommandClient and not the default impl
+		
+		if (client.getPermissionProvider().hasPermissions(permissions, event.getAuthor(), event.isFromGuild() ? event.getGuild() : null)) {
+			return true;
+		} else {
+			return botOwnerCanAlwaysExecute && event.getAuthor().getId().equals(client.getOwnerId());
+		}
+		
+	}
 }
 
 
