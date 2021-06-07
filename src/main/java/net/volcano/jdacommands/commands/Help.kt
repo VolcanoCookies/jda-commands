@@ -37,7 +37,7 @@ class Help {
 		val pager = EmbedFieldPagerBuilder()
 		pager.setTitle("__**Help**__")
 		pager.setFooter("<Required> [Optional]")
-		pager.setFieldsPerPage(12)
+		pager.setFieldsPerPage(24)
 		commands.groupBy { it.help.category }
 			.forEach { (cat, com) ->
 				pager.addField("", "__**Category: ${StringUtil.capitalize(cat)}**__")
