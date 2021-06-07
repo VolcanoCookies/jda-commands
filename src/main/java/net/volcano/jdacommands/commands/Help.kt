@@ -19,7 +19,7 @@ class Help {
 	@Help(description = "Show this embed.")
 	fun help(event: CommandEvent): RestAction<*> {
 
-		val commands = event.client.commands
+		val commands = event.client.allCommands
 			.filter {
 				event.client.permissionProvider.hasPermissions(
 					it.permissions,
@@ -40,8 +40,8 @@ class Help {
 		pager.setFieldsPerPage(12)
 		commands.groupBy { it.help.category }
 			.forEach { (cat, com) ->
-				pager.addField("__**Category: ${StringUtil.capitalize(cat)}**__", "")
-				com.forEach { pager.addInlineField("**${it.usageFormatted}**", it.descriptionFormatted) }
+				pager.addField("", "__**Category: ${StringUtil.capitalize(cat)}**__")
+				com.forEach { pager.addField("**${it.usageFormatted}**", it.descriptionFormatted) }
 			}
 		pager.setColor(Colors.HELP)
 
