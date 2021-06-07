@@ -123,7 +123,7 @@ public class Command {
 	}
 	
 	public String getUsageFormatted() {
-		return (paths[0] + (help.usage.isBlank() ? "" : " " + help.usage)).trim();
+		return ((help.usage.isBlank() ? "" : " " + help.usage)).trim();
 	}
 	
 	public String getDescriptionFormatted() {

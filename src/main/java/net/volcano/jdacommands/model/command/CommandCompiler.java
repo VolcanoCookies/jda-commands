@@ -117,7 +117,7 @@ public class CommandCompiler {
 			
 			Help help = method.getAnnotation(Help.class);
 			
-			helpBuilder.usage(help.usage().equals("GENERATE") ? argumentList.generateUsage() : help.usage());
+			helpBuilder.usage(help.usage().equals("GENERATE") ? paths.get(0) + " " + argumentList.generateUsage() : help.usage());
 			helpBuilder.description(help.description());
 			helpBuilder.category(help.category());
 			
