@@ -42,7 +42,8 @@ class Help {
 			.groupBy { it.help.category }
 			.forEach { (cat, com) ->
 				pager.addField("", "__**Category: ${StringUtil.capitalize(cat)}**__")
-				com.forEach { pager.addInlineField("**${it.usageFormatted}**", it.descriptionFormatted) }
+				com.sortedBy { -it.usageFormatted.length }
+					.forEach { pager.addInlineField("**${it.usageFormatted}**", it.descriptionFormatted) }
 			}
 		pager.setColor(Colors.HELP)
 
