@@ -27,6 +27,8 @@ public abstract class Codec<T> {
 			arg.setOptional(true);
 		}
 		
+		arg.setParameter(parameter);
+		
 		return arg;
 		
 	}

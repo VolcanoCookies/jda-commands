@@ -6,6 +6,8 @@ import lombok.experimental.SuperBuilder;
 import net.volcano.jdacommands.exceptions.command.parsing.InvalidArgumentsException;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 
+import java.lang.reflect.Parameter;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -27,6 +29,11 @@ public abstract class CommandArgument<T> {
 	protected Boolean nullable;
 	
 	/**
+	 * The name of the parameter behind this argument
+	 */
+	protected Parameter parameter;
+	
+	/**
 	 * How to actually parse the argument
 	 *
 	 * @param data the data to parse
@@ -34,4 +41,5 @@ public abstract class CommandArgument<T> {
 	 */
 	public abstract T parseValue(ArgumentParsingData data) throws InvalidArgumentsException;
 	
+	public abstract String getUsage();
 }
