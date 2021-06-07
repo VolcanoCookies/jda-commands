@@ -19,13 +19,9 @@ public abstract class Codec<T> {
 		}
 		var arg = buildArgument(parameter);
 		
-		if (parameter.isAnnotationPresent(Nullable.class)) {
-			arg.setNullable(true);
-		}
+		arg.setNullable(parameter.isAnnotationPresent(Nullable.class));
 		
-		if (parameter.isAnnotationPresent(Optional.class)) {
-			arg.setOptional(true);
-		}
+		arg.setOptional(parameter.isAnnotationPresent(Optional.class));
 		
 		arg.setParameter(parameter);
 		
