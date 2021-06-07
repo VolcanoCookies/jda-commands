@@ -1,15 +1,15 @@
 package net.volcano.jdacommands.model.command.arguments.implementation.codec;
 
-import net.volcano.jdacommands.model.command.arguments.implementation.argument.SwitchArgument;
+import net.volcano.jdacommands.model.command.arguments.implementation.argument.EnumArgument;
 import net.volcano.jdacommands.model.command.arguments.interfaces.Codec;
 
 import java.lang.reflect.Parameter;
 
-public class SwitchCodec extends Codec<Enum<?>> {
+public class EnumCodec extends Codec<Enum<?>> {
 	
 	@Override
-	public SwitchArgument buildArgument(Parameter parameter) {
-		var builder = SwitchArgument.builder();
+	public EnumArgument buildArgument(Parameter parameter) {
+		var builder = EnumArgument.builder();
 		
 		if (!(parameter.getParameterizedType() instanceof Class)) {
 			throw new IllegalArgumentException("Parameter type not instance of class");

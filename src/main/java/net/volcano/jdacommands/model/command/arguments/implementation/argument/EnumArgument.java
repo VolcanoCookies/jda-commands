@@ -5,9 +5,10 @@ import net.volcano.jdacommands.exceptions.command.parsing.InvalidArgumentsExcept
 import net.volcano.jdacommands.model.command.arguments.CommandArgument;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 import net.volcano.jdautils.utils.ListUtil;
+import net.volcano.jdautils.utils.StringUtil;
 
 @SuperBuilder
-public class SwitchArgument extends CommandArgument<Enum<?>> {
+public class EnumArgument extends CommandArgument<Enum<?>> {
 	
 	protected final Enum<?>[] options;
 	

@@ -20,7 +20,7 @@ public interface CodecRegistry {
 		registerCodec(new RegexCodec());
 		registerCodec(new RoleCodec());
 		registerCodec(new StringCodec());
-		registerCodec(new SwitchCodec());
+		registerCodec(new EnumCodec());
 		registerCodec(new UserCodec());
 	}
 	
