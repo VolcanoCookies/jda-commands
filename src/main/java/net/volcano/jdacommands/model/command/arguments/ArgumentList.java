@@ -5,6 +5,7 @@ import net.volcano.jdacommands.exceptions.command.parsing.ArgumentParsingExcepti
 import net.volcano.jdacommands.exceptions.command.parsing.MissingArgumentsException;
 import net.volcano.jdacommands.exceptions.command.parsing.TooManyArgumentsException;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
+import net.volcano.jdacommands.model.command.arguments.implementation.RawArgument;
 import net.volcano.jdautils.utils.ListUtil;
 
 import java.util.Arrays;
@@ -37,18 +38,39 @@ public class ArgumentList {
 	
 	public ParsedData parseArguments(ArgumentParsingData argumentData) throws ArgumentParsingException {
 		
-		var data = new ParsedData(argumentData.rawArguments, argumentData.rawArgumentStartIndex);
+		var data = new ParsedData(argumentData.rawArguments);
 		
 		// If the input raw argument size is bigger than the expected argument size,
 		// And the last argument is a "Take All" argument,
 		// Trim the raw argument to the expected size, and merge all arguments beyond that size into the last one
 		if (size() < argumentData.size()) {
-			argumentData.rawArguments = Arrays.copyOfRange(argumentData.rawArguments, 0, size());
-			argumentData.rawArgumentStartIndex = Arrays.copyOfRange(argumentData.rawArgumentStartIndex, 0, size());
-			argumentData.rawArguments[size() - 1] = argumentData.event
-					.getMessage()
-					.getContentRaw()
-					.substring(argumentData.rawArgumentStartIndex[size() - 1]);
+			
+			// Check if any of the arguments after, and including, the last one are in parenthesis
+			// If none are, we can merge them, else throw TooManyArgumentsException
+			boolean inParanthesis = false;
+			for (int i = size() - 1; i < argumentData.size(); i++) {
+				inParanthesis = argumentData.rawArguments[i].inParenthesis || inParanthesis;
+			}
+			
+			if (!inParanthesis) {
+				// The last argument is not in parenthesis so we can merge it with anything following it
+				argumentData.rawArguments = Arrays.copyOfRange(argumentData.rawArguments, 0, size());
+				var builder = RawArgument.builder();
+				
+				var lastArgument = argumentData.rawArguments[size() - 1];
+				
+				builder.startIndex(lastArgument.startIndex);
+				builder.inParenthesis(true);
+				builder.value(argumentData.event
+						.getMessage()
+						.getContentRaw()
+						.substring(argumentData.rawArguments[size() - 1].startIndex));
+				// Set the last argument to be a combination of all the ones that exceeded it
+				argumentData.rawArguments[size() - 1] = builder.build();
+				
+			} else {
+				throw new TooManyArgumentsException(argumentData, argumentData.size() - size());
+			}
 		}
 		
 		if (argumentData.size() - (lastIsArbitraryNumber ? 1 : 0) < size()) {

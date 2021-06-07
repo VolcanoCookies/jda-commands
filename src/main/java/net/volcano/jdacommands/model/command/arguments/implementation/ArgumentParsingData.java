@@ -15,8 +15,7 @@ public class ArgumentParsingData {
 	
 	public int currentArg = 0;
 	
-	public String[] rawArguments;
-	public Integer[] rawArgumentStartIndex;
+	public RawArgument[] rawArguments;
 	
 	public String rawContent;
 	
@@ -31,21 +30,22 @@ public class ArgumentParsingData {
 		this.event = event;
 		rawContent = arguments;
 		
-		List<String> argumentList = new ArrayList<>();
-		List<Integer> argumentStartList = new ArrayList<>();
+		List<RawArgument> argumentList = new ArrayList<>();
 		Matcher matcher = argumentPattern.matcher(arguments);
 		
 		while (matcher.find()) {
+			var rawArgumentBuilder = RawArgument.builder();
+			
 			String token = matcher.group();
 			if ((token.startsWith("'") || token.startsWith("\"")) &&
 					token.length() > 2) {
-				token = token.substring(1, token.length() - 1);
+				rawArgumentBuilder.inParenthesis(true);
+				rawArgumentBuilder.value(token.substring(1, token.length() - 1));
 			}
-			argumentList.add(token);
-			argumentStartList.add(matcher.start());
+			rawArgumentBuilder.startIndex(matcher.start());
+			argumentList.add(rawArgumentBuilder.build());
 		}
-		rawArguments = argumentList.toArray(new String[0]);
-		rawArgumentStartIndex = argumentStartList.toArray(new Integer[0]);
+		rawArguments = argumentList.toArray(new RawArgument[0]);
 		
 	}
 	
@@ -66,14 +66,13 @@ public class ArgumentParsingData {
 	}
 	
 	public String getArg() {
-		return rawArguments.length > currentArg ? rawArguments[currentArg] : null;
+		return rawArguments.length > currentArg ? rawArguments[currentArg].value : null;
 	}
 	
 	@Override
 	public ArgumentParsingData clone() {
 		return new ArgumentParsingData(currentArg,
 				rawArguments,
-				rawArgumentStartIndex,
 				rawContent,
 				event);
 	}

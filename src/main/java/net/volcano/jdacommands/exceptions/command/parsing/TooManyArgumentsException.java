@@ -14,7 +14,7 @@ public class TooManyArgumentsException extends ArgumentParsingException {
 		embedBuilder.setTitle("Error: Unexpected argument.");
 		
 		StringBuilder stringBuilder = new StringBuilder();
-		int startIndex = data.rawArgumentStartIndex[argumentIndex];
+		int startIndex = data.rawArguments[argumentIndex].startIndex;
 		int lengthLeft = data.rawContent.length() - startIndex;
 		
 		stringBuilder.append(data.rawContent,

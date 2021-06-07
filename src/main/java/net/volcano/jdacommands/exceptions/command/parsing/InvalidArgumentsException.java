@@ -22,7 +22,7 @@ public class InvalidArgumentsException extends ArgumentParsingException {
 	@Override
 	protected void getErrorEmbed(EmbedBuilder embedBuilder) {
 		embedBuilder.setTitle("Error: Invalid arguments");
-		int aroundStartIndex = data.rawArgumentStartIndex[argumentIndex];
+		int aroundStartIndex = data.rawArguments[argumentIndex].startIndex;
 		int aroundEndIndex = aroundStartIndex + data.getArg().length();
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("`");
