@@ -161,8 +161,7 @@ public class CommandEvent extends MessageReceivedEvent {
 	@CheckReturnValue
 	public MessageAction respondSuccess(String message) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
-		embedBuilder.setTitle("```diff\n+ Success +```");
-		embedBuilder.setDescription(message.trim());
+		embedBuilder.setDescription("```diff\n+ Success +```\n\n" + message.trim());
 		embedBuilder.setColor(Colors.SUCCESS);
 		return respond(embedBuilder);
 	}
@@ -176,8 +175,7 @@ public class CommandEvent extends MessageReceivedEvent {
 	@CheckReturnValue
 	public MessageAction respondInfo(String message) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
-		embedBuilder.setTitle("```asciidoc\n= Info =```");
-		embedBuilder.setDescription(message.trim());
+		embedBuilder.setDescription("```asciidoc\n= Info =```\n\n" + message.trim());
 		embedBuilder.setColor(Colors.INFO);
 		return respond(embedBuilder);
 	}
@@ -191,8 +189,7 @@ public class CommandEvent extends MessageReceivedEvent {
 	@CheckReturnValue
 	public MessageAction respondError(String message) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
-		embedBuilder.setTitle("```diff\n- ERROR -```");
-		embedBuilder.setDescription(message.trim());
+		embedBuilder.setDescription("```diff\n- ERROR -```\n\n" + message.trim());
 		embedBuilder.setColor(Colors.ERROR);
 		return respond(embedBuilder);
 	}
@@ -206,8 +203,7 @@ public class CommandEvent extends MessageReceivedEvent {
 	@CheckReturnValue
 	public MessageAction respondPartialSuccess(String message) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
-		embedBuilder.setTitle("```Fix\nPartial Success```");
-		embedBuilder.setDescription(message.trim());
+		embedBuilder.setDescription("```Fix\nPartial Success```\n\n" + message.trim());
 		embedBuilder.setColor(Colors.ERROR);
 		return respond(embedBuilder);
 	}
