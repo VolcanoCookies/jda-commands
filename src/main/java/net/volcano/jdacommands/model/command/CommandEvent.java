@@ -203,7 +203,8 @@ public class CommandEvent extends MessageReceivedEvent {
 	@CheckReturnValue
 	public MessageAction respondPartialSuccess(String message) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
-		embedBuilder.setDescription("```Fix\nPartial Success```\n\n" + message.trim());
+		embedBuilder.setTitle("Partial Success");
+		embedBuilder.setDescription(message.trim());
 		embedBuilder.setColor(Colors.ERROR);
 		return respond(embedBuilder);
 	}
