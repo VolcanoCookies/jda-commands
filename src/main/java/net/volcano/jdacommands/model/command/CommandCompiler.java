@@ -155,11 +155,7 @@ public class CommandCompiler {
 		builder.sensitive(commandMethod.sensitive());
 		builder.globalPermissions(commandMethod.global());
 		
-		if (method.isAnnotationPresent(BotOwnerCanAlwaysExecute.class)) {
-			builder.botOwnerCanAlwaysExecute(true);
-		} else {
-			builder.botOwnerCanAlwaysExecute(false);
-		}
+		builder.botOwnerCanAlwaysExecute(method.isAnnotationPresent(BotOwnerCanAlwaysExecute.class));
 		
 		return builder.build();
 		
