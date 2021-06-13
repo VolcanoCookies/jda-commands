@@ -41,7 +41,7 @@ class Manual {
 				embed.addField("Category", help.category, false)
 				if (help.examples.isNotEmpty())
 					embed.addField("Examples", help.examples.joinToString("\n"), false)
-				if (help.details != null) {
+				if (help.details.isNotBlank()) {
 					embed.setDescription(help.details)
 				}
 				embed
