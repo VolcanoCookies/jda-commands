@@ -143,11 +143,11 @@ public class CommandCompiler {
 		builder.method(methodBuilder.build());
 		
 		// Build the permissions for this command
-		var permissions = commandMethod.permissions();
-		if (!permissions.isBlank()) {
+		var permissions = controller.permissions();
+		if (!permissions.isBlank() && !commandMethod.permissions().isBlank()) {
 			permissions += ".";
 		}
-		permissions += controller.permissions();
+		permissions += commandMethod.permissions();
 		builder.permission(permissions);
 		
 		// Add misc values
