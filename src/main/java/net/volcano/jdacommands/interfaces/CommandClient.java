@@ -37,6 +37,8 @@ public interface CommandClient {
 	
 	ReactionMenuClient getReactionMenuClient();
 	
+	PermissionClient getPermissionClient();
+	
 	boolean registerCommand(Command command);
 	
 	boolean registerController(Object controller) throws CommandCompileException;
