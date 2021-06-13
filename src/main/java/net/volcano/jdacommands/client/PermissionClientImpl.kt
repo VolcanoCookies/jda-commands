@@ -23,7 +23,10 @@ class PermissionClientImpl(
 
 	override fun checkPermissions(user: User, guild: Guild?, permission: String): QueryResult {
 		val perms = PermissionTree(provider.getPermissions(user, guild))
-		return QueryResult(perms.contains(permission), getCooldown(user, guild, permission))
+		return QueryResult(
+			perms.contains(permission) || provider.isOverriding(user.id),
+			getCooldown(user, guild, permission)
+		)
 	}
 
 	override fun putCooldown(user: User, guild: Guild?, permission: String, time: Long): OffsetDateTime {
