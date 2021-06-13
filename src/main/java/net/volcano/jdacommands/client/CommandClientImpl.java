@@ -348,13 +348,17 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			
 			var any = parseAny(possibleCommands, parsingData);
 			// Check if the user has permissions for this command
-			checkPermissions(event, any.command);
+			if (!any.command.getBotOwnerCanAlwaysExecute() || !event.getAuthor().getId().equals(getOwnerId())) {
+				checkPermissions(event, any.command);
+			}
 			
 			return parseAny(possibleCommands, parsingData);
 		} else {
 			// Exactly one command
 			Command command = commands.iterator().next();
-			checkPermissions(event, command);
+			if (!command.getBotOwnerCanAlwaysExecute() || !event.getAuthor().getId().equals(getOwnerId())) {
+				checkPermissions(event, command);
+			}
 			return command.parseArguments(parsingData);
 		}
 		
@@ -363,17 +367,15 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	@Override
 	public void executeCommand(CommandEvent event) {
 		
+		boolean botOwnerOverriding = false;
+		
 		if (event.command.getBotOwnerCanAlwaysExecute()) {
-			if (!ownerId.equals(event.getAuthor().getId())) {
-				// Check if the user has permissions
-				try {
-					checkPermissions(event, event.command);
-				} catch (PermissionsOnCooldownException | MissingPermissionsException e) {
-					terminate(event, e);
-					return;
-				}
+			if (ownerId.equals(event.getAuthor().getId())) {
+				botOwnerOverriding = true;
 			}
-		} else {
+		}
+		
+		if (!botOwnerOverriding) {
 			// Check if the user has permissions
 			val queryResult = permissionClient.checkPermissions(event.getAuthor(), event.getGuild(), event.command.permission);
 			if (!queryResult.getHasPermissions()) {
@@ -399,7 +401,9 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			if (action != null) {
 				action.queue();
 			}
-			permissionClient.invokeCooldown(event.getAuthor(), event.getGuild(), event.command.permission);
+			if (!botOwnerOverriding) {
+				permissionClient.invokeCooldown(event.getAuthor(), event.getGuild(), event.command.permission);
+			}
 		} catch (InvocationTargetException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
