@@ -15,7 +15,7 @@ public @interface CommandMethod {
 	@AliasFor("value")
 	String[] path() default {""};
 	
-	String[] permissions() default {};
+	String permissions() default "";
 	
 	net.volcano.jdacommands.model.command.Command.Source source() default net.volcano.jdacommands.model.command.Command.Source.BOTH;
 	

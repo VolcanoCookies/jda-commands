@@ -25,6 +25,6 @@ public @interface CommandController {
 	/**
 	 * @return base permissions required for any command under this controller
 	 */
-	String[] permissions() default {};
+	String permissions() default "";
 	
 }

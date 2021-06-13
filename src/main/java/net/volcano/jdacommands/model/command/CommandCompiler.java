@@ -12,7 +12,10 @@ import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
 import net.volcano.jdautils.utils.ClassUtil;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class CommandCompiler {
 	
@@ -140,10 +143,12 @@ public class CommandCompiler {
 		builder.method(methodBuilder.build());
 		
 		// Build the permissions for this command
-		Set<String> permissions = new HashSet<>();
-		permissions.addAll(Arrays.asList(commandMethod.permissions()));
-		permissions.addAll(Arrays.asList(controller.permissions()));
-		builder.permissions(Collections.unmodifiableSet(permissions));
+		var permissions = commandMethod.permissions();
+		if (!permissions.isBlank()) {
+			permissions += ".";
+		}
+		permissions += controller.permissions();
+		builder.permission(permissions);
 		
 		// Add misc values
 		builder.source(commandMethod.source());

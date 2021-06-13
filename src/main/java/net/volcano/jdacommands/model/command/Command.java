@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
 import java.util.Comparator;
-import java.util.Set;
 
 @Builder
 @Data
@@ -35,7 +34,7 @@ public class Command {
 	/**
 	 * The required permissions for this command
 	 */
-	public final Set<String> permissions;
+	public final String permission;
 	
 	/**
 	 * The source for this command
