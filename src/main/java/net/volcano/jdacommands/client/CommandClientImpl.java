@@ -2,6 +2,7 @@ package net.volcano.jdacommands.client;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -10,10 +11,7 @@ import net.dv8tion.jda.api.requests.RestAction;
 import net.volcano.jdacommands.constants.Reactions;
 import net.volcano.jdacommands.exceptions.command.CommandCompileException;
 import net.volcano.jdacommands.exceptions.command.parsing.*;
-import net.volcano.jdacommands.exceptions.command.run.CommandException;
-import net.volcano.jdacommands.exceptions.command.run.CommandRuntimeException;
-import net.volcano.jdacommands.exceptions.command.run.IncorrectSourceException;
-import net.volcano.jdacommands.exceptions.command.run.MissingPermissionsException;
+import net.volcano.jdacommands.exceptions.command.run.*;
 import net.volcano.jdacommands.interfaces.*;
 import net.volcano.jdacommands.model.EmbedAttachment;
 import net.volcano.jdacommands.model.command.Command;
@@ -64,6 +62,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	private final CodecRegistry codecRegistry;
 	
 	private final ReactionMenuClient reactionMenuClient;
+	private final PermissionClient permissionClient;
 	
 	private final String ownerId;
 	
@@ -72,13 +71,15 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	                         PrefixProvider prefixProvider,
 	                         UserProvider userProvider,
 	                         GuildProvider guildProvider,
-	                         ReactionMenuClient reactionMenuClient) throws ExecutionException, InterruptedException, IOException, FontFormatException {
+	                         ReactionMenuClient reactionMenuClient,
+	                         PermissionClient permissionClient) throws ExecutionException, InterruptedException, IOException, FontFormatException {
 		
 		this.permissionProvider = permissionProvider;
 		this.prefixProvider = prefixProvider;
 		this.userProvider = userProvider;
 		this.guildProvider = guildProvider;
 		this.reactionMenuClient = reactionMenuClient;
+		this.permissionClient = permissionClient;
 		
 		executorService = new ScheduledThreadPoolExecutor(1);
 		executorService.setMaximumPoolSize(10);
@@ -151,7 +152,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 						.addReaction(Reactions.WARNING)
 						.queue();
 				
-			} catch (MissingPermissionsException e) {
+			} catch (MissingPermissionsException | PermissionsOnCooldownException e) {
 				event.getMessage()
 						.addReaction(Reactions.NO_PERMISSIONS)
 						.queue();
@@ -216,6 +217,11 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			throw new CommandNotFoundException();
 		}
 		
+	}
+	
+	@Override
+	public CommandNode getRootCommandNode() {
+		return root;
 	}
 	
 	/**
@@ -304,7 +310,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		if (commands.size() > 1) {
 			List<Command> permittedCommands = new ArrayList<>();
 			for (Command command : commands) {
-				if (command.hasPermissions(this, event)) {
+				if (permissionClient.checkPermissions(event.getAuthor(), event.isFromGuild() ? event.getGuild() : null, command.permission).getHasPermissions()) {
 					permittedCommands.add(command);
 				}
 			}
@@ -342,17 +348,13 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			
 			var any = parseAny(possibleCommands, parsingData);
 			// Check if the user has permissions for this command
-			if (!any.command.hasPermissions(this, event)) {
-				throw new MissingPermissionsException(any.command.permissions, event.isFromGuild() ? event.getGuild() : null);
-			}
+			checkPermissions(event, any.command);
 			
 			return parseAny(possibleCommands, parsingData);
 		} else {
 			// Exactly one command
 			Command command = commands.iterator().next();
-			if (!command.hasPermissions(this, event)) {
-				throw new MissingPermissionsException(command.permissions, event.isFromGuild() ? event.getGuild() : null);
-			}
+			checkPermissions(event, command);
 			return command.parseArguments(parsingData);
 		}
 		
@@ -364,20 +366,23 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		if (event.command.getBotOwnerCanAlwaysExecute()) {
 			if (!ownerId.equals(event.getAuthor().getId())) {
 				// Check if the user has permissions
-				if (!permissionProvider.hasPermissions(event.command.getPermissions(), event.getAuthor(), event.isFromGuild() ? event.getGuild() : null)) {
-					Set<String> missingPermissions = new HashSet<>(event.command.getPermissions());
-					missingPermissions.removeAll(permissionProvider.getPermissions(event.getAuthor(), event.isFromGuild() ? event.getGuild() : null));
-					terminate(event, new MissingPermissionsException(missingPermissions, event.isFromGuild() ? event.getGuild() : null));
+				try {
+					checkPermissions(event, event.command);
+				} catch (PermissionsOnCooldownException | MissingPermissionsException e) {
+					terminate(event, e);
 					return;
 				}
 			}
 		} else {
 			// Check if the user has permissions
-			if (!permissionProvider.hasPermissions(event.command.getPermissions(), event.getAuthor(), event.isFromGuild() ? event.getGuild() : null)) {
-				Set<String> missingPermissions = new HashSet<>(event.command.getPermissions());
-				missingPermissions.removeAll(permissionProvider.getPermissions(event.getAuthor(), event.isFromGuild() ? event.getGuild() : null));
-				terminate(event, new MissingPermissionsException(missingPermissions, event.isFromGuild() ? event.getGuild() : null));
-				return;
+			val queryResult = permissionClient.checkPermissions(event.getAuthor(), event.getGuild(), event.command.permission);
+			if (!queryResult.getHasPermissions()) {
+				try {
+					checkPermissions(event, event.command);
+				} catch (PermissionsOnCooldownException | MissingPermissionsException e) {
+					terminate(event, e);
+					return;
+				}
 			}
 		}
 		
@@ -394,6 +399,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			if (action != null) {
 				action.queue();
 			}
+			permissionClient.invokeCooldown(event.getAuthor(), event.getGuild(), event.command.permission);
 		} catch (InvocationTargetException | IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (CommandRuntimeException e) {
@@ -447,6 +453,18 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			}
 			
 			action.queue();
+		}
+	}
+	
+	private void checkPermissions(MessageReceivedEvent event, Command command) throws PermissionsOnCooldownException, MissingPermissionsException {
+		var guild = event.isFromGuild() ? event.getGuild() : null;
+		var queryResult = permissionClient.checkPermissions(event.getAuthor(), guild, command.permission);
+		if (!queryResult.getHasPermissions()) {
+			if (queryResult.getCooldownExpiration() != null) {
+				throw new PermissionsOnCooldownException(guild, command.permission, queryResult.getCooldownExpiration());
+			} else {
+				throw new MissingPermissionsException(guild, command.permission);
+			}
 		}
 	}
 	

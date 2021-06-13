@@ -1,6 +1,7 @@
 package net.volcano.jdacommands.commands
 
 import net.dv8tion.jda.api.requests.RestAction
+import net.volcano.jdacommands.interfaces.PermissionClient
 import net.volcano.jdacommands.model.command.Command
 import net.volcano.jdacommands.model.command.CommandEvent
 import net.volcano.jdacommands.model.command.annotations.BotOwnerCanAlwaysExecute
@@ -12,20 +13,18 @@ import net.volcano.jdautils.constants.Colors
 import net.volcano.jdautils.utils.StringUtil
 
 @CommandController
-class Help {
+class Help(
+	private val permissionClient: PermissionClient
+) {
 
 	@BotOwnerCanAlwaysExecute
-	@CommandMethod(path = ["help"], permissions = ["help"])
+	@CommandMethod(path = ["help"], permissions = "command.help")
 	@Help(description = "Show this embed.")
 	fun help(event: CommandEvent): RestAction<*> {
 
 		val commands = event.client.allCommands
 			.filter {
-				event.client.permissionProvider.hasPermissions(
-					it.permissions,
-					event.author.id,
-					if (!it.globalPermissions) event.guildId else null
-				)
+				permissionClient.checkPermissions(event.author, event.guild, it.permission).hasPermissions
 			}
 			.let {
 				if (event.isFromGuild)

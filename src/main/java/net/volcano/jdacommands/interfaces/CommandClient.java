@@ -3,12 +3,12 @@ package net.volcano.jdacommands.interfaces;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.volcano.jdacommands.client.ReactionMenuClient;
 import net.volcano.jdacommands.exceptions.command.CommandCompileException;
-import net.volcano.jdacommands.exceptions.command.parsing.ArgumentParsingException;
 import net.volcano.jdacommands.exceptions.command.parsing.CommandNotFoundException;
-import net.volcano.jdacommands.exceptions.command.run.MissingPermissionsException;
+import net.volcano.jdacommands.exceptions.command.run.CommandException;
 import net.volcano.jdacommands.model.command.Command;
 import net.volcano.jdacommands.model.command.CommandCompiler;
 import net.volcano.jdacommands.model.command.CommandEvent;
+import net.volcano.jdacommands.model.command.CommandNode;
 import net.volcano.jdacommands.model.command.arguments.ParsedData;
 import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
 
@@ -30,6 +30,8 @@ public interface CommandClient {
 	CodecRegistry getCodecRegistry();
 	
 	Set<Command> getAllCommands();
+	
+	CommandNode getRootCommandNode();
 	
 	ScheduledThreadPoolExecutor getExecutorService();
 	
