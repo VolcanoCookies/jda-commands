@@ -150,6 +150,10 @@ public class CommandCompiler {
 		permissions += commandMethod.permissions();
 		builder.permission(permissions);
 		
+		if (permissions.isEmpty()) {
+			throw new CommandCompileException(method, "Command permissions are empty, set some and provide them by default instead.");
+		}
+		
 		// Add misc values
 		builder.source(commandMethod.source());
 		builder.sensitive(commandMethod.sensitive());
