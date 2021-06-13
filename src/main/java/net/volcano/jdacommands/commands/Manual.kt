@@ -15,7 +15,7 @@ class Manual {
 
 	@CommandMethod(
 		path = ["manual", "man"],
-		permissions = ["commands.manual"]
+		permissions = "commands.manual"
 	)
 	@Help(
 		description = "Show more detailed information about commands."

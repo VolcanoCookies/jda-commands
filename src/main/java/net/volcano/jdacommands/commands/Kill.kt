@@ -13,7 +13,7 @@ class Kill {
 	@BotOwnerCanAlwaysExecute
 	@CommandMethod(
 		path = ["kill"],
-		permissions = ["kill"],
+		permissions = "command.kill",
 		global = true
 	)
 	@Help(description = "Kill the instance.", category = "admin")
