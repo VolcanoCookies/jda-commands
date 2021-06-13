@@ -29,6 +29,7 @@ class Manual {
 			return event.respondError("No commands found.")
 
 		val pager = EmbedEntirePagerBuilder()
+		pager.setColor(Colors.INFO)
 		pager.setEmbeds(
 			commands.map {
 				val embed = EmbedBuilder()
