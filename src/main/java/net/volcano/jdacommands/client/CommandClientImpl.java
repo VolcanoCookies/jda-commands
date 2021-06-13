@@ -140,7 +140,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 				User caller = event.getAuthor();
 				log.info("{}[{}] ran {}", caller.getAsTag(), caller.getId(), event.getMessage().getContentRaw());
 				
-			} catch (ArgumentParsingException e) {
+			} catch (ArgumentParsingException | InvalidArgumentsException e) {
 				
 				sendError(e, event);
 				
@@ -173,13 +173,13 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	 * @param argumentData the  data to parse
 	 * @return the parsed data
 	 */
-	private ParsedData parseAny(List<Command> commands, ArgumentParsingData argumentData) throws ArgumentParsingException,
+	private ParsedData parseAny(List<Command> commands, ArgumentParsingData argumentData) throws CommandException,
 			CommandNotFoundException {
 		
 		// The latest fully parsed command,
 		// where the last argument is a take-all
 		int longestParsedWithError = 0;
-		ArgumentParsingException exception = null;
+		CommandException exception = null;
 		
 		// Sort commands by longest argument chain first,
 		// And take all second
@@ -196,9 +196,14 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 				
 				return command.parseArguments(parsingData);
 				
-			} catch (MissingArgumentsException | InvalidArgumentsException | TooManyArgumentsException e) {
-				if (e.getArgumentIndex() > longestParsedWithError) {
-					longestParsedWithError = parsingData.currentArg;
+			} catch (MissingArgumentsException | TooManyArgumentsException e) {
+				if (e.getData().rawArguments[e.getArgumentIndex()].startIndex > longestParsedWithError) {
+					longestParsedWithError = e.getData().rawArguments[e.getArgumentIndex()].startIndex;
+					exception = e;
+				}
+			} catch (InvalidArgumentsException e) {
+				if (e.getErrorStartIndex() > longestParsedWithError) {
+					longestParsedWithError = e.getErrorStartIndex();
 					exception = e;
 				}
 			}
@@ -269,7 +274,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	 */
 	@Override
 	public ParsedData findAndParse(MessageReceivedEvent event, String content) throws CommandNotFoundException,
-			ArgumentParsingException, MissingPermissionsException {
+			CommandException {
 		
 		// Get the path
 		Matcher matcher = aliasSplitPattern.matcher(content);

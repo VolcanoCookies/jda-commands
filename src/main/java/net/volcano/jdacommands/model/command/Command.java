@@ -114,8 +114,7 @@ public class Command {
 	}
 	
 	public RestAction<?> call(CommandEvent event) throws InvocationTargetException,
-			IllegalAccessException,
-			CommandRuntimeException {
+			IllegalAccessException {
 		return method.invoke(event, event.data);
 	}
 	
@@ -152,7 +151,7 @@ public class Command {
 		BOTH
 	}
 	
-	public ParsedData parseArguments(ArgumentParsingData parsingData) throws ArgumentParsingException {
+	public ParsedData parseArguments(ArgumentParsingData parsingData) throws ArgumentParsingException, InvalidArgumentsException {
 		ParsedData data = arguments.parseArguments(parsingData);
 		data.command = this;
 		data.event = parsingData.event;

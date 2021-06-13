@@ -39,7 +39,7 @@ public interface CommandClient {
 	
 	boolean registerController(Object controller) throws CommandCompileException;
 	
-	ParsedData findAndParse(MessageReceivedEvent event, String content) throws CommandNotFoundException, ArgumentParsingException, MissingPermissionsException;
+	ParsedData findAndParse(MessageReceivedEvent event, String content) throws CommandNotFoundException, CommandException;
 	
 	default void call(CommandEvent event) {
 		try {

@@ -2,6 +2,7 @@ package net.volcano.jdacommands.model.command.arguments;
 
 import lombok.RequiredArgsConstructor;
 import net.volcano.jdacommands.exceptions.command.parsing.ArgumentParsingException;
+import net.volcano.jdacommands.exceptions.command.parsing.InvalidArgumentsException;
 import net.volcano.jdacommands.exceptions.command.parsing.MissingArgumentsException;
 import net.volcano.jdacommands.exceptions.command.parsing.TooManyArgumentsException;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
@@ -36,7 +37,7 @@ public class ArgumentList {
 		return commandArguments.size() > index ? commandArguments.get(index) : null;
 	}
 	
-	public ParsedData parseArguments(ArgumentParsingData argumentData) throws ArgumentParsingException {
+	public ParsedData parseArguments(ArgumentParsingData argumentData) throws ArgumentParsingException, InvalidArgumentsException {
 		
 		// If the input raw argument size is bigger than the expected argument size,
 		// And the last argument is a "Take All" argument,
