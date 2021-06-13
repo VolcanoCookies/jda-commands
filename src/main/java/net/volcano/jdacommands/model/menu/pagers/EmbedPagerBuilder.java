@@ -197,7 +197,6 @@ public abstract class EmbedPagerBuilder {
 		switch (type) {
 			case BOT:
 				return length <= MessageEmbed.EMBED_MAX_LENGTH_BOT;
-			case CLIENT:
 			default:
 				return length <= MessageEmbed.EMBED_MAX_LENGTH_CLIENT;
 		}
