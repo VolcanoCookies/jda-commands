@@ -402,8 +402,6 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			permissionClient.invokeCooldown(event.getAuthor(), event.getGuild(), event.command.permission);
 		} catch (InvocationTargetException | IllegalAccessException e) {
 			e.printStackTrace();
-		} catch (CommandRuntimeException e) {
-			terminate(event, e);
 		}
 		
 	}
