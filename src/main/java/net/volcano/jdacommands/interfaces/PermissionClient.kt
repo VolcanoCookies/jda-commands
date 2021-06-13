@@ -71,15 +71,10 @@ interface PermissionClient {
 
 class QueryResult(
 	val hasPermissions: Boolean,
-	val onCooldown: Boolean,
 	val cooldownExpiration: OffsetDateTime? = null
 ) {
 
+	val onCooldown = cooldownExpiration != null
 	val hasEffectivePermissions = hasPermissions && !onCooldown
 
-	constructor(hasPermissions: Boolean, cooldownExpiration: OffsetDateTime?) : this(
-		hasPermissions,
-		cooldownExpiration != null && cooldownExpiration.isAfter(OffsetDateTime.now()),
-		cooldownExpiration
-	)
 }
