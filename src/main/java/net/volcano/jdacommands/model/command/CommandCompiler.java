@@ -2,7 +2,10 @@ package net.volcano.jdacommands.model.command;
 
 import net.dv8tion.jda.api.requests.RestAction;
 import net.volcano.jdacommands.exceptions.command.CommandCompileException;
-import net.volcano.jdacommands.model.command.annotations.*;
+import net.volcano.jdacommands.model.command.annotations.BotOwnerCanAlwaysExecute;
+import net.volcano.jdacommands.model.command.annotations.CommandController;
+import net.volcano.jdacommands.model.command.annotations.CommandMethod;
+import net.volcano.jdacommands.model.command.annotations.Help;
 import net.volcano.jdacommands.model.command.arguments.ArgumentList;
 import net.volcano.jdacommands.model.command.arguments.CommandArgument;
 import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
@@ -120,13 +123,8 @@ public class CommandCompiler {
 			helpBuilder.usage(help.usage().equals("GENERATE") ? paths.get(0) + " " + argumentList.generateUsage() : help.usage());
 			helpBuilder.description(help.description());
 			helpBuilder.category(help.category());
-			
-			if (method.isAnnotationPresent(DetailedHelp.class)) {
-				DetailedHelp detailedHelp = method.getAnnotation(DetailedHelp.class);
-				
-				helpBuilder.details(detailedHelp.text());
-				helpBuilder.examples(detailedHelp.examples());
-			}
+			helpBuilder.examples(help.examples());
+			helpBuilder.details(help.details());
 			
 			builder.help(helpBuilder.build());
 		}

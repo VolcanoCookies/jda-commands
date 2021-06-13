@@ -15,5 +15,9 @@ public @interface Help {
 	
 	String category() default "general";
 	
+	String[] examples() default {};
+	
+	String details() default "";
+	
 }
 
