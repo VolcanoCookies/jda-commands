@@ -44,6 +44,7 @@ class Manual {
 				if (help.details.isNotBlank()) {
 					embed.setDescription(help.details)
 				}
+				embed.addField("Required permissions", "Command execution: `${it.permission}`", false)
 				embed
 			}
 		)
