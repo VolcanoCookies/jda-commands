@@ -23,7 +23,9 @@ class Manual {
 	)
 	fun manual(event: CommandEvent, command: String): RestAction<*>? {
 
-		val commands = event.client.rootCommandNode.findCommands(command).first
+		val strings = command.split(" ")
+
+		val commands = event.client.rootCommandNode.findCommands(*strings.toTypedArray()).first
 			.filter { it.help != null }
 
 		if (commands.isEmpty())
