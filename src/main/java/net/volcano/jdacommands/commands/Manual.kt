@@ -8,6 +8,7 @@ import net.volcano.jdacommands.model.command.annotations.CommandMethod
 import net.volcano.jdacommands.model.command.annotations.Help
 import net.volcano.jdacommands.model.menu.pagers.EmbedEntirePagerBuilder
 import net.volcano.jdautils.constants.Colors
+import net.volcano.jdautils.utils.StringUtil
 import java.time.Instant
 
 @CommandController
@@ -33,7 +34,7 @@ class Manual {
 		pager.setEmbeds(
 			commands.map {
 				val embed = EmbedBuilder()
-				embed.setTitle("Manual: ${it.paths[0]}")
+				embed.setTitle("Manual: ${StringUtil.capitalize(it.paths[0])}")
 				embed.setTimestamp(Instant.now())
 				embed.setColor(Colors.INFO)
 				val help = it.help
