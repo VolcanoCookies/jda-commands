@@ -104,6 +104,11 @@ public class Command {
 		 */
 		public final String category;
 		
+		/**
+		 * The permissions required to perform various tasks.
+		 */
+		public final String[] permissions;
+		
 	}
 	
 	/**

@@ -128,6 +128,7 @@ public class CommandCompiler {
 			helpBuilder.category(help.category());
 			helpBuilder.examples(help.examples());
 			helpBuilder.details(help.details());
+			helpBuilder.permissions(help.permissions());
 			
 			builder.help(helpBuilder.build());
 		}
