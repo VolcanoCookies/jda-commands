@@ -23,17 +23,10 @@ public class InvalidArgumentsException extends CommandException {
 	private final int errorStartIndex;
 	private final int errorLength;
 	
-	public InvalidArgumentsException(ArgumentParsingData data, int argumentIndex, String hint) {
-		this.hint = hint;
-		content = data.event.getMessage().getContentDisplay();
-		errorStartIndex = data.rawArguments[argumentIndex].startIndex;
-		errorLength = data.rawArguments[argumentIndex].value.length();
-	}
-	
 	public InvalidArgumentsException(ArgumentParsingData data, String hint) {
 		this.hint = hint;
-		content = data.event.getMessage().getContentDisplay();
-		errorStartIndex = data.rawArguments[data.currentArg].startIndex;
+		content = data.event.getMessage().getContentRaw();
+		errorStartIndex = data.rawArguments[data.currentArg].startIndex + data.rawPath.length() + data.rawPrefix.length();
 		errorLength = data.rawArguments[data.currentArg].value.length();
 	}
 	
@@ -56,7 +49,6 @@ public class InvalidArgumentsException extends CommandException {
 	
 	@Override
 	public List<EmbedAttachment> getAttachments() {
-		
 		var errorImage = ErrorImageGenerator.generateErrorImage(content, errorStartIndex, errorLength);
 		var os = new ByteArrayOutputStream();
 		try {

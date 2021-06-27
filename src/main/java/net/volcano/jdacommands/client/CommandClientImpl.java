@@ -278,7 +278,6 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	 * @throws CommandNotFoundException If no command was found for this path
 	 * @throws ArgumentParsingException If there was an error parsing all of the candidate commands
 	 */
-	@Override
 	public ParsedData findAndParse(MessageReceivedEvent event, String content) throws CommandNotFoundException,
 			CommandException {
 		
@@ -293,7 +292,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 				token = token.substring(1, token.length() - 1);
 			}
 			path.add(token);
-			pathIndexes.add(matcher.end());
+			pathIndexes.add(matcher.start());
 		}
 		
 		var pair = root.findCommands(path.toArray(new String[0]));
@@ -305,7 +304,13 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			throw new CommandNotFoundException();
 		}
 		
-		var parsingData = new ArgumentParsingData(event, pair.getSecond() == 0 ? "" : content.substring(pathIndexes.get(pathIndexes.size() - 1 - pair.getSecond())));
+		var divider = pair.getSecond() == 0 ? content.length() : pathIndexes.get(path.size() - pair.getSecond());
+		
+		var rawPrefix = event.getMessage().getContentRaw().substring(0, event.getMessage().getContentRaw().length() - content.length());
+		var rawPath = content.substring(0, divider);
+		var rawArguments = content.substring(divider);
+		
+		var parsingData = new ArgumentParsingData(event, rawPrefix, rawPath, rawArguments);
 		
 		if (commands.size() > 1) {
 			List<Command> permittedCommands = new ArrayList<>();
@@ -340,19 +345,13 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 				possibleCommands.addAll(commands);
 			}
 			
-			// Parse arguments to see which one gets further
-			for (Command command : possibleCommands) {
-				command.getArguments()
-						.parseArguments(parsingData.clone());
-			}
-			
 			var any = parseAny(possibleCommands, parsingData);
 			// Check if the user has permissions for this command
 			if (!any.command.getBotOwnerCanAlwaysExecute() || !event.getAuthor().getId().equals(getOwnerId())) {
 				checkPermissions(event, any.command);
 			}
 			
-			return parseAny(possibleCommands, parsingData);
+			return any;
 		} else {
 			// Exactly one command
 			Command command = commands.iterator().next();

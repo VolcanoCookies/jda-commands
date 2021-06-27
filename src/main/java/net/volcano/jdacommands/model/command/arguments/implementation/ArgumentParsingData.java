@@ -17,21 +17,22 @@ public class ArgumentParsingData {
 	
 	public RawArgument[] rawArguments;
 	
+	public String rawPrefix;
+	
+	public String rawPath;
+	
 	public String rawContent;
 	
 	public MessageReceivedEvent event;
 	
-	/**
-	 * @param event     The event resulting in this argument parser
-	 * @param arguments the content, on top of the command path, meaning the arguments
-	 */
-	public ArgumentParsingData(MessageReceivedEvent event, String arguments) {
-		arguments = arguments.trim();
+	public ArgumentParsingData(MessageReceivedEvent event, String rawPrefix, String rawPath, String rawContent) {
+		this.rawPrefix = rawPrefix;
+		this.rawPath = rawPath;
+		this.rawContent = rawContent;
 		this.event = event;
-		rawContent = arguments;
 		
 		List<RawArgument> argumentList = new ArrayList<>();
-		Matcher matcher = argumentPattern.matcher(arguments);
+		Matcher matcher = argumentPattern.matcher(rawContent.trim());
 		
 		while (matcher.find()) {
 			var rawArgumentBuilder = RawArgument.builder();
@@ -76,6 +77,8 @@ public class ArgumentParsingData {
 	public ArgumentParsingData clone() {
 		return new ArgumentParsingData(currentArg,
 				rawArguments,
+				rawPrefix,
+				rawPath,
 				rawContent,
 				event);
 	}
