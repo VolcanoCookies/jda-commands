@@ -48,7 +48,8 @@ class Manual {
 				if (help.details.isNotBlank()) {
 					embed.setDescription(help.details)
 				}
-				embed.addField("Required permissions", "Command execution: `${it.permission}`", false)
+				val permissions = listOf("Command execution: `${it.permission}`") + help.permissions
+				embed.addField("Required permissions", permissions.joinToString("\n"), false)
 				embed
 			}
 		)

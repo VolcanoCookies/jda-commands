@@ -19,5 +19,7 @@ public @interface Help {
 	
 	String details() default "";
 	
+	String[] permissions() default {};
+	
 }
 
