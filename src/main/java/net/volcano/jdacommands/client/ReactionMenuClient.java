@@ -72,7 +72,7 @@ public class ReactionMenuClient extends ListenerAdapter {
 		
 		Confirmation confirmation = new Confirmation(userId, null);
 		
-		channel.sendMessage(Confirmation.getEmbed(content).build())
+		channel.sendMessageEmbeds(Confirmation.getEmbed(content).build())
 				.queue(message -> {
 					message.addReaction(Reactions.YES).queue();
 					message.addReaction(Reactions.NO).queue();

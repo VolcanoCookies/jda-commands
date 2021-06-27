@@ -440,7 +440,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			event.getAuthor()
 					.openPrivateChannel()
 					.flatMap(c -> {
-						var action = c.sendMessage(e.getErrorEmbed().build());
+						var action = c.sendMessageEmbeds(e.getErrorEmbed().build());
 						for (EmbedAttachment attachment : e.getAttachments()) {
 							action = action.addFile(attachment.inputStream, attachment.name);
 						}
@@ -449,7 +449,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 					.queue();
 		} else {
 			
-			var action = event.getChannel().sendMessage(e.getErrorEmbed().build());
+			var action = event.getChannel().sendMessageEmbeds(e.getErrorEmbed().build());
 			for (EmbedAttachment attachment : e.getAttachments()) {
 				action = action.addFile(attachment.inputStream, attachment.name);
 			}

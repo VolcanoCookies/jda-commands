@@ -52,7 +52,7 @@ public class Confirmation extends Menu {
 					embedBuilder.setColor(bool ? Colors.YES : Colors.NO);
 					embedBuilder.setTitle("Action " + (bool ? "confirmed" : "cancelled"));
 					embedBuilder.setDescription("No further action required.");
-					return message.editMessage(embedBuilder.build());
+					return message.editMessageEmbeds(embedBuilder.build());
 				}).queue();
 	}
 	

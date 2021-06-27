@@ -65,7 +65,7 @@ public abstract class EmbedPager extends Menu {
 					
 					event.getChannel()
 							.retrieveMessageById(getMessageId())
-							.flatMap(message -> message.editMessage(getPage()))
+							.flatMap(message -> message.editMessageEmbeds(getPage()))
 							.queue();
 					
 				}

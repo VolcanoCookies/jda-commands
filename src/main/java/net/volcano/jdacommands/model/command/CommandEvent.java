@@ -68,7 +68,7 @@ public class CommandEvent extends MessageReceivedEvent {
 	 */
 	@CheckReturnValue
 	public MessageAction respond(EmbedBuilder embedBuilder) {
-		return getChannel().sendMessage(embedBuilder.build());
+		return getChannel().sendMessageEmbeds(embedBuilder.build());
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class CommandEvent extends MessageReceivedEvent {
 	public RestAction<Message> respond(EmbedPagerBuilder embedPagerBuilder) {
 		EmbedPager embedPager = embedPagerBuilder.build();
 		embedPager.setUserId(getAuthor().getId());
-		return getChannel().sendMessage(embedPager.getPage())
+		return getChannel().sendMessageEmbeds(embedPager.getPage())
 				.map(message -> {
 					embedPager.setMessageId(message.getId());
 					embedPager.postSend(message);
@@ -123,7 +123,7 @@ public class CommandEvent extends MessageReceivedEvent {
 	public RestAction<Message> respondPrivate(EmbedBuilder embedBuilder) {
 		return getAuthor()
 				.openPrivateChannel()
-				.flatMap(c -> c.sendMessage(embedBuilder.build()));
+				.flatMap(c -> c.sendMessageEmbeds(embedBuilder.build()));
 	}
 	
 	/**
@@ -240,7 +240,7 @@ public class CommandEvent extends MessageReceivedEvent {
 	@CheckReturnValue
 	public RestAction<?> askConfirmation(String content, User user, Consumer<Boolean> consumer) {
 		return user.openPrivateChannel()
-				.flatMap(c -> c.sendMessage(Confirmation.getEmbed(content).build()))
+				.flatMap(c -> c.sendMessageEmbeds(Confirmation.getEmbed(content).build()))
 				.map(message -> {
 					Confirmation confirmation = new Confirmation(message.getId(), user.getId());
 					client.getReactionMenuClient()
