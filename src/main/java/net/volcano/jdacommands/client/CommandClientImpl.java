@@ -23,11 +23,11 @@ import net.volcano.jdacommands.model.command.arguments.ParsedData;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 import net.volcano.jdacommands.model.command.arguments.implementation.CodecRegistryImpl;
 import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -72,7 +72,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	                         UserProvider userProvider,
 	                         GuildProvider guildProvider,
 	                         ReactionMenuClient reactionMenuClient,
-	                         PermissionClient permissionClient) throws ExecutionException, InterruptedException, IOException, FontFormatException {
+	                         PermissionClient permissionClient,
+	                         ApplicationContext context) throws ExecutionException, InterruptedException {
 		
 		this.permissionProvider = permissionProvider;
 		this.prefixProvider = prefixProvider;
@@ -84,10 +85,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		executorService = new ScheduledThreadPoolExecutor(1);
 		executorService.setMaximumPoolSize(10);
 		
-		codecRegistry = new CodecRegistryImpl();
+		codecRegistry = new CodecRegistryImpl(context);
 		commandCompiler = new CommandCompiler(codecRegistry);
-		
-		codecRegistry.loadDefaults();
 		
 		ownerId = jda.retrieveApplicationInfo()
 				.submit()
@@ -469,4 +468,9 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		}
 	}
 	
+	@Override
+	@Bean
+	public CodecRegistry getCodecRegistry() {
+		return codecRegistry;
+	}
 }

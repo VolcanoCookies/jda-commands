@@ -4,10 +4,12 @@ import net.volcano.jdacommands.model.command.annotations.argument.Regex;
 import net.volcano.jdacommands.model.command.arguments.CommandArgument;
 import net.volcano.jdacommands.model.command.arguments.implementation.argument.RegexArgument;
 import net.volcano.jdacommands.model.command.arguments.interfaces.Codec;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Parameter;
 import java.util.regex.Matcher;
 
+@Component
 public class RegexCodec extends Codec<Matcher> {
 	
 	@Override

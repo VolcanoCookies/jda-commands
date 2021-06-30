@@ -1,34 +1,41 @@
-package net.volcano.jdacommands.model.command.arguments.implementation;
+package net.volcano.jdacommands.model.command.arguments.implementation
 
-import net.volcano.jdacommands.model.command.arguments.interfaces.Codec;
-import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
+import net.volcano.jdacommands.model.command.arguments.interfaces.Codec
+import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.context.ApplicationContext
+import java.lang.reflect.ParameterizedType
 
-import javax.annotation.Nullable;
-import java.lang.reflect.ParameterizedType;
-import java.util.HashMap;
-import java.util.Map;
+class CodecRegistryImpl(
+	context: ApplicationContext
+) : CodecRegistry {
 
-public class CodecRegistryImpl implements CodecRegistry {
-	
-	private final Map<Class<?>, Codec<?>> codecMap = new HashMap<>();
-	
-	@Override
-	@Nullable
-	public <T> Codec<T> getCodec(Class<T> clazz) {
-		return (Codec<T>) codecMap.getOrDefault(clazz, null);
+	val log: Logger = LoggerFactory.getLogger(this::class.java)
+
+	private val codecMap: MutableMap<Class<*>, Codec<*>?> = HashMap()
+	override fun <T> getCodec(clazz: Class<T>): Codec<T>? {
+		return codecMap.getOrDefault(clazz, null) as Codec<T>?
 	}
-	
-	@Override
-	public <T> void registerCodec(Codec<T> codec) {
+
+	override fun <T> registerCodec(codec: Codec<T>) {
 		try {
-			Class<?> clazz = (Class<?>) ((ParameterizedType) codec.getClass().getGenericSuperclass())
-					.getActualTypeArguments()[0];
-			codecMap.put(clazz, codec);
-		} catch (ClassCastException e) {
-			Class<?> clazz = (Class<?>) ((ParameterizedType) ((ParameterizedType) codec.getClass().getGenericSuperclass())
-					.getActualTypeArguments()[0]).getRawType();
-			codecMap.put(clazz, codec);
+			val clazz = (codec.javaClass.genericSuperclass as ParameterizedType)
+				.actualTypeArguments[0] as Class<*>
+			codecMap[clazz] = codec
+		} catch (e: ClassCastException) {
+			val clazz = ((codec.javaClass.genericSuperclass as ParameterizedType)
+				.actualTypeArguments[0] as ParameterizedType).rawType as Class<*>
+			codecMap[clazz] = codec
 		}
 	}
-	
+
+	init {
+		for ((name, codex) in context.getBeansOfType(Codec::class.java)) {
+			registerCodec(codex)
+			log.info("Registered codex $name.")
+		}
+
+	}
+
 }

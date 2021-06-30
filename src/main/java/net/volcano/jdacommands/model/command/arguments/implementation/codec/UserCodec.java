@@ -6,10 +6,12 @@ import net.volcano.jdacommands.model.command.annotations.argument.Optional;
 import net.volcano.jdacommands.model.command.arguments.CommandArgument;
 import net.volcano.jdacommands.model.command.arguments.implementation.argument.UserArgument;
 import net.volcano.jdacommands.model.command.arguments.interfaces.Codec;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Parameter;
 
+@Component
 public class UserCodec extends Codec<User> {
 	
 	@Override
