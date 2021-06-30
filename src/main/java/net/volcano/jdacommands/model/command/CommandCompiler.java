@@ -97,7 +97,6 @@ public class CommandCompiler {
 				type = ClassUtil.dePrimitivize(params[i].getType());
 			} else {
 				type = params[i].getType();
-				
 			}
 			
 			var codec = registry.getCodec(type);
@@ -155,8 +154,18 @@ public class CommandCompiler {
 			throw new CommandCompileException(method, "Command permissions are empty, set some and provide them by default instead.");
 		}
 		
+		// Add command source
+		if (commandMethod.source() == Command.Source.DEFAULT) {
+			if (controller.source() == Command.Source.DEFAULT) {
+				builder.source(Command.Source.BOTH);
+			} else {
+				builder.source(controller.source());
+			}
+		} else {
+			builder.source(commandMethod.source());
+		}
+		
 		// Add misc values
-		builder.source(commandMethod.source());
 		builder.sensitive(commandMethod.sensitive());
 		builder.globalPermissions(commandMethod.global());
 		

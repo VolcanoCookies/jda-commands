@@ -153,7 +153,8 @@ public class Command {
 	public enum Source {
 		PRIVATE,
 		GUILD,
-		BOTH
+		BOTH,
+		DEFAULT
 	}
 	
 	public ParsedData parseArguments(ArgumentParsingData parsingData) throws ArgumentParsingException, InvalidArgumentsException {

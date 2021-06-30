@@ -1,5 +1,6 @@
 package net.volcano.jdacommands.model.command.annotations;
 
+import net.volcano.jdacommands.model.command.Command;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
 
@@ -26,5 +27,10 @@ public @interface CommandController {
 	 * @return base permissions required for any command under this controller
 	 */
 	String permissions() default "";
+	
+	/**
+	 * @return Base source to apply to all commands under this controller unless they specify otherwise
+	 */
+	net.volcano.jdacommands.model.command.Command.Source source() default Command.Source.DEFAULT;
 	
 }

@@ -1,5 +1,6 @@
 package net.volcano.jdacommands.model.command.annotations;
 
+import net.volcano.jdacommands.model.command.Command;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
@@ -17,7 +18,7 @@ public @interface CommandMethod {
 	
 	String permissions() default "";
 	
-	net.volcano.jdacommands.model.command.Command.Source source() default net.volcano.jdacommands.model.command.Command.Source.BOTH;
+	net.volcano.jdacommands.model.command.Command.Source source() default Command.Source.DEFAULT;
 	
 	boolean sensitive() default false;
 	
