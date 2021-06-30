@@ -159,9 +159,12 @@ public class CommandEvent extends MessageReceivedEvent {
 	 * @return a action ready for execution
 	 */
 	@CheckReturnValue
-	public MessageAction respondSuccess(String message) {
+	public MessageAction respondSuccess(String message, Field... fields) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
 		embedBuilder.setDescription("```diff\n+ Success +```\n" + message.trim());
+		for (Field field : fields) {
+			embedBuilder.addField(field.build());
+		}
 		embedBuilder.setColor(Colors.SUCCESS);
 		return respond(embedBuilder);
 	}
@@ -173,9 +176,12 @@ public class CommandEvent extends MessageReceivedEvent {
 	 * @return a action ready for execution
 	 */
 	@CheckReturnValue
-	public MessageAction respondInfo(String message) {
+	public MessageAction respondInfo(String message, Field... fields) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
 		embedBuilder.setDescription("```asciidoc\n= Info =```\n" + message.trim());
+		for (Field field : fields) {
+			embedBuilder.addField(field.build());
+		}
 		embedBuilder.setColor(Colors.INFO);
 		return respond(embedBuilder);
 	}
@@ -187,9 +193,12 @@ public class CommandEvent extends MessageReceivedEvent {
 	 * @return a action ready for execution
 	 */
 	@CheckReturnValue
-	public MessageAction respondError(String message) {
+	public MessageAction respondError(String message, Field... fields) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
 		embedBuilder.setDescription("```diff\n- ERROR -```\n" + message.trim());
+		for (Field field : fields) {
+			embedBuilder.addField(field.build());
+		}
 		embedBuilder.setColor(Colors.ERROR);
 		return respond(embedBuilder);
 	}
@@ -201,9 +210,12 @@ public class CommandEvent extends MessageReceivedEvent {
 	 * @return a action ready for execution
 	 */
 	@CheckReturnValue
-	public MessageAction respondPartialSuccess(String message) {
+	public MessageAction respondPartialSuccess(String message, Field... fields) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
 		embedBuilder.setDescription("```fix\nPartial Success```\n" + message.trim());
+		for (Field field : fields) {
+			embedBuilder.addField(field.build());
+		}
 		embedBuilder.setColor(Colors.ERROR);
 		return respond(embedBuilder);
 	}
