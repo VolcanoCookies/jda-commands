@@ -53,7 +53,8 @@ class Manual {
 				if (it.paths.size > 1)
 					embed.addField(
 						"Aliases",
-						it.paths.filter { it.lowercase() != command.lowercase() }.joinToString("\n") { p -> "`$p`" },
+						it.paths.filter { p -> p.lowercase() != command.lowercase() }
+							.joinToString("\n") { p -> "`$p`" },
 						false
 					)
 				embed
