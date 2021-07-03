@@ -50,6 +50,12 @@ class Manual {
 				}
 				val permissions = listOf("Command execution: `${it.permission}`") + help.permissions
 				embed.addField("Required permissions", permissions.joinToString("\n"), false)
+				if (it.paths.size > 1)
+					embed.addField(
+						"Aliases",
+						it.paths.toList().subList(1, it.paths.size).joinToString("\n") { p -> "`$p`" },
+						false
+					)
 				embed
 			}
 		)
