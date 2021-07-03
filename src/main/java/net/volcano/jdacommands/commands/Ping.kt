@@ -15,7 +15,7 @@ class Ping {
 
 	@CommandMethod(
 		path = ["ping"],
-		permissions = "ping"
+		permissions = "command.ping"
 	)
 	@Help(description = "Ping the bot.")
 	fun ping(event: CommandEvent): RestAction<*> {

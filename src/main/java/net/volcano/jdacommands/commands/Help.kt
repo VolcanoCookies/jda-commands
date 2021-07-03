@@ -18,7 +18,10 @@ class Help(
 ) {
 
 	@BotOwnerCanAlwaysExecute
-	@CommandMethod(path = ["help"], permissions = "command.help")
+	@CommandMethod(
+		path = ["help"],
+		permissions = "command.help"
+	)
 	@Help(description = "Show this embed.")
 	fun help(event: CommandEvent): RestAction<*> {
 

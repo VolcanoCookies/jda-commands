@@ -11,7 +11,7 @@ class Invite {
 
 	@CommandMethod(
 		path = ["invite"],
-		permissions = "invite"
+		permissions = "command.invite"
 	)
 	@Help(description = "Generate a invite link for the bot.")
 	fun invite(event: CommandEvent): RestAction<*> {
