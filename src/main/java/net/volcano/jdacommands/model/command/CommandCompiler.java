@@ -147,15 +147,13 @@ public class CommandCompiler {
 		if (!permissions.isBlank() && !commandMethod.permissions().isBlank()) {
 			permissions += ".";
 		}
-		if (!permissions.startsWith("command.")) {
-			permissions = "command." + permissions;
-		}
 		permissions += commandMethod.permissions();
-		builder.permission(permissions);
-		
 		if (permissions.isEmpty()) {
 			throw new CommandCompileException(method, "Command permissions are empty, set some and provide them by default instead.");
+		} else if (!permissions.startsWith("command.")) {
+			permissions = "command." + permissions;
 		}
+		builder.permission(permissions);
 		
 		// Add command source
 		if (commandMethod.source() == Command.Source.DEFAULT) {
