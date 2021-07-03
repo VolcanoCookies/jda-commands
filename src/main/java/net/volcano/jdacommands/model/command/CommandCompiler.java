@@ -147,6 +147,9 @@ public class CommandCompiler {
 		if (!permissions.isBlank() && !commandMethod.permissions().isBlank()) {
 			permissions += ".";
 		}
+		if (!permissions.startsWith("command.")) {
+			permissions = "command." + permissions;
+		}
 		permissions += commandMethod.permissions();
 		builder.permission(permissions);
 		
