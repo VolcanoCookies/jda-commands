@@ -3,10 +3,14 @@ package net.volcano.jdacommands.model.menu.pagers
 import lombok.Getter
 import lombok.Setter
 import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.MessageBuilder
+import net.dv8tion.jda.api.entities.Emoji
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
-import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent
-import net.dv8tion.jda.api.requests.RestAction
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
+import net.dv8tion.jda.api.interactions.components.ActionRow
+import net.dv8tion.jda.api.interactions.components.Button
+import net.dv8tion.jda.api.interactions.components.ButtonStyle
 import net.volcano.jdacommands.constants.Reactions
 import net.volcano.jdacommands.model.interaction.InteractionListener
 import net.volcano.jdautils.constants.EmbedLimit
@@ -28,13 +32,33 @@ abstract class EmbedPager(
 
 	abstract val size: Int
 
-	open fun postSend(message: Message): RestAction<*>? {
-		return null
+	fun postSend(message: Message) {
+
+		val builder = MessageBuilder(message)
+		builder.setActionRows(getActionRow())
+
+		message.editMessage(builder.build()).queue()
+	}
+
+	fun getActionRow(): ActionRow {
+		return ActionRow.of(
+			Button.of(ButtonStyle.PRIMARY, "first", "Start", Emoji.fromUnicode(Reactions.PAGE_START))
+				.withDisabled(currentPage == 0),
+			Button.of(ButtonStyle.PRIMARY, "prev", "Back", Emoji.fromUnicode(Reactions.PAGE_BACK))
+				.withDisabled(currentPage == 0),
+			Button.of(ButtonStyle.PRIMARY, "next", "Next", Emoji.fromUnicode(Reactions.PAGE_FORWARD))
+				.withDisabled(currentPage == size - 1),
+			Button.of(ButtonStyle.PRIMARY, "end", "End", Emoji.fromUnicode(Reactions.PAGE_END))
+				.withDisabled(currentPage == size - 1),
+			Button.of(ButtonStyle.PRIMARY, "download", "Download", Emoji.fromUnicode(Reactions.DOWNLOAD))
+				.withDisabled(download == null)
+		)
 	}
 
 	val page: MessageEmbed
 		get() = getPage(currentPage)
 
+	/*
 	override fun onInteraction(event: GenericMessageReactionEvent) {
 
 		if (event.userId != userId)
@@ -68,6 +92,44 @@ abstract class EmbedPager(
 					}.queue()
 			}
 
+		}
+
+	}
+	*/
+
+	override fun onInteraction(event: ButtonClickEvent) {
+
+		if (event.user.id != userId) {
+			event.reply("This embed does not belong to you!")
+				.setEphemeral(true)
+				.queue()
+			return
+		}
+
+		val prevPage = currentPage
+
+		var invalid = false
+		when (event.componentId) {
+			"first" -> currentPage = 0
+			"prev" -> currentPage = max(currentPage - 1, 0)
+			"next" -> currentPage = min(currentPage + 1, size - 1)
+			"end" -> currentPage = max(0, size - 1)
+			"download" -> {
+				download?.let {
+					event.channel
+						.sendFile(it, "download.txt")
+						.queue { download = null }
+				}
+			}
+			else -> {
+				invalid = true
+			}
+		}
+
+		if (!invalid) {
+			event.editMessageEmbeds(page)
+				.setActionRow(getActionRow().components)
+				.queue()
 		}
 
 	}
