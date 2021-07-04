@@ -15,11 +15,10 @@ import net.volcano.jdacommands.exceptions.command.run.PermissionsOnCooldownExcep
 import net.volcano.jdacommands.interfaces.CommandClient;
 import net.volcano.jdacommands.interfaces.QueryResult;
 import net.volcano.jdacommands.model.command.arguments.ParsedData;
-import net.volcano.jdacommands.model.menu.Confirmation;
+import net.volcano.jdacommands.model.interaction.Confirmation;
 import net.volcano.jdacommands.model.menu.pagers.EmbedPager;
 import net.volcano.jdacommands.model.menu.pagers.EmbedPagerBuilder;
 import net.volcano.jdautils.constants.Colors;
-import net.volcano.jdautils.constants.Reactions;
 import net.volcano.jdautils.utils.RoleUtil;
 import net.volcano.jdautils.utils.UserUtil;
 
@@ -101,14 +100,14 @@ public class CommandEvent extends MessageReceivedEvent {
 	 */
 	@CheckReturnValue
 	public RestAction<Message> respond(EmbedPagerBuilder embedPagerBuilder) {
+		embedPagerBuilder.setUserId(getAuthor().getId());
 		EmbedPager embedPager = embedPagerBuilder.build();
-		embedPager.setUserId(getAuthor().getId());
 		return getChannel().sendMessageEmbeds(embedPager.getPage())
 				.map(message -> {
 					embedPager.setMessageId(message.getId());
 					embedPager.postSend(message);
-					client.getReactionMenuClient()
-							.register(embedPager);
+					client.getInteractionClient()
+							.addListener(message, embedPager);
 					return message;
 				});
 	}
@@ -229,15 +228,12 @@ public class CommandEvent extends MessageReceivedEvent {
 	 */
 	@CheckReturnValue
 	public RestAction<?> askConfirmation(String content, Consumer<Boolean> consumer) {
-		return respond(Confirmation.getEmbed(content))
+		return getChannel().sendMessage(Confirmation.Companion.message(content))
 				.map(message -> {
-					Confirmation confirmation = new Confirmation(getAuthor().getId(), message.getId());
-					client.getReactionMenuClient()
-							.register(confirmation);
-					message.addReaction(Reactions.YES).queue();
-					message.addReaction(Reactions.NO).queue();
+					var confirmation = new Confirmation(getAuthor());
+					client.getInteractionClient().addListener(message, confirmation);
 					confirmation.getFuture().thenAcceptAsync(consumer);
-					return confirmation.getFuture();
+					return message;
 				});
 	}
 	
@@ -252,15 +248,12 @@ public class CommandEvent extends MessageReceivedEvent {
 	@CheckReturnValue
 	public RestAction<?> askConfirmation(String content, User user, Consumer<Boolean> consumer) {
 		return user.openPrivateChannel()
-				.flatMap(c -> c.sendMessageEmbeds(Confirmation.getEmbed(content).build()))
+				.flatMap(c -> c.sendMessage(Confirmation.Companion.message(content)))
 				.map(message -> {
-					Confirmation confirmation = new Confirmation(message.getId(), user.getId());
-					client.getReactionMenuClient()
-							.register(confirmation);
-					message.addReaction(Reactions.YES).queue();
-					message.addReaction(Reactions.NO).queue();
+					var confirmation = new Confirmation(user);
+					client.getInteractionClient().addListener(message, confirmation);
 					confirmation.getFuture().thenAcceptAsync(consumer);
-					return null;
+					return message;
 				});
 	}
 	

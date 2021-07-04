@@ -6,19 +6,23 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.requests.RestAction
 import net.volcano.jdacommands.constants.Reactions
 
-class EmbedEntirePager(
-	private val embeds: List<MessageEmbed>,
+class EmbedDescriptionPager(
+	private val pages: List<String>,
 	userId: String,
+	baseEmbed: EmbedBuilder,
 	download: ByteArray? = null,
 	currentPage: Int = 0,
 	expiration: Long = 60L * 30L,
-) : EmbedPager(userId, EmbedBuilder(), download, currentPage, expiration) {
+) : EmbedPager(userId, baseEmbed, download, currentPage, expiration) {
 
 	override val size: Int
-		get() = embeds.size
+		get() = pages.size
 
 	override fun getPage(page: Int): MessageEmbed {
-		return embeds[page]
+		val embedBuilder = EmbedBuilder(baseEmbed)
+		embedBuilder.setDescription(pages[page])
+		embedBuilder.setFooter(generateFooter())
+		return embedBuilder.build()
 	}
 
 	override fun postSend(message: Message): RestAction<*>? {

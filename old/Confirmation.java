@@ -2,7 +2,6 @@ package net.volcano.jdacommands.model.menu;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent;
-import net.volcano.jdacommands.model.menu.pagers.Menu;
 import net.volcano.jdautils.constants.Colors;
 import net.volcano.jdautils.constants.Reactions;
 

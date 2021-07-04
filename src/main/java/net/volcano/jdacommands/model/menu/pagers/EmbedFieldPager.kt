@@ -1,24 +1,32 @@
 package net.volcano.jdacommands.model.menu.pagers
 
+import lombok.Getter
+import lombok.Setter
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.requests.RestAction
 import net.volcano.jdacommands.constants.Reactions
 
-class EmbedEntirePager(
-	private val embeds: List<MessageEmbed>,
+@Getter
+@Setter
+class EmbedFieldPager(
+	private val fields: List<List<MessageEmbed.Field>>,
 	userId: String,
+	baseEmbed: EmbedBuilder,
 	download: ByteArray? = null,
 	currentPage: Int = 0,
 	expiration: Long = 60L * 30L,
-) : EmbedPager(userId, EmbedBuilder(), download, currentPage, expiration) {
+) : EmbedPager(userId, baseEmbed, download, currentPage, expiration) {
 
 	override val size: Int
-		get() = embeds.size
+		get() = fields.size
 
 	override fun getPage(page: Int): MessageEmbed {
-		return embeds[page]
+		val embedBuilder = EmbedBuilder(baseEmbed)
+		embedBuilder.setFooter(generateFooter())
+		fields[page].forEach { embedBuilder.addField(it) }
+		return embedBuilder.build()
 	}
 
 	override fun postSend(message: Message): RestAction<*>? {

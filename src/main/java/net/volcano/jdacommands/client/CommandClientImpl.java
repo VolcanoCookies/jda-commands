@@ -60,9 +60,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	
 	private final CommandCompiler commandCompiler;
 	private final CodecRegistry codecRegistry;
-	
-	private final ReactionMenuClient reactionMenuClient;
 	private final PermissionClient permissionClient;
+	private final InteractionClient interactionClient;
 	
 	private final String ownerId;
 	
@@ -71,16 +70,16 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	                         PrefixProvider prefixProvider,
 	                         UserProvider userProvider,
 	                         GuildProvider guildProvider,
-	                         ReactionMenuClient reactionMenuClient,
 	                         PermissionClient permissionClient,
+	                         InteractionClient interactionClient,
 	                         ApplicationContext context) throws ExecutionException, InterruptedException {
 		
 		this.permissionProvider = permissionProvider;
 		this.prefixProvider = prefixProvider;
 		this.userProvider = userProvider;
 		this.guildProvider = guildProvider;
-		this.reactionMenuClient = reactionMenuClient;
 		this.permissionClient = permissionClient;
+		this.interactionClient = interactionClient;
 		
 		executorService = new ScheduledThreadPoolExecutor(1);
 		executorService.setMaximumPoolSize(10);

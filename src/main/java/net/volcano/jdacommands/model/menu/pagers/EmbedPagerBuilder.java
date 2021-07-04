@@ -31,19 +31,21 @@ public abstract class EmbedPagerBuilder {
 	public final static String ZERO_WIDTH_SPACE = "\u200E";
 	public final static Pattern URL_PATTERN = Pattern.compile("\\s*(https?|attachment)://\\S+\\s*", Pattern.CASE_INSENSITIVE);
 	
-	private final List<MessageEmbed.Field> fields = new LinkedList<>();
-	private final StringBuilder description = new StringBuilder();
-	private int color = Role.DEFAULT_COLOR_RAW;
-	private String url, title;
-	private OffsetDateTime timestamp;
-	private MessageEmbed.Thumbnail thumbnail;
-	private MessageEmbed.AuthorInfo author;
-	private MessageEmbed.Footer footer;
-	private MessageEmbed.ImageInfo image;
+	protected final List<MessageEmbed.Field> fields = new LinkedList<>();
+	protected final StringBuilder description = new StringBuilder();
+	protected int color = Role.DEFAULT_COLOR_RAW;
+	protected String url, title;
+	protected OffsetDateTime timestamp;
+	protected MessageEmbed.Thumbnail thumbnail;
+	protected MessageEmbed.AuthorInfo author;
+	protected MessageEmbed.Footer footer;
+	protected MessageEmbed.ImageInfo image;
 	
-	private long expiration;
+	protected String userId;
 	
-	private byte[] download;
+	protected long expiration;
+	
+	protected byte[] download;
 	
 	public EmbedPagerBuilder() {
 	}

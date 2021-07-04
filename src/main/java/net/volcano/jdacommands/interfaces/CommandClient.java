@@ -1,6 +1,5 @@
 package net.volcano.jdacommands.interfaces;
 
-import net.volcano.jdacommands.client.ReactionMenuClient;
 import net.volcano.jdacommands.exceptions.command.CommandCompileException;
 import net.volcano.jdacommands.model.command.Command;
 import net.volcano.jdacommands.model.command.CommandCompiler;
@@ -31,7 +30,7 @@ public interface CommandClient {
 	
 	ScheduledThreadPoolExecutor getExecutorService();
 	
-	ReactionMenuClient getReactionMenuClient();
+	InteractionClient getInteractionClient();
 	
 	PermissionClient getPermissionClient();
 	
