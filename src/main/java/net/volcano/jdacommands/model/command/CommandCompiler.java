@@ -80,18 +80,23 @@ public class CommandCompiler {
 			}
 			
 			var isArray = params[i].getType().isArray();
-			var isEnum = params[i].getType().isEnum();
-			var isPrimitive = params[i].getType().isPrimitive();
+			
+			Class<?> type;
+			if (isArray) {
+				type = params[i].getType().componentType();
+			} else {
+				type = params[i].getType();
+			}
+			
+			var isEnum = type.isEnum();
+			var isPrimitive = type.isPrimitive();
 			//var isGeneric = ((ParameterizedType) ((ParameterizedType) params[i].getType().getGenericSuperclass()).getActualTypeArguments()[0]).getActualTypeArguments()[0] instanceof WildcardType;
 			
 			if (isArray && i != params.length - 1) {
 				throw new CommandCompileException(method, "Cannot have array argument as non last parameter");
 			}
 			
-			Class<?> type;
-			if (isArray) {
-				type = params[i].getType().componentType();
-			} else if (isEnum) {
+			if (isEnum) {
 				type = Enum.class;
 			} else if (isPrimitive) {
 				type = ClassUtil.dePrimitivize(params[i].getType());
