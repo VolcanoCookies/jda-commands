@@ -49,8 +49,8 @@ class EmbedDescriptionPagerBuilder : EmbedPagerBuilder {
 		this.pages.addAll(pages)
 	}
 
-	fun setPages(pages: MutableList<String>) {
-		this.pages = pages
+	fun setPages(pages: List<String>) {
+		this.pages = pages.toMutableList()
 		for (page in this.pages) {
 			check(page.length <= EmbedLimit.EMBED_DESCRIPTION_LIMIT) {
 				String.format(
