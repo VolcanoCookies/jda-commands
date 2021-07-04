@@ -17,7 +17,11 @@ public class EnumCodec extends Codec<Enum<?>> {
 			throw new IllegalArgumentException("Parameter type not instance of class");
 		}
 		
-		var enumClass = ((Class<Enum>) actualType);
+		var enumClass = ((Class<Enum>) parameter.getParameterizedType());
+		
+		if (enumClass.isArray()) {
+			enumClass = (Class<Enum>) enumClass.componentType();
+		}
 		
 		builder.options(enumClass.getEnumConstants());
 		
