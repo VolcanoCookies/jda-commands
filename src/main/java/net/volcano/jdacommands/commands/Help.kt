@@ -38,6 +38,7 @@ class Help(
 				else
 					it.filter { c -> c.source != Command.Source.GUILD }
 			}
+			.filter { it.help != null }
 
 		val pager = EmbedFieldPagerBuilder()
 		pager.setTitle("__**Help**__")
@@ -71,6 +72,7 @@ class Help(
 				else
 					it.filter { c -> c.source != Command.Source.GUILD }
 			}
+			.filter { it.help != null }
 			.filter {
 				it.help.category.lowercase() == category.lowercase()
 			}
