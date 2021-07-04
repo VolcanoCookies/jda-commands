@@ -17,7 +17,7 @@ public abstract class Codec<T> {
 		if (type != ClassUtil.stripWildcard(ClassUtil.getGenericType(getClass()))) {
 			throw new IllegalArgumentException("Invalid codec used for type.");
 		}
-		var arg = buildArgument(parameter, type);
+		var arg = buildArgument(parameter);
 		
 		arg.setNullable(parameter.isAnnotationPresent(Nullable.class));
 		
@@ -29,6 +29,6 @@ public abstract class Codec<T> {
 		
 	}
 	
-	protected abstract CommandArgument<T> buildArgument(Parameter parameter, Type actualType);
+	protected abstract CommandArgument<T> buildArgument(Parameter parameter);
 	
 }

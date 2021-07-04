@@ -6,13 +6,12 @@ import net.volcano.jdacommands.model.command.arguments.interfaces.Codec;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
 
 @Component
 public class DoubleCodec extends Codec<Double> {
 	
 	@Override
-	protected CommandArgument<Double> buildArgument(Parameter parameter, Type actualType) {
+	protected CommandArgument<Double> buildArgument(Parameter parameter) {
 		var builder = DoubleArgument.builder();
 		
 		return builder.build();

@@ -7,14 +7,13 @@ import net.volcano.jdacommands.model.command.arguments.interfaces.Codec;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
 import java.util.regex.Matcher;
 
 @Component
 public class RegexCodec extends Codec<Matcher> {
 	
 	@Override
-	protected CommandArgument<Matcher> buildArgument(Parameter parameter, Type actualType) {
+	protected CommandArgument<Matcher> buildArgument(Parameter parameter) {
 		var builder = RegexArgument.builder();
 		
 		if (parameter.isAnnotationPresent(Regex.class)) {
