@@ -10,12 +10,13 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 
 @Component
 public class MemberCodec extends Codec<Member> {
 	
 	@Override
-	public CommandArgument<Member> buildArgument(Parameter parameter) {
+	public CommandArgument<Member> buildArgument(Parameter parameter, Type actualType) {
 		var builder = MemberArgument.builder();
 		
 		if (parameter.isAnnotationPresent(Nullable.class)) {

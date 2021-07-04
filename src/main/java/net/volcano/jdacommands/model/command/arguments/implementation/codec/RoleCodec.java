@@ -7,12 +7,13 @@ import net.volcano.jdacommands.model.command.arguments.interfaces.Codec;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 
 @Component
 public class RoleCodec extends Codec<Role> {
 	
 	@Override
-	protected CommandArgument<Role> buildArgument(Parameter parameter) {
+	protected CommandArgument<Role> buildArgument(Parameter parameter, Type actualType) {
 		var builder = RoleArgument.builder();
 		
 		builder.sameGuild(true);
