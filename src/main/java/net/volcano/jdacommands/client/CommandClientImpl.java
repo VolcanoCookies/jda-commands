@@ -13,7 +13,6 @@ import net.volcano.jdacommands.exceptions.command.CommandCompileException;
 import net.volcano.jdacommands.exceptions.command.parsing.*;
 import net.volcano.jdacommands.exceptions.command.run.*;
 import net.volcano.jdacommands.interfaces.*;
-import net.volcano.jdacommands.model.EmbedAttachment;
 import net.volcano.jdacommands.model.command.Command;
 import net.volcano.jdacommands.model.command.CommandCompiler;
 import net.volcano.jdacommands.model.command.CommandEvent;
@@ -23,6 +22,7 @@ import net.volcano.jdacommands.model.command.arguments.ParsedData;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 import net.volcano.jdacommands.model.command.arguments.implementation.CodecRegistryImpl;
 import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
+import net.volcano.jdacommands.model.interaction.pager.EmbedAttachment;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
@@ -326,7 +326,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			
 			List<Command> possibleCommands = new ArrayList<>();
 			for (Command command : permittedCommands) {
-				if (parsingData.size() == command.getArguments().size()) {
+				if (parsingData.size() == command.getArguments().size() ||
+						(command.getArguments().lastIsArbitraryNumber && parsingData.size() >= command.getArguments().size())) {
 					possibleCommands.add(command);
 				}
 			}

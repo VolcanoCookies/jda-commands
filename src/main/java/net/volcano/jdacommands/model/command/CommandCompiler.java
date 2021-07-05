@@ -81,34 +81,33 @@ public class CommandCompiler {
 			
 			var isArray = params[i].getType().isArray();
 			
-			Class<?> type;
+			Class<?> actualType = params[i].getType();
 			if (isArray) {
-				type = params[i].getType().componentType();
-			} else {
-				type = params[i].getType();
+				actualType = actualType.componentType();
 			}
 			
-			var isEnum = type.isEnum();
-			var isPrimitive = type.isPrimitive();
+			var isEnum = actualType.isEnum();
+			var isPrimitive = actualType.isPrimitive();
 			//var isGeneric = ((ParameterizedType) ((ParameterizedType) params[i].getType().getGenericSuperclass()).getActualTypeArguments()[0]).getActualTypeArguments()[0] instanceof WildcardType;
 			
 			if (isArray && i != params.length - 1) {
 				throw new CommandCompileException(method, "Cannot have array argument as non last parameter");
 			}
 			
+			Class<?> codecType;
 			if (isEnum) {
-				type = Enum.class;
+				codecType = Enum.class;
 			} else if (isPrimitive) {
-				type = ClassUtil.dePrimitivize(params[i].getType());
+				codecType = ClassUtil.dePrimitivize(params[i].getType());
 			} else {
-				type = params[i].getType();
+				codecType = actualType;
 			}
 			
-			var codec = registry.getCodec(type);
+			var codec = registry.getCodec(codecType);
 			if (codec == null) {
-				throw new CommandCompileException(method, "Unsupported type for command argument; " + type);
+				throw new CommandCompileException(method, "Unsupported type for command argument; " + codecType);
 			} else {
-				arguments.add(codec.encodeArgument(params[i], type));
+				arguments.add(codec.encodeArgument(params[i], codecType, actualType));
 			}
 			
 			if (isArray) {

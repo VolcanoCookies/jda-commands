@@ -12,9 +12,9 @@ public abstract class Codec<T> {
 	
 	protected Class<? extends CommandArgument<T>> argumentClass;
 	
-	public CommandArgument<T> encodeArgument(Parameter parameter, Type type) {
+	public CommandArgument<T> encodeArgument(Parameter parameter, Type codecType, Type actualType) {
 		
-		if (type != ClassUtil.stripWildcard(ClassUtil.getGenericType(getClass()))) {
+		if (codecType != ClassUtil.stripWildcard(ClassUtil.getGenericType(getClass()))) {
 			throw new IllegalArgumentException("Invalid codec used for type.");
 		}
 		var arg = buildArgument(parameter);
@@ -24,6 +24,8 @@ public abstract class Codec<T> {
 		arg.setOptional(parameter.isAnnotationPresent(Optional.class));
 		
 		arg.setParameter(parameter);
+		
+		arg.setType(actualType);
 		
 		return arg;
 		

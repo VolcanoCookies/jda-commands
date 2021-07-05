@@ -8,6 +8,7 @@ import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentPa
 import net.volcano.jdautils.utils.StringUtil;
 
 import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 
 @Getter
 @Setter
@@ -33,6 +34,13 @@ public abstract class CommandArgument<T> {
 	 * The name of the parameter behind this argument
 	 */
 	protected Parameter parameter;
+	
+	/**
+	 * The type of this argument.
+	 * For arrays this is the component type.
+	 * For enums it will be the actual enum type and not Enum.class
+	 */
+	protected Type type;
 	
 	/**
 	 * How to actually parse the argument
