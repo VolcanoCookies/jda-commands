@@ -25,7 +25,10 @@ class Confirmation(
 	override fun onInteraction(event: ButtonClickEvent) {
 
 		if (event.user.id != userId) {
-			event.reply("You neither confirm, nor deny, this action!")
+			val embedBuilder = EmbedBuilder()
+			embedBuilder.setColor(Colors.ERROR)
+			embedBuilder.setDescription("```diff\n- You cannot confirm or deny this action! -```")
+			event.replyEmbeds(embedBuilder.build())
 				.setEphemeral(true)
 				.queue()
 			return
