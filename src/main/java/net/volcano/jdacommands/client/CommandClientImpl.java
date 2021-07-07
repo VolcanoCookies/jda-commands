@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.RestAction;
+import net.volcano.jdacommands.config.CategoryConfig;
 import net.volcano.jdacommands.constants.Reactions;
 import net.volcano.jdacommands.exceptions.command.CommandCompileException;
 import net.volcano.jdacommands.exceptions.command.parsing.*;
@@ -72,6 +73,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	                         GuildProvider guildProvider,
 	                         PermissionClient permissionClient,
 	                         InteractionClient interactionClient,
+	                         CategoryConfig categoryConfig,
 	                         ApplicationContext context) throws ExecutionException, InterruptedException {
 		
 		this.permissionProvider = permissionProvider;
@@ -85,7 +87,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		executorService.setMaximumPoolSize(10);
 		
 		codecRegistry = new CodecRegistryImpl(context);
-		commandCompiler = new CommandCompiler(codecRegistry);
+		commandCompiler = new CommandCompiler(codecRegistry, categoryConfig);
 		
 		ownerId = jda.retrieveApplicationInfo()
 				.submit()

@@ -1,6 +1,7 @@
 package net.volcano.jdacommands.model.command;
 
 import net.dv8tion.jda.api.requests.RestAction;
+import net.volcano.jdacommands.config.CategoryConfig;
 import net.volcano.jdacommands.exceptions.command.CommandCompileException;
 import net.volcano.jdacommands.model.command.annotations.BotOwnerCanAlwaysExecute;
 import net.volcano.jdacommands.model.command.annotations.CommandController;
@@ -20,9 +21,11 @@ import java.util.Set;
 public class CommandCompiler {
 	
 	private final CodecRegistry registry;
+	private final CategoryConfig config;
 	
-	public CommandCompiler(CodecRegistry registry) {
+	public CommandCompiler(CodecRegistry registry, CategoryConfig config) {
 		this.registry = registry;
+		this.config = config;
 	}
 	
 	public Set<Command> compile(Object controller) throws CommandCompileException {
@@ -129,6 +132,11 @@ public class CommandCompiler {
 			helpBuilder.usage(help.usage().equals("GENERATE") ? paths.get(0) + " " + argumentList.generateUsage() : help.usage());
 			helpBuilder.description(help.description());
 			helpBuilder.category(help.category());
+			if (config.emojis.containsKey(help.category().toLowerCase())) {
+				helpBuilder.emoji(config.emojis.get(help.category()));
+			} else {
+				throw new IllegalArgumentException("No emoji for category " + help.category());
+			}
 			helpBuilder.examples(help.examples());
 			helpBuilder.details(help.details());
 			helpBuilder.permissions(help.permissions());
