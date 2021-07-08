@@ -105,6 +105,11 @@ public class Command {
 		public final String category;
 		
 		/**
+		 * The emoji of this commands category
+		 */
+		public final String emoji;
+		
+		/**
 		 * The permissions required to perform various tasks.
 		 */
 		public final String[] permissions;

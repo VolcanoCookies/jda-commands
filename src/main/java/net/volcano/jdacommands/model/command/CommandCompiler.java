@@ -141,7 +141,7 @@ public class CommandCompiler {
 			if (config.emojis.containsKey(category.toLowerCase())) {
 				helpBuilder.emoji(config.emojis.get(category));
 			} else {
-				throw new IllegalArgumentException("No emoji for category " + help.category());
+				throw new CommandCompileException(method, "No emoji for category " + help.category());
 			}
 			helpBuilder.examples(help.examples());
 			helpBuilder.details(help.details());

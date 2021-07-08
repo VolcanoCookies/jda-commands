@@ -46,9 +46,11 @@ class Help(
 		commands.filter { it.help != null }
 			.groupBy { it.help.category }
 			.forEach { (cat, com) ->
-				pager.addField("", "__**Category: ${StringUtil.capitalize(cat)}**__")
-				com.sortedBy { it.usageFormatted.length }
-					.forEach { pager.addInlineField("**${it.usageFormatted}**", it.descriptionFormatted) }
+				pager.addOption(
+					cat,
+					com.joinToString("\n\n") { "**${it.usageFormatted}**\n${it.descriptionFormatted}" },
+					Emoji.fromUnicode(com.first().help.emoji)
+				)
 			}
 		pager.setColor(Colors.HELP)
 
