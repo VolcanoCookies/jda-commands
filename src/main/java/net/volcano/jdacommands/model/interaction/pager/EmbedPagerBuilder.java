@@ -1,4 +1,4 @@
-package net.volcano.jdacommands.model.menu.pagers;
+package net.volcano.jdacommands.model.interaction.pager;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.entities.EmbedType;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.internal.utils.Checks;
 import net.dv8tion.jda.internal.utils.Helpers;
 import net.volcano.jdautils.constants.EmbedLimit;
@@ -18,6 +19,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.time.*;
 import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -43,9 +45,11 @@ public abstract class EmbedPagerBuilder {
 	
 	protected String userId;
 	
-	protected long expiration;
+	protected long expiration = 30 * 60;
 	
 	protected byte[] download;
+	
+	protected List<Button> extraButtons = new ArrayList<>();
 	
 	public EmbedPagerBuilder() {
 	}
@@ -100,6 +104,11 @@ public abstract class EmbedPagerBuilder {
 	
 	public EmbedPagerBuilder setDownload(CharSequence content) {
 		download = content.toString().getBytes();
+		return this;
+	}
+	
+	public EmbedPagerBuilder addButton(Button button) {
+		extraButtons.add(button);
 		return this;
 	}
 	

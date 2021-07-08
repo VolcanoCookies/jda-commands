@@ -1,4 +1,4 @@
-package net.volcano.jdacommands.model.menu.pagers
+package net.volcano.jdacommands.model.interaction.pager
 
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
@@ -24,7 +24,7 @@ class EmbedDescriptionPagerBuilder : EmbedPagerBuilder {
 			}
 			check(embedBuilder.length() + page.length <= MessageEmbed.EMBED_MAX_LENGTH_BOT) { "Cannot build an embed with more than " + MessageEmbed.EMBED_MAX_LENGTH_BOT + " characters!" }
 		}
-		return EmbedDescriptionPager(pages, userId, embedBuilder, download, 0)
+		return EmbedDescriptionPager(pages, userId, embedBuilder, download, 0, extraButtons, expiration)
 	}
 
 	fun addPage(page: String) {

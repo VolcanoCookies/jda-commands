@@ -1,4 +1,4 @@
-package net.volcano.jdacommands.model.menu.pagers
+package net.volcano.jdacommands.model.interaction.pager
 
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.EmbedType

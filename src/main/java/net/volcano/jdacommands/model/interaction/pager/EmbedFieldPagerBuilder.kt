@@ -1,4 +1,4 @@
-package net.volcano.jdacommands.model.menu.pagers
+package net.volcano.jdacommands.model.interaction.pager
 
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
@@ -37,7 +37,7 @@ class EmbedFieldPagerBuilder : EmbedPagerBuilder {
 			list.add(field)
 		}
 		fields.add(list)
-		return EmbedFieldPager(fields, userId, embedBuilder.clearFields(), download, 0)
+		return EmbedFieldPager(fields, userId, embedBuilder.clearFields(), download, 0, extraButtons, expiration)
 	}
 
 }
