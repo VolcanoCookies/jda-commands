@@ -1,5 +1,6 @@
 package net.volcano.jdacommands.model.command;
 
+import kotlin.jvm.functions.Function1;
 import lombok.Builder;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -220,16 +221,16 @@ public class CommandEvent extends MessageReceivedEvent {
 	 * Create a yes/no prompt.
 	 * The prompt will last 5 minutes, after which it will default to {@code false}
 	 *
-	 * @param content  the contents of the prompt
-	 * @param consumer what to do with the answer
+	 * @param content   the contents of the prompt
+	 * @param generator what to do with the answer
 	 */
 	@CheckReturnValue
-	public RestAction<?> askConfirmation(String content, Consumer<Boolean> consumer) {
+	public RestAction<?> askConfirmation(String content, Function1<Boolean, Object> generator) {
 		return getChannel().sendMessage(Confirmation.Companion.message(content))
 				.map(message -> {
-					var confirmation = new Confirmation(getAuthor());
-					client.getInteractionClient().addListener(message, confirmation);
-					confirmation.getFuture().thenAcceptAsync(consumer);
+					var confirmation = new Confirmation(getAuthor(), generator);
+					client.getInteractionClient()
+							.addListener(message, confirmation);
 					return message;
 				});
 	}
@@ -243,13 +244,12 @@ public class CommandEvent extends MessageReceivedEvent {
 	 * @return a future that completes when a answer is provided.
 	 */
 	@CheckReturnValue
-	public RestAction<?> askConfirmation(String content, User user, Consumer<Boolean> consumer) {
+	public RestAction<?> askConfirmation(String content, User user, Function1<Boolean, Object> generator) {
 		return user.openPrivateChannel()
 				.flatMap(c -> c.sendMessage(Confirmation.Companion.message(content)))
 				.map(message -> {
-					var confirmation = new Confirmation(user);
+					var confirmation = new Confirmation(user, generator);
 					client.getInteractionClient().addListener(message, confirmation);
-					confirmation.getFuture().thenAcceptAsync(consumer);
 					return message;
 				});
 	}

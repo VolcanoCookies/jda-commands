@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.MessageBuilder
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
 import net.dv8tion.jda.api.interactions.components.ActionRow
@@ -12,15 +13,16 @@ import net.volcano.jdautils.constants.Colors
 import java.util.concurrent.CompletableFuture
 
 class Confirmation(
-	val userId: String
+	val userId: String,
+	val generator: (Boolean) -> Any?
 ) : InteractionListener(60L * 5L) {
 
 	val future: CompletableFuture<Boolean> = CompletableFuture()
 
 	private var expired = true
 
-	constructor(user: User) : this(user.id)
-	constructor(member: Member) : this(member.id)
+	constructor(user: User, generator: (Boolean) -> Any?) : this(user.id, generator)
+	constructor(member: Member, generator: (Boolean) -> Any?) : this(member.id, generator)
 
 	override fun onInteraction(event: ButtonClickEvent) {
 
@@ -47,15 +49,27 @@ class Confirmation(
 		event.deferReply(true)
 		future.complete(answer)
 
-		val embedBuilder = EmbedBuilder()
-		if (answer) {
-			embedBuilder.setColor(Colors.SUCCESS)
-			embedBuilder.setDescription("```diff\n+ Action confirmed. +```")
-		} else {
-			embedBuilder.setColor(Colors.ERROR)
-			embedBuilder.setDescription("```diff\n- Action denied. -```")
+		val message = generator.invoke(answer).let {
+			when (it) {
+				is Message -> it
+				is MessageBuilder -> it.build()
+				is EmbedBuilder -> MessageBuilder().setEmbeds(it.build()).build()
+				is MessageEmbed -> MessageBuilder().setEmbeds(it).build()
+				else -> {
+					val embedBuilder = EmbedBuilder()
+					if (answer) {
+						embedBuilder.setColor(Colors.SUCCESS)
+						embedBuilder.setDescription("```diff\n+ Action confirmed. +```")
+					} else {
+						embedBuilder.setColor(Colors.ERROR)
+						embedBuilder.setDescription("```diff\n- Action denied. -```")
+					}
+					MessageBuilder().setEmbeds(embedBuilder.build()).build()
+				}
+			}
 		}
-		event.replyEmbeds(embedBuilder.build())
+
+		event.reply(message)
 			.setEphemeral(true)
 			.queue()
 
