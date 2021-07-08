@@ -6,7 +6,7 @@ import net.volcano.jdacommands.model.command.CommandEvent
 import net.volcano.jdacommands.model.command.annotations.CommandController
 import net.volcano.jdacommands.model.command.annotations.CommandMethod
 import net.volcano.jdacommands.model.command.annotations.Help
-import net.volcano.jdacommands.model.menu.pagers.EmbedEntirePagerBuilder
+import net.volcano.jdacommands.model.interaction.pager.EmbedEntirePagerBuilder
 import net.volcano.jdautils.constants.Colors
 import net.volcano.jdautils.utils.StringUtil
 import java.time.Instant
