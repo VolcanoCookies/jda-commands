@@ -21,7 +21,7 @@ class Help(
 
 	@BotOwnerCanAlwaysExecute
 	@CommandMethod(
-		path = ["help"],
+		path = ["help", "h"],
 		permissions = "command.help"
 	)
 	@Help(
