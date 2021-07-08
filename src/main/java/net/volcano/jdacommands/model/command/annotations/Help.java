@@ -11,7 +11,7 @@ public @interface Help {
 	
 	String usage() default "GENERATE";
 	
-	String description() default "No description found, yell at Volcano#2343.";
+	String description();
 	
 	String category() default "DEFAULT";
 	
