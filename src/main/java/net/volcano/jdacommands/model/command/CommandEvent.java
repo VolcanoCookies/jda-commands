@@ -16,9 +16,10 @@ import net.volcano.jdacommands.interfaces.CommandClient;
 import net.volcano.jdacommands.interfaces.QueryResult;
 import net.volcano.jdacommands.model.command.arguments.ParsedData;
 import net.volcano.jdacommands.model.interaction.Confirmation;
+import net.volcano.jdacommands.model.interaction.menu.EmbedMenu;
+import net.volcano.jdacommands.model.interaction.menu.EmbedMenuBuilder;
 import net.volcano.jdacommands.model.interaction.pager.EmbedPager;
 import net.volcano.jdacommands.model.interaction.pager.EmbedPagerBuilder;
-import net.volcano.jdautils.constants.Colors;
 import net.volcano.jdautils.utils.RoleUtil;
 import net.volcano.jdautils.utils.UserUtil;
 
@@ -26,7 +27,6 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public class CommandEvent extends MessageReceivedEvent {
 	
@@ -108,6 +108,26 @@ public class CommandEvent extends MessageReceivedEvent {
 					embedPager.postSend(message);
 					client.getInteractionClient()
 							.addListener(message, embedPager);
+					return message;
+				});
+	}
+	
+	/**
+	 * Respond to the command caller in the same channel
+	 *
+	 * @param embedMenuBuilder the response
+	 * @return a message action
+	 */
+	@CheckReturnValue
+	public RestAction<Message> respond(EmbedMenuBuilder embedMenuBuilder) {
+		embedMenuBuilder.setUserId(getAuthor().getId());
+		EmbedMenu embedMenu = embedMenuBuilder.build();
+		return getChannel().sendMessageEmbeds(embedMenu.getFrontPage())
+				.map(message -> {
+					embedMenu.setMessageId(message.getId());
+					embedMenu.postSend(message);
+					client.getInteractionClient()
+							.addListener(message, embedMenu);
 					return message;
 				});
 	}

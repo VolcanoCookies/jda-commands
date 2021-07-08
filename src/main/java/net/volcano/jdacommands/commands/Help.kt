@@ -1,5 +1,6 @@
 package net.volcano.jdacommands.commands
 
+import net.dv8tion.jda.api.entities.Emoji
 import net.dv8tion.jda.api.requests.RestAction
 import net.volcano.jdacommands.interfaces.PermissionClient
 import net.volcano.jdacommands.model.command.Command
@@ -8,7 +9,8 @@ import net.volcano.jdacommands.model.command.annotations.BotOwnerCanAlwaysExecut
 import net.volcano.jdacommands.model.command.annotations.CommandController
 import net.volcano.jdacommands.model.command.annotations.CommandMethod
 import net.volcano.jdacommands.model.command.annotations.Help
-import net.volcano.jdacommands.model.menu.pagers.EmbedFieldPagerBuilder
+import net.volcano.jdacommands.model.interaction.menu.EmbedDescriptionMenuBuilder
+import net.volcano.jdacommands.model.interaction.pager.EmbedFieldPagerBuilder
 import net.volcano.jdautils.constants.Colors
 import net.volcano.jdautils.utils.StringUtil
 
@@ -40,7 +42,9 @@ class Help(
 			}
 			.filter { it.help != null }
 
-		val pager = EmbedFieldPagerBuilder()
+		val pager = EmbedDescriptionMenuBuilder()
+		pager.asReply = false
+		pager.ephemeral = true
 		pager.setTitle("__**Help**__")
 		pager.setFooter("<Required> [Optional]")
 		commands.filter { it.help != null }
@@ -55,7 +59,6 @@ class Help(
 		pager.setColor(Colors.HELP)
 
 		return event.respond(pager)
-
 	}
 
 	@CommandMethod(
@@ -83,7 +86,7 @@ class Help(
 		pager.setTitle("__**Help ${StringUtil.capitalize(category)}**__")
 		pager.setFooter("<Required> [Optional]")
 		commands.sortedBy { it.usageFormatted.length }
-			.forEach { pager.addInlineField("**${it.usageFormatted}**", it.descriptionFormatted) }
+			.forEach { pager.addField("**${it.usageFormatted}**", it.descriptionFormatted) }
 		pager.setColor(Colors.HELP)
 
 		return event.respond(pager)

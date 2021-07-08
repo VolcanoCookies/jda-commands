@@ -3,6 +3,7 @@ package net.volcano.jdacommands.client
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
+import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent
 import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.volcano.jdacommands.interfaces.InteractionClient
@@ -62,6 +63,15 @@ class InteractionClientImpl(
 	}
 
 	override fun onButtonClick(event: ButtonClickEvent) {
+		listeners[event.messageId]?.let {
+			if (Instant.now().epochSecond < it.expirationEpochSeconds)
+				it.onInteraction(event)
+			else
+				removeListener(event.messageId)
+		}
+	}
+
+	override fun onSelectionMenu(event: SelectionMenuEvent) {
 		listeners[event.messageId]?.let {
 			if (Instant.now().epochSecond < it.expirationEpochSeconds)
 				it.onInteraction(event)

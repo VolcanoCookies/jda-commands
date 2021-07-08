@@ -3,6 +3,7 @@ package net.volcano.jdacommands.model.interaction
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
+import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent
 import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent
 import net.dv8tion.jda.api.utils.TimeUtil
 import net.volcano.jdacommands.interfaces.InteractionClient
@@ -36,6 +37,8 @@ abstract class InteractionListener(
 	open fun onInteraction(event: ButtonClickEvent) {}
 
 	open fun onInteraction(event: GenericMessageReactionEvent) {}
+
+	open fun onInteraction(event: SelectionMenuEvent) {}
 
 	/**
 	 * Ran if the listener was registered using a message instance and not id.
