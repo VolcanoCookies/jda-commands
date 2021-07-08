@@ -13,7 +13,7 @@ public @interface Help {
 	
 	String description() default "No description found, yell at Volcano#2343.";
 	
-	String category() default "general";
+	String category() default "DEFAULT";
 	
 	String[] examples() default {};
 	

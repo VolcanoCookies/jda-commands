@@ -131,9 +131,15 @@ public class CommandCompiler {
 			
 			helpBuilder.usage(help.usage().equals("GENERATE") ? paths.get(0) + " " + argumentList.generateUsage() : help.usage());
 			helpBuilder.description(help.description());
-			helpBuilder.category(help.category());
-			if (config.emojis.containsKey(help.category().toLowerCase())) {
-				helpBuilder.emoji(config.emojis.get(help.category()));
+			var category = "";
+			if (help.category().equals("DEFAULT")) {
+				category = controller.category();
+			} else {
+				category = help.category();
+			}
+			helpBuilder.category(category);
+			if (config.emojis.containsKey(category.toLowerCase())) {
+				helpBuilder.emoji(config.emojis.get(category));
 			} else {
 				throw new IllegalArgumentException("No emoji for category " + help.category());
 			}

@@ -33,4 +33,9 @@ public @interface CommandController {
 	 */
 	net.volcano.jdacommands.model.command.Command.Source source() default Command.Source.DEFAULT;
 	
+	/**
+	 * The default category for this controller commands
+	 */
+	String category() default "general";
+	
 }
