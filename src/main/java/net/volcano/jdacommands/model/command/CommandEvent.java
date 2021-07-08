@@ -14,6 +14,7 @@ import net.volcano.jdacommands.exceptions.command.run.MissingPermissionsExceptio
 import net.volcano.jdacommands.exceptions.command.run.PermissionsOnCooldownException;
 import net.volcano.jdacommands.interfaces.CommandClient;
 import net.volcano.jdacommands.interfaces.QueryResult;
+import net.volcano.jdacommands.model.Templates;
 import net.volcano.jdacommands.model.command.arguments.ParsedData;
 import net.volcano.jdacommands.model.interaction.Confirmation;
 import net.volcano.jdacommands.model.interaction.menu.EmbedMenu;
@@ -179,13 +180,7 @@ public class CommandEvent extends MessageReceivedEvent {
 	 */
 	@CheckReturnValue
 	public MessageAction respondSuccess(String message, Field... fields) {
-		EmbedBuilder embedBuilder = new EmbedBuilder();
-		embedBuilder.setDescription("```diff\n+ Success +```\n" + message.trim());
-		for (Field field : fields) {
-			embedBuilder.addField(field.build());
-		}
-		embedBuilder.setColor(Colors.SUCCESS);
-		return respond(embedBuilder);
+		return respond(Templates.INSTANCE.success(message, fields));
 	}
 	
 	/**
@@ -196,13 +191,7 @@ public class CommandEvent extends MessageReceivedEvent {
 	 */
 	@CheckReturnValue
 	public MessageAction respondInfo(String message, Field... fields) {
-		EmbedBuilder embedBuilder = new EmbedBuilder();
-		embedBuilder.setDescription("```asciidoc\n= Info =```\n" + message.trim());
-		for (Field field : fields) {
-			embedBuilder.addField(field.build());
-		}
-		embedBuilder.setColor(Colors.INFO);
-		return respond(embedBuilder);
+		return respond(Templates.INSTANCE.info(message, fields));
 	}
 	
 	/**
@@ -213,13 +202,7 @@ public class CommandEvent extends MessageReceivedEvent {
 	 */
 	@CheckReturnValue
 	public MessageAction respondError(String message, Field... fields) {
-		EmbedBuilder embedBuilder = new EmbedBuilder();
-		embedBuilder.setDescription("```diff\n- ERROR -```\n" + message.trim());
-		for (Field field : fields) {
-			embedBuilder.addField(field.build());
-		}
-		embedBuilder.setColor(Colors.ERROR);
-		return respond(embedBuilder);
+		return respond(Templates.INSTANCE.error(message, fields));
 	}
 	
 	/**
@@ -230,13 +213,7 @@ public class CommandEvent extends MessageReceivedEvent {
 	 */
 	@CheckReturnValue
 	public MessageAction respondPartialSuccess(String message, Field... fields) {
-		EmbedBuilder embedBuilder = new EmbedBuilder();
-		embedBuilder.setDescription("```fix\nPartial Success```\n" + message.trim());
-		for (Field field : fields) {
-			embedBuilder.addField(field.build());
-		}
-		embedBuilder.setColor(Colors.ERROR);
-		return respond(embedBuilder);
+		return respond(Templates.INSTANCE.partialSuccess(message, fields));
 	}
 	
 	/**
