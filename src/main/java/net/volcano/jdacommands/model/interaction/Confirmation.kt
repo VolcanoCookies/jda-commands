@@ -91,7 +91,7 @@ class Confirmation(
 			val embedBuilder = EmbedBuilder()
 			embedBuilder.setTitle("Confirmation")
 			embedBuilder.setDescription(content)
-			embedBuilder.setColor(Colors.NOTES)
+			embedBuilder.setColor(Colors.INFO)
 			embedBuilder.setFooter("You have 5 minutes to respond, after which this confirmation will automatically be denied.")
 			val messageBuilder = MessageBuilder()
 			messageBuilder.setEmbeds(embedBuilder.build())
