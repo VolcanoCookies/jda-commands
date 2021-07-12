@@ -2,10 +2,8 @@ package net.volcano.jdacommands.model.interaction
 
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.MessageBuilder
-import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
-import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.Button
@@ -20,9 +18,6 @@ class Confirmation(
 	val future: CompletableFuture<Boolean> = CompletableFuture()
 
 	private var expired = true
-
-	constructor(user: User, generator: (Boolean) -> Any?) : this(user.id, generator)
-	constructor(member: Member, generator: (Boolean) -> Any?) : this(member.id, generator)
 
 	override fun onInteraction(event: ButtonClickEvent) {
 
