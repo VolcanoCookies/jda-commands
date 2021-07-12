@@ -43,7 +43,7 @@ public abstract class EmbedPagerBuilder {
 	protected MessageEmbed.Footer footer;
 	protected MessageEmbed.ImageInfo image;
 	
-	protected String userId;
+	public String userId;
 	
 	protected long expiration = 30 * 60;
 	
