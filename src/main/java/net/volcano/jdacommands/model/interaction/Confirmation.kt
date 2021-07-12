@@ -12,7 +12,8 @@ import java.util.concurrent.CompletableFuture
 
 class Confirmation(
 	val userId: String,
-	val generator: (Boolean) -> Any?
+	private val confirmGenerator: ((ButtonClickEvent) -> Any?)? = null,
+	private val denyGenerator: ((ButtonClickEvent) -> Any?)? = null
 ) : InteractionListener(60L * 5L) {
 
 	val future: CompletableFuture<Boolean> = CompletableFuture()
