@@ -44,31 +44,26 @@ class Confirmation(
 		event.deferReply(true)
 		future.complete(answer)
 
-		val message = generator.invoke(answer).let {
+		val message = if (answer) {
+			confirmGenerator?.invoke(event)
+		} else {
+			denyGenerator?.invoke(event)
+		}?.let {
 			when (it) {
 				is Message -> it
 				is MessageBuilder -> it.build()
 				is EmbedBuilder -> MessageBuilder().setEmbeds(it.build()).build()
 				is MessageEmbed -> MessageBuilder().setEmbeds(it).build()
-				else -> {
-					val embedBuilder = EmbedBuilder()
-					if (answer) {
-						embedBuilder.setColor(Colors.SUCCESS)
-						embedBuilder.setDescription("```diff\n+ Action confirmed. +```")
-					} else {
-						embedBuilder.setColor(Colors.ERROR)
-						embedBuilder.setDescription("```diff\n- Action denied. -```")
-					}
-					MessageBuilder().setEmbeds(embedBuilder.build()).build()
-				}
+				else -> generateDefault(answer)
 			}
-		}
+		} ?: generateDefault(answer)
 
 		event.reply(message)
 			.setEphemeral(true)
 			.queue()
 
 		event.message?.let { removeSelf(it) } ?: removeSelf()
+
 	}
 
 	override fun destruct(message: Message) {
@@ -81,6 +76,18 @@ class Confirmation(
 	}
 
 	companion object {
+
+		fun generateDefault(answer: Boolean): Message {
+			val embedBuilder = EmbedBuilder()
+			if (answer) {
+				embedBuilder.setColor(Colors.SUCCESS)
+				embedBuilder.setDescription("```diff\n+ Action confirmed. +```")
+			} else {
+				embedBuilder.setColor(Colors.ERROR)
+				embedBuilder.setDescription("```diff\n- Action denied. -```")
+			}
+			return MessageBuilder().setEmbeds(embedBuilder.build()).build()
+		}
 
 		fun message(content: String): Message {
 			val embedBuilder = EmbedBuilder()
