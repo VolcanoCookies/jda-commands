@@ -32,7 +32,12 @@ class Help(
 
 		val commands = event.client.allCommands
 			.filter {
-				permissionClient.checkPermissions(event.author, event.guild, it.permission).hasPermissions
+				permissionClient.checkPermissions(
+					it.permission,
+					event.author,
+					event.guild,
+					event.textChannel
+				).hasPermissions
 			}
 			.let {
 				if (event.isFromGuild)
@@ -69,7 +74,12 @@ class Help(
 
 		val commands = event.client.allCommands
 			.filter {
-				permissionClient.checkPermissions(event.author, event.guild, it.permission).hasPermissions
+				permissionClient.checkPermissions(
+					it.permission,
+					event.author,
+					event.guild,
+					event.textChannel
+				).hasPermissions
 			}
 			.let {
 				if (event.isFromGuild)
