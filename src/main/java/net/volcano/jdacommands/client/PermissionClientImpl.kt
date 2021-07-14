@@ -1,6 +1,7 @@
 package net.volcano.jdacommands.client
 
 import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.User
 import net.volcano.jdacommands.interfaces.PermissionClient
 import net.volcano.jdacommands.interfaces.PermissionProvider
@@ -21,8 +22,8 @@ class PermissionClientImpl(
 	// UserID -> Path -> Expiration Time
 	private val globalCooldowns = mutableMapOf<String, MutableMap<String, OffsetDateTime>>()
 
-	override fun checkPermissions(user: User, guild: Guild?, permission: String): QueryResult {
-		val perms = PermissionTree(provider.getPermissions(user, guild))
+	override fun checkPermissions(permission: String, user: User, guild: Guild?, channel: TextChannel?): QueryResult {
+		val perms = PermissionTree(provider.getPermissions(user, guild, channel))
 		return QueryResult(
 			perms.contains(permission) || provider.isOverriding(user.id),
 			getCooldown(user, guild, permission)

@@ -2,6 +2,7 @@ package net.volcano.jdacommands.interfaces
 
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.User
 import java.time.OffsetDateTime
 
@@ -10,14 +11,19 @@ interface PermissionClient {
 	/**
 	 * Check a [member]s [permission] without triggering any cooldowns.
 	 */
-	fun checkPermissions(member: Member, permission: String): QueryResult {
-		return checkPermissions(member.user, member.guild, permission)
+	fun checkPermissions(permission: String, member: Member, channel: TextChannel? = null): QueryResult {
+		return checkPermissions(permission, member.user, member.guild, channel)
 	}
 
 	/**
 	 * Check a [user]s [permission] without triggering any cooldowns.
 	 */
-	fun checkPermissions(user: User, guild: Guild?, permission: String): QueryResult
+	fun checkPermissions(
+		permission: String,
+		user: User,
+		guild: Guild? = null,
+		channel: TextChannel? = null
+	): QueryResult
 
 	/**
 	 * Put this [member]s [permission] on cooldown for the specified [time] of seconds.
