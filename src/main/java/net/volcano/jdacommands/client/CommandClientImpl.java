@@ -26,6 +26,7 @@ import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
 import net.volcano.jdacommands.model.interaction.pager.EmbedAttachment;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
@@ -63,6 +64,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	private final CodecRegistry codecRegistry;
 	private final PermissionClient permissionClient;
 	private final InteractionClient interactionClient;
+	@Nullable
+	private final Extension extension;
 	
 	private final String ownerId;
 	
@@ -74,6 +77,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	                         PermissionClient permissionClient,
 	                         InteractionClient interactionClient,
 	                         CategoryConfig categoryConfig,
+	                         @Nullable Extension extension,
 	                         ApplicationContext context) throws ExecutionException, InterruptedException {
 		
 		this.permissionProvider = permissionProvider;
@@ -82,6 +86,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		this.guildProvider = guildProvider;
 		this.permissionClient = permissionClient;
 		this.interactionClient = interactionClient;
+		this.extension = extension;
 		
 		executorService = new ScheduledThreadPoolExecutor(1);
 		executorService.setMaximumPoolSize(10);
@@ -133,7 +138,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 				
 				var data = findAndParse(event, finalContent);
 				
-				var commandEvent = new CommandEvent(this, data);
+				var commandEvent = new CommandEvent(this, data, extension);
 				
 				executeCommand(commandEvent);
 				
@@ -315,7 +320,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		if (commands.size() > 1) {
 			List<Command> permittedCommands = new ArrayList<>();
 			for (Command command : commands) {
-				if (permissionClient.checkPermissions(event.getAuthor(), event.isFromGuild() ? event.getGuild() : null, command.permission).getHasPermissions()) {
+				if (permissionClient.checkPermissions(command.permission, event.getAuthor(), event.isFromGuild() ? event.getGuild() : null, event.isFromGuild() ? event.getTextChannel() : null).getHasPermissions()) {
 					permittedCommands.add(command);
 				}
 			}
@@ -377,7 +382,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		
 		if (!botOwnerOverriding) {
 			// Check if the user has permissions
-			val queryResult = permissionClient.checkPermissions(event.getAuthor(), event.getGuild(), event.command.permission);
+			val queryResult = permissionClient.checkPermissions(event.command.permission, event.getAuthor(), event.getGuild(), event.getTextChannel());
 			if (!queryResult.getHasPermissions()) {
 				try {
 					checkPermissions(event, event.command);
@@ -460,7 +465,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	
 	private void checkPermissions(MessageReceivedEvent event, Command command) throws PermissionsOnCooldownException, MissingPermissionsException {
 		var guild = event.isFromGuild() ? event.getGuild() : null;
-		var queryResult = permissionClient.checkPermissions(event.getAuthor(), guild, command.permission);
+		var queryResult = permissionClient.checkPermissions(command.permission, event.getAuthor(), guild, event.isFromGuild() ? event.getTextChannel() : null);
 		if (!queryResult.getHasPermissions()) {
 			if (queryResult.getCooldownExpiration() != null) {
 				throw new PermissionsOnCooldownException(guild, command.permission, queryResult.getCooldownExpiration());
