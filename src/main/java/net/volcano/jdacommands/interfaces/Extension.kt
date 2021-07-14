@@ -1,4 +1,3 @@
 package net.volcano.jdacommands.interfaces
 
-interface Extension {
-}
+open class Extension
