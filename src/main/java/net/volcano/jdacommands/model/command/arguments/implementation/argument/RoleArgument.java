@@ -14,7 +14,7 @@ public class RoleArgument extends CommandArgument<Role> {
 	
 	@Override
 	public Role parseValue(ArgumentParsingData data) throws InvalidArgumentsException {
-		Role role = RoleUtil.findRole(data.getArg(), data.event.getJDA(), data.event.isFromGuild() ? data.event.getGuild() : null);
+		Role role = RoleUtil.findRole(data.getArg(), data.event.getJDA(), data.event.isFromGuild() && sameGuild ? data.event.getGuild() : null);
 		if (role != null || nullable) {
 			return role;
 		} else {

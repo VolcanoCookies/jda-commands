@@ -21,7 +21,6 @@ public class CommandFunction {
 	protected RestAction<?> invoke(CommandEvent event, ParsedData data) throws InvocationTargetException,
 			IllegalAccessException {
 		
-		Object returned;
 		Object[] args = new Object[argumentCount];
 		
 		int i = 0;
@@ -33,7 +32,7 @@ public class CommandFunction {
 		}
 		
 		try {
-			returned = method.invoke(instance, args);
+			Object returned = method.invoke(instance, args);
 			if (returned instanceof RestAction) {
 				return (RestAction<?>) returned;
 			}

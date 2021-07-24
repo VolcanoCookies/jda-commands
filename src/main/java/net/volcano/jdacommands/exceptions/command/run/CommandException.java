@@ -2,7 +2,7 @@ package net.volcano.jdacommands.exceptions.command.run;
 
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.volcano.jdacommands.model.interaction.pager.EmbedAttachment;
+import net.volcano.jdacommands.model.EmbedAttachment;
 import net.volcano.jdautils.constants.Colors;
 
 import java.time.Instant;

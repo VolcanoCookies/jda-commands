@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import net.volcano.jdacommands.exceptions.command.parsing.InvalidArgumentsException;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
-import net.volcano.jdautils.utils.StringUtil;
+import net.volcano.jdautils.utils.StringUtilKt;
 
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
@@ -18,29 +18,29 @@ public abstract class CommandArgument<T> {
 	/**
 	 * The usage of this argument
 	 */
-	protected String usage;
+	public String usage;
 	
 	/**
 	 * If the value is allowed to be missing
 	 */
-	protected Boolean optional;
+	public Boolean optional;
 	
 	/**
 	 * If the value is allowed to resolve to {@code null}
 	 */
-	protected Boolean nullable;
+	public Boolean nullable;
 	
 	/**
 	 * The name of the parameter behind this argument
 	 */
-	protected Parameter parameter;
+	public Parameter parameter;
 	
 	/**
 	 * The type of this argument.
 	 * For arrays this is the component type.
 	 * For enums it will be the actual enum type and not Enum.class
 	 */
-	protected Type type;
+	public Type type;
 	
 	/**
 	 * How to actually parse the argument
@@ -51,6 +51,15 @@ public abstract class CommandArgument<T> {
 	public abstract T parseValue(ArgumentParsingData data) throws InvalidArgumentsException;
 	
 	public String getUsage() {
-		return "<" + StringUtil.cameCaseToSpaces(StringUtil.capitalize(parameter.getName())) + ">";
+		
+		// Get usage, provided or generated from parameter name.
+		var u = usage != null ? usage : StringUtilKt.camelCaseToSpaces(StringUtilKt.capitalize(parameter.getName()));
+		
+		if (optional) {
+			return "[" + u + "]";
+		} else {
+			return "<" + u + ">";
+		}
 	}
+	
 }

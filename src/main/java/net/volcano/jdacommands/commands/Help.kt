@@ -12,7 +12,7 @@ import net.volcano.jdacommands.model.command.annotations.Help
 import net.volcano.jdacommands.model.interaction.menu.EmbedDescriptionMenuBuilder
 import net.volcano.jdacommands.model.interaction.pager.EmbedFieldPagerBuilder
 import net.volcano.jdautils.constants.Colors
-import net.volcano.jdautils.utils.StringUtil
+import net.volcano.jdautils.utils.capitalize
 
 @CommandController
 class Help(
@@ -93,7 +93,7 @@ class Help(
 			}
 
 		val pager = EmbedFieldPagerBuilder()
-		pager.setTitle("__**Help ${StringUtil.capitalize(category)}**__")
+		pager.setTitle("__**Help ${category.capitalize()}**__")
 		pager.setFooter("<Required> [Optional]")
 		commands.sortedBy { it.usageFormatted.length }
 			.forEach { pager.addField("**${it.usageFormatted}**", it.descriptionFormatted) }

@@ -7,7 +7,7 @@ import net.volcano.jdacommands.exceptions.command.parsing.MissingArgumentsExcept
 import net.volcano.jdacommands.exceptions.command.parsing.TooManyArgumentsException;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 import net.volcano.jdacommands.model.command.arguments.implementation.RawArgument;
-import net.volcano.jdautils.utils.ListUtil;
+import net.volcano.jdautils.utils.ListUtilKt;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ import java.util.List;
 @SuppressWarnings("rawtypes")
 public class ArgumentList {
 	
-	protected final List<CommandArgument> commandArguments;
+	public final List<CommandArgument> commandArguments;
 	
 	public final boolean lastIsArbitraryNumber;
 	
@@ -27,7 +27,7 @@ public class ArgumentList {
 	 * @return the usage string
 	 */
 	public String generateUsage() {
-		return ListUtil.asString(" ", commandArguments, CommandArgument::getUsage);
+		return ListUtilKt.asString(commandArguments, " ", CommandArgument::getUsage);
 	}
 	
 	public int size() {

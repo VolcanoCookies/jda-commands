@@ -15,6 +15,10 @@ public class UserArgument extends CommandArgument<User> {
 	@Override
 	public User parseValue(ArgumentParsingData data) throws InvalidArgumentsException {
 		User user = UserUtil.findUser(data.getArg(), data.event.getJDA(), data.event.isFromGuild() ? data.event.getGuild() : null);
+		
+		if (user == null && defaultToCaller)
+			user = data.event.getAuthor();
+		
 		if (user != null || nullable) {
 			return user;
 		} else {

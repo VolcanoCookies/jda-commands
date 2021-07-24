@@ -1,18 +1,25 @@
 package net.volcano.jdacommands.model.command.arguments.implementation.codec;
 
+import net.volcano.jdacommands.model.ParameterData;
+import net.volcano.jdacommands.model.command.annotations.argument.Arg;
 import net.volcano.jdacommands.model.command.arguments.CommandArgument;
 import net.volcano.jdacommands.model.command.arguments.implementation.argument.IntegerArgument;
 import net.volcano.jdacommands.model.command.arguments.interfaces.Codec;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Parameter;
-
 @Component
 public class IntegerCodec extends Codec<Integer> {
 	
 	@Override
-	protected CommandArgument<Integer> buildArgument(Parameter parameter) {
+	protected CommandArgument<Integer> buildArgument(ParameterData data) {
 		var builder = IntegerArgument.builder();
+		
+		var arg = data.parameter.getAnnotation(Arg.class);
+		
+		if (arg != null) {
+			builder.min((int) arg.min());
+			builder.max((int) arg.max());
+		}
 		
 		return builder.build();
 	}

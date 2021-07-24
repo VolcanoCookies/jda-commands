@@ -16,6 +16,10 @@ public class MemberArgument extends CommandArgument<Member> {
 	@Override
 	public Member parseValue(ArgumentParsingData data) throws InvalidArgumentsException {
 		User user = UserUtil.findUser(data.getArg(), data.event.getJDA(), data.event.isFromGuild() ? data.event.getGuild() : null);
+		
+		if (user == null && defaultToCaller)
+			user = data.event.getAuthor();
+		
 		if (user == null && nullable) {
 			return null;
 		} else if (user != null && data.event.isFromGuild()) {
@@ -24,6 +28,7 @@ public class MemberArgument extends CommandArgument<Member> {
 				return member;
 			}
 		}
+		
 		throw new InvalidArgumentsException(data, String.format("Member \"%s\" not found.", data.getArg()));
 	}
 	

@@ -8,7 +8,8 @@ import net.volcano.jdacommands.model.command.annotations.CommandMethod
 import net.volcano.jdacommands.model.command.annotations.Help
 import net.volcano.jdacommands.model.interaction.pager.EmbedEntirePagerBuilder
 import net.volcano.jdautils.constants.Colors
-import net.volcano.jdautils.utils.StringUtil
+import net.volcano.jdautils.utils.capitalize
+import net.volcano.jdautils.utils.capitalizeFirst
 import java.time.Instant
 
 @CommandController
@@ -35,27 +36,42 @@ class Manual {
 		pager.setColor(Colors.INFO)
 		pager.setEmbeds(
 			commands.map {
+
 				val embed = EmbedBuilder()
-				embed.setTitle("Manual: ${StringUtil.capitalize(it.paths[0])}")
+				embed.setTitle("Manual: ${it.paths[0].capitalize()}")
 				embed.setTimestamp(Instant.now())
 				embed.setColor(Colors.INFO)
+
 				val help = it.help
 				embed.addField("Usage", it.usageFormatted, false)
+				val parameters = it.arguments.commandArguments.joinToString(" ") { p ->
+					val u = "${p.type.typeName.capitalizeFirst()} : ${p.usage}"
+					if (p.optional) {
+						"[$u]"
+					} else {
+						"<$u>"
+					}
+				}
+				embed.addField("Arguments", parameters, false)
 				embed.addField("Short Description", it.descriptionFormatted, false)
 				embed.addField("Category", help.category, false)
+
 				if (help.examples.isNotEmpty())
 					embed.addField("Examples", help.examples.joinToString("\n"), false)
 				if (help.details.isNotBlank()) {
 					embed.setDescription(help.details)
 				}
+
 				val permissions = listOf("Command execution: `${it.permission}`") + help.permissions
 				embed.addField("Required permissions", permissions.joinToString("\n"), false)
+
 				if (it.paths.size > 1)
 					embed.addField(
 						"Aliases",
 						it.paths.joinToString("\n"),
 						false
 					)
+
 				embed
 			}
 		)

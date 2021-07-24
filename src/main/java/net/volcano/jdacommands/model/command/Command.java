@@ -63,7 +63,7 @@ public class Command {
 	/**
 	 * The arguments for this command
 	 */
-	protected final ArgumentList arguments;
+	public final ArgumentList arguments;
 	
 	/**
 	 * The method to call when this command should be executed

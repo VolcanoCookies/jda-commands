@@ -2,8 +2,8 @@ package net.volcano.jdacommands.exceptions.command.parsing;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.volcano.jdacommands.ErrorImageGenerator;
+import net.volcano.jdacommands.model.EmbedAttachment;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
-import net.volcano.jdacommands.model.interaction.pager.EmbedAttachment;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;

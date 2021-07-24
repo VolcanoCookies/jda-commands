@@ -3,6 +3,7 @@ package net.volcano.jdacommands.model.command;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.volcano.jdacommands.config.CategoryConfig;
 import net.volcano.jdacommands.exceptions.command.CommandCompileException;
+import net.volcano.jdacommands.model.ParameterData;
 import net.volcano.jdacommands.model.command.annotations.BotOwnerCanAlwaysExecute;
 import net.volcano.jdacommands.model.command.annotations.CommandController;
 import net.volcano.jdacommands.model.command.annotations.CommandMethod;
@@ -110,7 +111,8 @@ public class CommandCompiler {
 			if (codec == null) {
 				throw new CommandCompileException(method, "Unsupported type for command argument; " + codecType);
 			} else {
-				arguments.add(codec.encodeArgument(params[i], codecType, actualType));
+				var data = new ParameterData(params[1], actualType, codecType, registry);
+				arguments.add(codec.encodeArgument(data));
 			}
 			
 			if (isArray) {

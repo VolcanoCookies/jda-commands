@@ -1,36 +1,42 @@
 package net.volcano.jdacommands.model.command.arguments.interfaces;
 
+import net.volcano.jdacommands.model.ParameterData;
+import net.volcano.jdacommands.model.command.annotations.argument.Arg;
 import net.volcano.jdacommands.model.command.annotations.argument.Optional;
 import net.volcano.jdacommands.model.command.arguments.CommandArgument;
 import net.volcano.jdautils.utils.ClassUtil;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
 
 public abstract class Codec<T> {
 	
 	protected Class<? extends CommandArgument<T>> argumentClass;
 	
-	public CommandArgument<T> encodeArgument(Parameter parameter, Type codecType, Type actualType) {
+	public CommandArgument<T> encodeArgument(ParameterData data) {
 		
-		if (codecType != ClassUtil.stripWildcard(ClassUtil.getGenericType(getClass()))) {
+		if (data.codecType != ClassUtil.stripWildcard(ClassUtil.getGenericType(getClass()))) {
 			throw new IllegalArgumentException("Invalid codec used for type.");
 		}
-		var arg = buildArgument(parameter);
+		var arg = buildArgument(data);
 		
-		arg.setNullable(parameter.isAnnotationPresent(Nullable.class));
+		var ann = data.parameter.getAnnotation(Arg.class);
+		if (ann != null) {
+			if (!ann.usage().equals("DEFAULT"))
+				arg.setUsage(ann.usage());
+		}
 		
-		arg.setOptional(parameter.isAnnotationPresent(Optional.class));
+		arg.setNullable(data.parameter.isAnnotationPresent(Nullable.class));
 		
-		arg.setParameter(parameter);
+		arg.setOptional(data.parameter.isAnnotationPresent(Optional.class));
 		
-		arg.setType(actualType);
+		arg.setParameter(data.parameter);
+		
+		arg.setType(data.actualType);
 		
 		return arg;
 		
 	}
 	
-	protected abstract CommandArgument<T> buildArgument(Parameter parameter);
+	protected abstract CommandArgument<T> buildArgument(ParameterData data);
 	
 }
