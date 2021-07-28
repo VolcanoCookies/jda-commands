@@ -6,7 +6,10 @@ import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu
 import net.volcano.jdacommands.model.command.Field
-import net.volcano.jdautils.utils.StringUtil
+import net.volcano.jdautils.constants.SELECTION_OPTION_DESCRIPTION_LIMIT
+import net.volcano.jdautils.constants.SELECTION_OPTION_LABEL_LIMIT
+import net.volcano.jdautils.utils.capitalize
+import net.volcano.jdautils.utils.trim
 
 class EmbedFieldMenu(
 	opts: MutableMap<SelectOption, MutableList<Field>>,
@@ -21,11 +24,11 @@ class EmbedFieldMenu(
 	private val options = opts.mapKeys { it.key.value }
 
 	private val selections = opts.keys.map {
-		if (it.label.length > 25) {
-			it.withLabel(StringUtil.capitalize(it.label).substring(0, 25))
-				.withDescription(StringUtil.capitalize(it.label))
+		if (it.label.length > SELECTION_OPTION_LABEL_LIMIT) {
+			it.withLabel(it.label.capitalize().trim(SELECTION_OPTION_LABEL_LIMIT))
+				.withDescription(it.label.capitalize().trim(SELECTION_OPTION_DESCRIPTION_LIMIT))
 		} else {
-			it.withLabel(StringUtil.capitalize(it.label))
+			it.withLabel(it.label.capitalize())
 		}
 	}.sortedBy { it.label }
 

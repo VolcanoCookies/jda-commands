@@ -3,10 +3,12 @@ package net.volcano.jdacommands.client
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.User
+import net.volcano.jdacommands.interfaces.CommandClient
 import net.volcano.jdacommands.interfaces.PermissionClient
 import net.volcano.jdacommands.interfaces.PermissionProvider
 import net.volcano.jdacommands.interfaces.QueryResult
 import net.volcano.jdacommands.permissions.PermissionTree
+import net.volcano.jdautils.utils.asString
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
@@ -21,6 +23,8 @@ class PermissionClientImpl(
 
 	// UserID -> Path -> Expiration Time
 	private val globalCooldowns = mutableMapOf<String, MutableMap<String, OffsetDateTime>>()
+
+	lateinit var client: CommandClient
 
 	override fun checkPermissions(permission: String, user: User, guild: Guild?, channel: TextChannel?): QueryResult {
 		val perms = PermissionTree(provider.getPermissions(user, guild, channel))
@@ -65,6 +69,19 @@ class PermissionClientImpl(
 		} else {
 			globalCooldowns[user.id]?.get(permission)
 		}
+	}
+
+	override fun getKnownPermissions(): Map<String, String> {
+		return this.client.allCommands.groupBy { it.permission }
+			.mapValues {
+				if (it.value.size == 1) {
+					"Execute command ${it.value[0].paths[0]}"
+				} else {
+					"Execute commands ${it.value.asString(",") { c -> c.paths[0] }}"
+				}
+			}.plus(this.client.allCommands.flatMap {
+				it.help?.permissions?.map { p -> p.split(":", limit = 2).let { i -> Pair(i[0], i[1]) } } ?: emptyList()
+			})
 	}
 
 	@Scheduled(fixedRate = 1000 * 60 * 5)

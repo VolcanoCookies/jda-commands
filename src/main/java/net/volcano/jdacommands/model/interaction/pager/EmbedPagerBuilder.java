@@ -11,8 +11,8 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.internal.utils.Checks;
 import net.dv8tion.jda.internal.utils.Helpers;
-import net.volcano.jdautils.constants.EmbedLimit;
-import net.volcano.jdautils.utils.StringUtil;
+import net.volcano.jdautils.constants.LimitKt;
+import net.volcano.jdautils.utils.StringUtilKt;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -651,8 +651,8 @@ public abstract class EmbedPagerBuilder {
 			return this;
 		}
 		
-		if (value != null && value.length() > EmbedLimit.EMBED_FIELD_VALUE_LIMIT) {
-			List<String> split = StringUtil.splitAt(value, EmbedLimit.EMBED_FIELD_VALUE_LIMIT, "\n");
+		if (value != null && value.length() > LimitKt.EMBED_FIELD_VALUE_LIMIT) {
+			List<String> split = StringUtilKt.splitAt(value, LimitKt.EMBED_FIELD_VALUE_LIMIT, "\n");
 			fields.add(new MessageEmbed.Field(name, split.get(0), inline));
 			for (int i = 1; i < split.size(); i++) {
 				fields.add(new MessageEmbed.Field("\\a", split.get(i), inline));
@@ -690,8 +690,8 @@ public abstract class EmbedPagerBuilder {
 			return this;
 		}
 		
-		if (value != null && value.length() > EmbedLimit.EMBED_FIELD_VALUE_LIMIT) {
-			List<String> split = StringUtil.splitAt(value, EmbedLimit.EMBED_FIELD_VALUE_LIMIT, "\n");
+		if (value != null && value.length() > LimitKt.EMBED_FIELD_VALUE_LIMIT) {
+			List<String> split = StringUtilKt.splitAt(value, LimitKt.EMBED_FIELD_VALUE_LIMIT, "\n");
 			fields.add(new MessageEmbed.Field(name, split.get(0), false));
 			for (int i = 1; i < split.size(); i++) {
 				fields.add(new MessageEmbed.Field("\\a", split.get(i), false));

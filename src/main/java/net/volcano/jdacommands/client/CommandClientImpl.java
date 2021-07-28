@@ -91,6 +91,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		executorService = new ScheduledThreadPoolExecutor(1);
 		executorService.setMaximumPoolSize(10);
 		
+		((PermissionClientImpl) this.permissionClient).setClient(this);
+		
 		codecRegistry = new CodecRegistryImpl(context);
 		commandCompiler = new CommandCompiler(codecRegistry, categoryConfig);
 		

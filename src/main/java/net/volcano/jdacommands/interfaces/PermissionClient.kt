@@ -73,6 +73,11 @@ interface PermissionClient {
 	 */
 	fun getCooldown(user: User, guild: Guild?, permission: String): OffsetDateTime?
 
+	/**
+	 * Get a map with permissions as keys and descriptions as values
+	 */
+	fun getKnownPermissions(): Map<String, String>
+
 }
 
 class QueryResult(

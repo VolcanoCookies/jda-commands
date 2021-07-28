@@ -21,5 +21,7 @@ public @interface Help {
 	
 	String[] permissions() default {};
 	
+	Permission[] perms() default {};
+	
 }
 

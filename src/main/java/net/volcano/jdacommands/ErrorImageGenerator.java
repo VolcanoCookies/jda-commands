@@ -12,6 +12,8 @@ public class ErrorImageGenerator {
 	public static Font font;
 	public static FontMetrics metrics;
 	
+	public static final Color BACKGROUND_COLOR = new Color(0x2f3136);
+	
 	static {
 		try {
 			font = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(ErrorImageGenerator.class
@@ -52,9 +54,7 @@ public class ErrorImageGenerator {
 		graphics.setFont(font);
 		graphics.setRenderingHints(rh);
 		
-		Color backgroundColor = new Color(0x2f3136);
-		
-		graphics.setColor(backgroundColor);
+		graphics.setColor(BACKGROUND_COLOR);
 		graphics.fillRect(0, 0, width, height + 12);
 		graphics.setColor(Color.WHITE);
 		graphics.drawString(pre, 0, height - metrics.getDescent());

@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.components.Button
 import net.dv8tion.jda.internal.utils.Checks
 import net.dv8tion.jda.internal.utils.Helpers
 import net.volcano.jdautils.constants.EmbedLimit
-import net.volcano.jdautils.utils.StringUtil.splitAt
+import net.volcano.jdautils.utils.splitAt
 import java.awt.Color
 import java.time.*
 import java.time.temporal.TemporalAccessor
@@ -586,7 +586,7 @@ abstract class EmbedMenuBuilder {
 			return this
 		}
 		if (value != null && value.length > EmbedLimit.EMBED_FIELD_VALUE_LIMIT) {
-			val split = splitAt(value, EmbedLimit.EMBED_FIELD_VALUE_LIMIT, "\n")
+			val split = value.splitAt(EmbedLimit.EMBED_FIELD_VALUE_LIMIT, "\n")
 			fields.add(Field(name, split[0], inline))
 			for (i in 1 until split.size) {
 				fields.add(Field("\\a", split[i], inline))
@@ -624,7 +624,7 @@ abstract class EmbedMenuBuilder {
 			return this
 		}
 		if (value != null && value.length > EmbedLimit.EMBED_FIELD_VALUE_LIMIT) {
-			val split = splitAt(value, EmbedLimit.EMBED_FIELD_VALUE_LIMIT, "\n")
+			val split = value.splitAt(EmbedLimit.EMBED_FIELD_VALUE_LIMIT, "\n")
 			fields.add(Field(name, split[0], false))
 			for (i in 1 until split.size) {
 				fields.add(Field("\\a", split[i], false))
