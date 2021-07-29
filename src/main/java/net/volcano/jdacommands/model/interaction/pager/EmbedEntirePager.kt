@@ -3,7 +3,7 @@ package net.volcano.jdacommands.model.interaction.pager
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.Button
-import net.volcano.jdautils.constants.EmbedLimit
+import net.volcano.jdautils.constants.EMBED_FOOTER_LIMIT
 import net.volcano.jdautils.utils.trim
 
 class EmbedEntirePager(
@@ -25,7 +25,7 @@ class EmbedEntirePager(
 	override val footer: MessageEmbed.Footer
 		get() {
 			val text = "Page ${currentPage + 1} of $size${baseEmbed.build().footer?.text?.let { " | $it" } ?: ""}".trim(
-				EmbedLimit.EMBED_FOOTER_LIMIT
+				EMBED_FOOTER_LIMIT
 			)
 			return MessageEmbed.Footer(text, page.footer?.iconUrl, page.footer?.proxyIconUrl)
 		}

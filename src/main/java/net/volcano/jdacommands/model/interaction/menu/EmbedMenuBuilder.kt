@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.interactions.components.Button
 import net.dv8tion.jda.internal.utils.Checks
 import net.dv8tion.jda.internal.utils.Helpers
-import net.volcano.jdautils.constants.EmbedLimit
+import net.volcano.jdautils.constants.EMBED_FIELD_VALUE_LIMIT
 import net.volcano.jdautils.utils.splitAt
 import java.awt.Color
 import java.time.*
@@ -585,8 +585,8 @@ abstract class EmbedMenuBuilder {
 		if (name == null && value == null) {
 			return this
 		}
-		if (value != null && value.length > EmbedLimit.EMBED_FIELD_VALUE_LIMIT) {
-			val split = value.splitAt(EmbedLimit.EMBED_FIELD_VALUE_LIMIT, "\n")
+		if (value != null && value.length > EMBED_FIELD_VALUE_LIMIT) {
+			val split = value.splitAt(EMBED_FIELD_VALUE_LIMIT, "\n")
 			fields.add(Field(name, split[0], inline))
 			for (i in 1 until split.size) {
 				fields.add(Field("\\a", split[i], inline))
@@ -623,8 +623,8 @@ abstract class EmbedMenuBuilder {
 		if (name == null && value == null) {
 			return this
 		}
-		if (value != null && value.length > EmbedLimit.EMBED_FIELD_VALUE_LIMIT) {
-			val split = value.splitAt(EmbedLimit.EMBED_FIELD_VALUE_LIMIT, "\n")
+		if (value != null && value.length > EMBED_FIELD_VALUE_LIMIT) {
+			val split = value.splitAt(EMBED_FIELD_VALUE_LIMIT, "\n")
 			fields.add(Field(name, split[0], false))
 			for (i in 1 until split.size) {
 				fields.add(Field("\\a", split[i], false))

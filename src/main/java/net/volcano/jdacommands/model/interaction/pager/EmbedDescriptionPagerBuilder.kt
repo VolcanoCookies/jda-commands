@@ -2,7 +2,7 @@ package net.volcano.jdacommands.model.interaction.pager
 
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
-import net.volcano.jdautils.constants.EmbedLimit
+import net.volcano.jdautils.constants.EMBED_DESCRIPTION_LIMIT
 
 class EmbedDescriptionPagerBuilder : EmbedPagerBuilder {
 
@@ -16,7 +16,7 @@ class EmbedDescriptionPagerBuilder : EmbedPagerBuilder {
 		val embedBuilder = EmbedBuilder(baseEmbed)
 		embedBuilder.setDescription(null)
 		for (page in pages) {
-			check(page.length <= EmbedLimit.EMBED_DESCRIPTION_LIMIT) {
+			check(page.length <= EMBED_DESCRIPTION_LIMIT) {
 				String.format(
 					"Description page is longer than %d! Please limit your input!",
 					MessageEmbed.TEXT_MAX_LENGTH
@@ -28,10 +28,10 @@ class EmbedDescriptionPagerBuilder : EmbedPagerBuilder {
 	}
 
 	fun addPage(page: String) {
-		check(page.length <= EmbedLimit.EMBED_DESCRIPTION_LIMIT) {
+		check(page.length <= EMBED_DESCRIPTION_LIMIT) {
 			String.format(
 				"Description page is longer than %d! Please limit your input!",
-				EmbedLimit.EMBED_DESCRIPTION_LIMIT
+				EMBED_DESCRIPTION_LIMIT
 			)
 		}
 		pages.add(page)
@@ -39,10 +39,10 @@ class EmbedDescriptionPagerBuilder : EmbedPagerBuilder {
 
 	fun addPages(pages: List<String>) {
 		for (page in pages) {
-			check(page.length <= EmbedLimit.EMBED_DESCRIPTION_LIMIT) {
+			check(page.length <= EMBED_DESCRIPTION_LIMIT) {
 				String.format(
 					"Description page is longer than %d! Please limit your input!",
-					EmbedLimit.EMBED_DESCRIPTION_LIMIT
+					EMBED_DESCRIPTION_LIMIT
 				)
 			}
 		}
@@ -52,10 +52,10 @@ class EmbedDescriptionPagerBuilder : EmbedPagerBuilder {
 	fun setPages(pages: List<String>) {
 		this.pages = pages.toMutableList()
 		for (page in this.pages) {
-			check(page.length <= EmbedLimit.EMBED_DESCRIPTION_LIMIT) {
+			check(page.length <= EMBED_DESCRIPTION_LIMIT) {
 				String.format(
 					"Description page is longer than %d! Please limit your input!",
-					EmbedLimit.EMBED_DESCRIPTION_LIMIT
+					EMBED_DESCRIPTION_LIMIT
 				)
 			}
 		}

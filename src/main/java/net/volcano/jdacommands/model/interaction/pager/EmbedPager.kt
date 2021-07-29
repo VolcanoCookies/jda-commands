@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.interactions.components.Button
 import net.dv8tion.jda.api.interactions.components.ButtonStyle
 import net.volcano.jdacommands.constants.Reactions
 import net.volcano.jdacommands.model.interaction.InteractionListener
-import net.volcano.jdautils.constants.EmbedLimit
+import net.volcano.jdautils.constants.EMBED_FOOTER_LIMIT
 import net.volcano.jdautils.utils.trim
 import kotlin.math.max
 import kotlin.math.min
@@ -120,7 +120,7 @@ abstract class EmbedPager(
 	open val footer: MessageEmbed.Footer
 		get() {
 			val text = "Page ${currentPage + 1} of $size${baseEmbed.build().footer?.text?.let { " | $it" } ?: ""}".trim(
-				EmbedLimit.EMBED_FOOTER_LIMIT
+				EMBED_FOOTER_LIMIT
 			)
 			val base = baseEmbed.build()
 			return MessageEmbed.Footer(text, base.footer?.iconUrl, base.footer?.proxyIconUrl)
