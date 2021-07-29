@@ -22,6 +22,12 @@ public class EnumCodec extends Codec<Enum<?>> {
 			enumClass = (Class<Enum>) enumClass.componentType();
 		}
 		
+		var constants = enumClass.getEnumConstants();
+		
+		if (constants.length == 0) {
+			throw new IllegalArgumentException("Cannot have empty enum as argument");
+		}
+		
 		builder.options(enumClass.getEnumConstants());
 		
 		return builder.build();
