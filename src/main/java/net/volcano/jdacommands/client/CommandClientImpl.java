@@ -163,6 +163,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 				event.getMessage()
 						.addReaction(Reactions.NO_PERMISSIONS)
 						.queue();
+			} catch (CommandRuntimeException e) {
+				sendError(e, event);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
