@@ -108,10 +108,11 @@ public class CommandCompiler {
 			}
 			
 			var codec = registry.getCodec(codecType);
+			
 			if (codec == null) {
 				throw new CommandCompileException(method, "Unsupported type for command argument; " + codecType);
 			} else {
-				var data = new ParameterData(params[1], actualType, codecType, registry);
+				var data = new ParameterData(params[i], actualType, codecType, registry);
 				arguments.add(codec.encodeArgument(data));
 			}
 			
