@@ -121,7 +121,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		String content = event.getMessage().getContentRaw();
 		
 		// Check if the message starts with the prefix
-		if (!content.startsWith(prefix) || content.matches("^<a?[^A-z].*$")) {
+		if (!content.startsWith(prefix) || content.matches("^<[a@#]?[^A-z].*$")) {
 			return;
 		}
 		
