@@ -356,19 +356,34 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 				possibleCommands.addAll(commands);
 			}
 			
-			var any = parseAny(possibleCommands, parsingData);
-			// Check if the user has permissions for this command
-			if (!any.command.getBotOwnerCanAlwaysExecute() || !event.getAuthor().getId().equals(getOwnerId())) {
-				checkPermissions(event, any.command);
+			try {
+				
+				var any = parseAny(possibleCommands, parsingData);
+				// Check if the user has permissions for this command
+				
+				if (!any.command.getBotOwnerCanAlwaysExecute() || !event.getAuthor().getId().equals(getOwnerId())) {
+					checkPermissions(event, any.command);
+				}
+				
+				return any;
+			} catch (CommandException e) {
+				
+				var command = e.getCommand();
+				if (!command.getBotOwnerCanAlwaysExecute() || !event.getAuthor().getId().equals(getOwnerId())) {
+					checkPermissions(event, command);
+				}
+				
+				throw e;
+				
 			}
 			
-			return any;
 		} else {
 			// Exactly one command
 			Command command = commands.iterator().next();
 			if (!command.getBotOwnerCanAlwaysExecute() || !event.getAuthor().getId().equals(getOwnerId())) {
 				checkPermissions(event, command);
 			}
+			
 			return command.parseArguments(parsingData);
 		}
 		
