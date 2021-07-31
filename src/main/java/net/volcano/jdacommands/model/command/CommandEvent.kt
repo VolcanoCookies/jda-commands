@@ -333,9 +333,9 @@ class CommandEvent @Builder constructor(
 			if (guild == this.guild) textChannel else null
 		)
 		if (!res.hasPermissions) {
-			throw MissingPermissionsException(guild, permission)
+			throw MissingPermissionsException(null, guild, permission)
 		} else if (res.onCooldown) {
-			throw PermissionsOnCooldownException(guild, permission, res.cooldownExpiration!!)
+			throw PermissionsOnCooldownException(null, guild, permission, res.cooldownExpiration!!)
 		}
 	}
 

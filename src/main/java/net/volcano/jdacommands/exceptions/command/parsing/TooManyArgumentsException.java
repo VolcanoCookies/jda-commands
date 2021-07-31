@@ -3,6 +3,7 @@ package net.volcano.jdacommands.exceptions.command.parsing;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.volcano.jdacommands.ErrorImageGenerator;
 import net.volcano.jdacommands.model.EmbedAttachment;
+import net.volcano.jdacommands.model.command.Command;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 
 import javax.imageio.ImageIO;
@@ -14,8 +15,8 @@ import java.util.List;
 
 public class TooManyArgumentsException extends ArgumentParsingException {
 	
-	public TooManyArgumentsException(ArgumentParsingData data, int argumentIndex) {
-		super(data, argumentIndex);
+	public TooManyArgumentsException(Command command, ArgumentParsingData data, int argumentIndex) {
+		super(command, data, argumentIndex);
 	}
 	
 	@Override

@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.volcano.jdacommands.ErrorImageGenerator;
 import net.volcano.jdacommands.exceptions.command.run.CommandException;
 import net.volcano.jdacommands.model.EmbedAttachment;
+import net.volcano.jdacommands.model.command.Command;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 
 import javax.imageio.ImageIO;
@@ -24,13 +25,15 @@ public class InvalidArgumentsException extends CommandException {
 	private final int errorLength;
 	
 	public InvalidArgumentsException(ArgumentParsingData data, String hint) {
+		super(data.command);
 		this.hint = hint;
 		content = data.event.getMessage().getContentRaw();
 		errorStartIndex = data.rawArguments[data.currentArg].startIndex + data.rawPath.length() + data.rawPrefix.length();
 		errorLength = data.rawArguments[data.currentArg].value.length();
 	}
 	
-	public InvalidArgumentsException(String content, int errorStartIndex, int errorLength, String hint) {
+	public InvalidArgumentsException(Command command, String content, int errorStartIndex, int errorLength, String hint) {
+		super(command);
 		this.hint = hint;
 		this.content = content;
 		this.errorStartIndex = errorStartIndex;

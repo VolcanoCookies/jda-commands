@@ -5,6 +5,7 @@ import net.volcano.jdacommands.exceptions.command.parsing.ArgumentParsingExcepti
 import net.volcano.jdacommands.exceptions.command.parsing.InvalidArgumentsException;
 import net.volcano.jdacommands.exceptions.command.parsing.MissingArgumentsException;
 import net.volcano.jdacommands.exceptions.command.parsing.TooManyArgumentsException;
+import net.volcano.jdacommands.model.command.Command;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 import net.volcano.jdacommands.model.command.arguments.implementation.RawArgument;
 import net.volcano.jdautils.utils.ListUtilKt;
@@ -20,6 +21,8 @@ public class ArgumentList {
 	public final List<CommandArgument> commandArguments;
 	
 	public final boolean lastIsArbitraryNumber;
+	
+	public Command command;
 	
 	/**
 	 * Generate usage string based on arguments
@@ -41,7 +44,7 @@ public class ArgumentList {
 	public ParsedData parseArguments(ArgumentParsingData argumentData) throws ArgumentParsingException, InvalidArgumentsException {
 		
 		if (size() == 0 && argumentData.size() > 0) {
-			throw new TooManyArgumentsException(argumentData, 0);
+			throw new TooManyArgumentsException(command, argumentData, 0);
 		}
 		
 		// If the input raw argument size is bigger than the expected argument size,
@@ -71,12 +74,12 @@ public class ArgumentList {
 				argumentData.rawArguments[size() - 1] = builder.build();
 				
 			} else {
-				throw new TooManyArgumentsException(argumentData, argumentData.size() - size());
+				throw new TooManyArgumentsException(command, argumentData, argumentData.size() - size());
 			}
 		}
 		
 		if (argumentData.size() < size()) {
-			throw new MissingArgumentsException(argumentData, argumentData.currentArg, size());
+			throw new MissingArgumentsException(command, argumentData, argumentData.currentArg, size());
 		}
 		
 		var data = new ParsedData(argumentData.rawArguments);
@@ -96,7 +99,7 @@ public class ArgumentList {
 				if (lastIsArbitraryNumber) {
 					Array.set(last, j++, commandArguments.get(size() - 1).parseValue(argumentData));
 				} else {
-					throw new TooManyArgumentsException(argumentData, argumentData.currentArg);
+					throw new TooManyArgumentsException(command, argumentData, argumentData.currentArg);
 				}
 				
 			} else {

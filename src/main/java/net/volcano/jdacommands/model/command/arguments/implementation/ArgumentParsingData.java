@@ -2,6 +2,7 @@ package net.volcano.jdacommands.model.command.arguments.implementation;
 
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.volcano.jdacommands.model.command.Command;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,8 @@ public class ArgumentParsingData {
 	public String rawContent;
 	
 	public MessageReceivedEvent event;
+	
+	public Command command;
 	
 	public ArgumentParsingData(MessageReceivedEvent event, String rawPrefix, String rawPath, String rawContent) {
 		this.rawPrefix = rawPrefix;
@@ -75,12 +78,15 @@ public class ArgumentParsingData {
 	
 	@Override
 	public ArgumentParsingData clone() {
-		return new ArgumentParsingData(currentArg,
+		return new ArgumentParsingData(
+				currentArg,
 				rawArguments,
 				rawPrefix,
 				rawPath,
 				rawContent,
-				event);
+				event,
+				command
+		);
 	}
 	
 }

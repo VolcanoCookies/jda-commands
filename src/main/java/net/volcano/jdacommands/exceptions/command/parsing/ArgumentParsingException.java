@@ -1,12 +1,11 @@
 package net.volcano.jdacommands.exceptions.command.parsing;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.volcano.jdacommands.exceptions.command.run.CommandException;
+import net.volcano.jdacommands.model.command.Command;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 
 @Getter
-@RequiredArgsConstructor
 public abstract class ArgumentParsingException extends CommandException {
 	
 	/**
@@ -17,6 +16,18 @@ public abstract class ArgumentParsingException extends CommandException {
 	 * The argument index of the argument that failed
 	 */
 	protected final int argumentIndex;
+	
+	public ArgumentParsingException(Command command, ArgumentParsingData data, int argumentIndex) {
+		super(command);
+		this.data = data;
+		this.argumentIndex = argumentIndex;
+	}
+	
+	protected ArgumentParsingException(String message, Command command, ArgumentParsingData data, int argumentIndex) {
+		super(message, command);
+		this.data = data;
+		this.argumentIndex = argumentIndex;
+	}
 	
 }
 

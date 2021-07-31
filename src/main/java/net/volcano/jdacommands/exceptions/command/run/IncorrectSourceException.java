@@ -1,15 +1,18 @@
 package net.volcano.jdacommands.exceptions.command.run;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.volcano.jdacommands.model.command.Command;
 
-@RequiredArgsConstructor
 @Getter
 public class IncorrectSourceException extends CommandException {
 	
 	private final Command.Source requiredSource;
+	
+	public IncorrectSourceException(Command command, Command.Source requiredSource) {
+		super(command);
+		this.requiredSource = requiredSource;
+	}
 	
 	@Override
 	protected EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {

@@ -1,15 +1,19 @@
 package net.volcano.jdacommands.exceptions.command.run;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
+import net.volcano.jdacommands.model.command.Command;
 
-@RequiredArgsConstructor
 @Getter
 public class CommandBannedException extends CommandException {
 	
 	private final User user;
+	
+	public CommandBannedException(String message, Command command, User user) {
+		super(message, command);
+		this.user = user;
+	}
 	
 	@Override
 	protected EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {

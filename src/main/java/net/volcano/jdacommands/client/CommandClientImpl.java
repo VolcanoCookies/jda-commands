@@ -201,6 +201,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		for (Command command : commands) {
 			
 			ArgumentParsingData parsingData = argumentData.clone();
+			parsingData.command = command;
 			
 			try {
 				
@@ -400,7 +401,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		// Check if the command is from the correct source
 		if ((event.isFromGuild() && event.command.getSource() == Command.Source.PRIVATE) ||
 				(!event.isFromGuild() && event.command.getSource() == Command.Source.GUILD)) {
-			terminate(event, new IncorrectSourceException(event.command.getSource()));
+			terminate(event, new IncorrectSourceException(event.command, event.command.getSource()));
 			return;
 		}
 		
@@ -472,9 +473,9 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		var queryResult = permissionClient.checkPermissions(command.permission, event.getAuthor(), guild, event.isFromGuild() ? event.getTextChannel() : null);
 		if (!queryResult.getHasPermissions()) {
 			if (queryResult.getCooldownExpiration() != null) {
-				throw new PermissionsOnCooldownException(guild, command.permission, queryResult.getCooldownExpiration());
+				throw new PermissionsOnCooldownException(command, guild, command.permission, queryResult.getCooldownExpiration());
 			} else {
-				throw new MissingPermissionsException(guild, command.permission);
+				throw new MissingPermissionsException(command, guild, command.permission);
 			}
 		}
 	}

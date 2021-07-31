@@ -3,6 +3,7 @@ package net.volcano.jdacommands.exceptions.command.run;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.volcano.jdacommands.model.EmbedAttachment;
+import net.volcano.jdacommands.model.command.Command;
 import net.volcano.jdautils.constants.Colors;
 
 import java.time.Instant;
@@ -16,6 +17,17 @@ public abstract class CommandException extends Exception {
 	 * If the error should be sent in dms
 	 */
 	private final boolean sensitive = false;
+	
+	protected final Command command;
+	
+	public CommandException(Command command) {
+		this.command = command;
+	}
+	
+	protected CommandException(String message, Command command) {
+		super(message);
+		this.command = command;
+	}
 	
 	public EmbedBuilder getErrorEmbed() {
 		EmbedBuilder embedBuilder = new EmbedBuilder();

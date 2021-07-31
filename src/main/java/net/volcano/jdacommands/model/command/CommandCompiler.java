@@ -42,7 +42,9 @@ public class CommandCompiler {
 		Set<Command> set = new HashSet<>();
 		for (Method method : controller.getClass().getDeclaredMethods()) {
 			if (method.isAnnotationPresent(CommandMethod.class)) {
-				set.add(compileCommand(controller, module, method));
+				var command = compileCommand(controller, module, method);
+				command.arguments.command = command;
+				set.add(command);
 			}
 		}
 		return set;
