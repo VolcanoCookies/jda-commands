@@ -19,6 +19,9 @@ public class LongCodec extends Codec<Long> {
 		if (arg != null) {
 			builder.min((long) arg.min());
 			builder.max((long) arg.max());
+		} else {
+			builder.min(Long.MIN_VALUE);
+			builder.max(Long.MAX_VALUE);
 		}
 		
 		return builder.build();

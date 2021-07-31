@@ -19,6 +19,9 @@ public class IntegerCodec extends Codec<Integer> {
 		if (arg != null) {
 			builder.min((int) arg.min());
 			builder.max((int) arg.max());
+		} else {
+			builder.min(Integer.MIN_VALUE);
+			builder.max(Integer.MAX_VALUE);
 		}
 		
 		return builder.build();
