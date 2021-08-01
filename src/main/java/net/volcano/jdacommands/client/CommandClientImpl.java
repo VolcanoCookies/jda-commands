@@ -106,6 +106,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		
 	}
 	
+	private static final Pattern MENTION_FILTER = Pattern.compile("^<(a?:|@[&!]?\\d+|#\\d+).*$", Pattern.DOTALL);
+	
 	@Override
 	public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
 		
@@ -121,7 +123,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		String content = event.getMessage().getContentRaw();
 		
 		// Check if the message starts with the prefix
-		if (!content.startsWith(prefix) || content.matches("^<[a@#]?[^A-z].*$")) {
+		if (!content.startsWith(prefix) || MENTION_FILTER.matcher(content).matches()) {
 			return;
 		}
 		
