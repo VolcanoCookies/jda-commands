@@ -57,7 +57,8 @@ class Help(
 			.forEach { (cat, com) ->
 				pager.addOption(
 					cat,
-					com.joinToString("\n\n") { "**${it.usageFormatted}**\n${it.descriptionFormatted}" },
+					com.sortedBy { it.usageFormatted }
+						.joinToString("\n\n") { "**${it.usageFormatted}**\n${it.descriptionFormatted}" },
 					Emoji.fromUnicode(com.first().help.emoji)
 				)
 			}
