@@ -14,7 +14,7 @@ public class MissingArgumentsException extends ArgumentParsingException {
 	}
 	
 	@Override
-	protected EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
+	public EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
 		embedBuilder.setTitle(String.format("Error: Missing %d Arguments.", requiredArguments - getArgumentIndex()));
 		embedBuilder.setDescription("Required arguments: " + requiredArguments);
 		return embedBuilder;

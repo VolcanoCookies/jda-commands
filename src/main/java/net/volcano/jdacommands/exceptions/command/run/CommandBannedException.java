@@ -16,7 +16,7 @@ public class CommandBannedException extends CommandException {
 	}
 	
 	@Override
-	protected EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
+	public EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
 		embedBuilder.setTitle("Error: Command banned");
 		embedBuilder.setDescription("You are banned from running commands");
 		return embedBuilder;

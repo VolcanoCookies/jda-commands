@@ -5,12 +5,12 @@ import net.volcano.jdacommands.model.command.Command;
 
 public class CommandRuntimeException extends CommandException {
 	
-	protected CommandRuntimeException(String message, Command command) {
+	public CommandRuntimeException(String message, Command command) {
 		super(message, command);
 	}
 	
 	@Override
-	protected EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
+	public EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
 		embedBuilder.setTitle("Error: Runtime exception");
 		embedBuilder.setDescription(getMessage());
 		return embedBuilder;

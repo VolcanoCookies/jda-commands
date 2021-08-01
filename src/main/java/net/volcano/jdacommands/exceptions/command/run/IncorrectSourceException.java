@@ -15,7 +15,7 @@ public class IncorrectSourceException extends CommandException {
 	}
 	
 	@Override
-	protected EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
+	public EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
 		embedBuilder.setTitle("Error: Incorrect source");
 		embedBuilder.setDescription("This command has to be ran in " + (requiredSource == Command.Source.GUILD ? "a guild" : "dms") + ".");
 		return embedBuilder;

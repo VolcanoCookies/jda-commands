@@ -18,13 +18,13 @@ public abstract class CommandException extends Exception {
 	 */
 	private final boolean sensitive = false;
 	
-	protected final Command command;
+	public final Command command;
 	
 	public CommandException(Command command) {
 		this.command = command;
 	}
 	
-	protected CommandException(String message, Command command) {
+	public CommandException(String message, Command command) {
 		super(message);
 		this.command = command;
 	}

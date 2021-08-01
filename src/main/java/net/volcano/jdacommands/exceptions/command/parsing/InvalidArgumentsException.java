@@ -41,7 +41,7 @@ public class InvalidArgumentsException extends CommandException {
 	}
 	
 	@Override
-	protected EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
+	public EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
 		embedBuilder.setTitle("Error: Invalid arguments.");
 		if (hint != null) {
 			embedBuilder.addField("Hint", hint, false);

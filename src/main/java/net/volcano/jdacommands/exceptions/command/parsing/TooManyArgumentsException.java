@@ -20,7 +20,7 @@ public class TooManyArgumentsException extends ArgumentParsingException {
 	}
 	
 	@Override
-	protected EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
+	public EmbedBuilder getErrorEmbed(EmbedBuilder embedBuilder) {
 		embedBuilder.setTitle("Error: Too many arguments.");
 		embedBuilder.setImage("attachment://errorImage.png");
 		return embedBuilder;
