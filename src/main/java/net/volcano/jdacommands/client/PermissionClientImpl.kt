@@ -12,6 +12,7 @@ import net.volcano.jdautils.utils.asString
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
+import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class PermissionClientImpl(
@@ -19,10 +20,10 @@ class PermissionClientImpl(
 ) : PermissionClient {
 
 	// GuildID -> UserID -> Path -> Expiration Time
-	private val guildCooldowns = mutableMapOf<String, MutableMap<String, MutableMap<String, OffsetDateTime>>>()
+	private val guildCooldowns = ConcurrentHashMap<String, MutableMap<String, MutableMap<String, OffsetDateTime>>>()
 
 	// UserID -> Path -> Expiration Time
-	private val globalCooldowns = mutableMapOf<String, MutableMap<String, OffsetDateTime>>()
+	private val globalCooldowns = ConcurrentHashMap<String, MutableMap<String, OffsetDateTime>>()
 
 	lateinit var client: CommandClient
 
@@ -87,26 +88,42 @@ class PermissionClientImpl(
 	@Scheduled(fixedRate = 1000 * 60 * 5)
 	fun clearExpiredCooldowns() {
 		val now = OffsetDateTime.now()
-		for ((userId, permissions) in globalCooldowns) {
-			for ((permission, time) in permissions) {
-				if (time.isBefore(now))
-					permissions.remove(permission)
+
+		val globalCooldownsIterator = globalCooldowns.iterator()
+
+		while (globalCooldownsIterator.hasNext()) {
+			val permissions = globalCooldownsIterator.next().value
+			val permissionsIterator = permissions.iterator()
+			while (permissionsIterator.hasNext()) {
+				if (permissionsIterator.next().value.isBefore(now))
+					permissionsIterator.remove()
 			}
 			if (permissions.isEmpty())
-				globalCooldowns.remove(userId)
+				globalCooldownsIterator.remove()
 		}
 
-		for ((guildId, memberCooldowns) in guildCooldowns) {
-			for ((memberId, permissions) in memberCooldowns) {
-				for ((permission, time) in permissions) {
-					if (time.isBefore(now))
-						permissions.remove(permission)
+		val guildCooldownsIterator = guildCooldowns.iterator()
+
+		while (guildCooldownsIterator.hasNext()) {
+			val memberCooldowns = guildCooldownsIterator.next().value
+			val memberCooldownsIterator = memberCooldowns.iterator()
+
+			while (memberCooldownsIterator.hasNext()) {
+				val permissions = memberCooldownsIterator.next().value
+				val permissionsIterator = permissions.iterator()
+
+				while (permissionsIterator.hasNext()) {
+					if (permissionsIterator.next().value.isBefore(now))
+						permissionsIterator.remove()
 				}
+
 				if (permissions.isEmpty())
-					memberCooldowns.remove(memberId)
+					memberCooldownsIterator.remove()
 			}
+
 			if (memberCooldowns.isEmpty())
-				guildCooldowns.remove(guildId)
+				guildCooldownsIterator.remove()
+
 		}
 
 	}
