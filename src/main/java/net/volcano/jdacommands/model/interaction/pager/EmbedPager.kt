@@ -24,6 +24,7 @@ abstract class EmbedPager(
 	var userId: String,
 	var baseEmbed: EmbedBuilder,
 	var download: ByteArray? = null,
+	var fileName: String? = null,
 	var currentPage: Int = 0,
 	var extraButtons: List<Button>,
 	expiration: Long = 60L * 30L,
@@ -99,7 +100,7 @@ abstract class EmbedPager(
 			"download" -> {
 				download?.let {
 					event.channel
-						.sendFile(it, "download.txt")
+						.sendFile(it, fileName ?: "download.txt")
 						.queue { download = null }
 				}
 				download = null

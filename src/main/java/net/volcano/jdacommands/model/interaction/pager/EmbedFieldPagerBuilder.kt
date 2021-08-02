@@ -39,7 +39,16 @@ class EmbedFieldPagerBuilder : EmbedPagerBuilder {
 			list.add(field)
 		}
 		fields.add(list)
-		return EmbedFieldPager(fields, userId, embedBuilder.clearFields(), download, 0, extraButtons, expiration)
+		return EmbedFieldPager(
+			fields,
+			userId,
+			embedBuilder.clearFields(),
+			download,
+			downloadFileName,
+			0,
+			extraButtons,
+			expiration
+		)
 	}
 
 }

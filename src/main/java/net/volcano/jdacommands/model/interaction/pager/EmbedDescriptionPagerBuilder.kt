@@ -24,7 +24,16 @@ class EmbedDescriptionPagerBuilder : EmbedPagerBuilder {
 			}
 			check(embedBuilder.length() + page.length <= MessageEmbed.EMBED_MAX_LENGTH_BOT) { "Cannot build an embed with more than " + MessageEmbed.EMBED_MAX_LENGTH_BOT + " characters!" }
 		}
-		return EmbedDescriptionPager(pages, userId, embedBuilder, download, 0, extraButtons, expiration)
+		return EmbedDescriptionPager(
+			pages,
+			userId,
+			embedBuilder,
+			download,
+			downloadFileName,
+			0,
+			extraButtons,
+			expiration
+		)
 	}
 
 	fun addPage(page: String) {

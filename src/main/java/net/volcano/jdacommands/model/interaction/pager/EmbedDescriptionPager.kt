@@ -9,10 +9,11 @@ class EmbedDescriptionPager(
 	userId: String,
 	baseEmbed: EmbedBuilder,
 	download: ByteArray? = null,
+	fileName: String? = null,
 	currentPage: Int = 0,
 	extraButtons: List<Button> = listOf(),
 	expiration: Long = 60L * 30L,
-) : EmbedPager(userId, baseEmbed, download, currentPage, extraButtons, expiration) {
+) : EmbedPager(userId, baseEmbed, download, fileName, currentPage, extraButtons, expiration) {
 
 	override val size: Int
 		get() = pages.size

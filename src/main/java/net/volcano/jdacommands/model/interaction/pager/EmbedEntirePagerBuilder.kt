@@ -13,7 +13,7 @@ class EmbedEntirePagerBuilder : EmbedPagerBuilder {
 	constructor(embed: MessageEmbed?) : super(embed)
 
 	override fun buildEmbed(baseEmbed: MessageEmbed): EmbedPager {
-		return EmbedEntirePager(embeds, userId, download)
+		return EmbedEntirePager(embeds, userId, download, downloadFileName)
 	}
 
 	fun setEmbeds(embeds: List<EmbedBuilder>) {

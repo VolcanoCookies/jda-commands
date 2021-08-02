@@ -48,6 +48,7 @@ public abstract class EmbedPagerBuilder {
 	protected long expiration = 30 * 60;
 	
 	protected byte[] download;
+	protected String downloadFileName;
 	
 	protected List<Button> extraButtons = new ArrayList<>();
 	
@@ -104,6 +105,13 @@ public abstract class EmbedPagerBuilder {
 	
 	public EmbedPagerBuilder setDownload(CharSequence content) {
 		download = content.toString().getBytes();
+		downloadFileName = "download.txt";
+		return this;
+	}
+	
+	public EmbedPagerBuilder setDownload(CharSequence content, String fileName) {
+		download = content.toString().getBytes();
+		downloadFileName = fileName;
 		return this;
 	}
 	

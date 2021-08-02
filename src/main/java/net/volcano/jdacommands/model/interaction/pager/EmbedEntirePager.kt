@@ -10,10 +10,11 @@ class EmbedEntirePager(
 	private val embeds: List<MessageEmbed>,
 	userId: String,
 	download: ByteArray? = null,
+	fileName: String? = null,
 	currentPage: Int = 0,
 	extraButtons: List<Button> = listOf(),
 	expiration: Long = 60L * 30L,
-) : EmbedPager(userId, EmbedBuilder(), download, currentPage, extraButtons, expiration) {
+) : EmbedPager(userId, EmbedBuilder(), download, fileName, currentPage, extraButtons, expiration) {
 
 	override val size: Int
 		get() = embeds.size
