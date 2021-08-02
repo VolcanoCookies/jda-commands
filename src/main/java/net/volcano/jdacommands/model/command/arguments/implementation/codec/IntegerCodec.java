@@ -17,8 +17,19 @@ public class IntegerCodec extends Codec<Integer> {
 		var arg = data.parameter.getAnnotation(Arg.class);
 		
 		if (arg != null) {
-			builder.min((int) arg.min());
-			builder.max((int) arg.max());
+			var aMin = arg.min() == Double.MIN_VALUE ? Integer.MIN_VALUE : (int) arg.min();
+			var aMax = arg.max() == Double.MAX_VALUE ? Integer.MAX_VALUE : (int) arg.max();
+			
+			builder.min(aMin);
+			builder.max(aMax);
+			
+			if (aMin != Integer.MIN_VALUE && aMax != Integer.MAX_VALUE) {
+				builder.usage("<" + aMin + "-" + aMax + ">");
+			} else if (aMin != Integer.MIN_VALUE) {
+				builder.usage("< >=" + aMin + " >");
+			} else if (aMax != Integer.MAX_VALUE) {
+				builder.usage("< <=" + aMax + ">");
+			}
 		} else {
 			builder.min(Integer.MIN_VALUE);
 			builder.max(Integer.MAX_VALUE);

@@ -19,6 +19,14 @@ public class DoubleCodec extends Codec<Double> {
 		if (arg != null) {
 			builder.min(arg.min());
 			builder.max(arg.max());
+			
+			if (arg.min() != Integer.MIN_VALUE && arg.max() != Integer.MAX_VALUE) {
+				builder.usage("<" + arg.min() + "-" + arg.max() + ">");
+			} else if (arg.min() != Integer.MIN_VALUE) {
+				builder.usage("< >=" + arg.min() + " >");
+			} else if (arg.max() != Integer.MAX_VALUE) {
+				builder.usage("< <=" + arg.max() + ">");
+			}
 		} else {
 			builder.min(Double.MIN_VALUE);
 			builder.max(Double.MAX_VALUE);
