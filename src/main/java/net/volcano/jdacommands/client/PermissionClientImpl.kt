@@ -36,6 +36,9 @@ class PermissionClientImpl(
 	}
 
 	override fun putCooldown(user: User, guild: Guild?, permission: String, time: Long): OffsetDateTime {
+		if (time == 0L)
+			return OffsetDateTime.now()
+
 		val dateTime = OffsetDateTime.now().plusSeconds(time)
 		if (guild != null) {
 			guildCooldowns.putIfAbsent(guild.id, mutableMapOf())
