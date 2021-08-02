@@ -22,14 +22,6 @@ public class LongCodec extends Codec<Long> {
 			
 			builder.min(aMin);
 			builder.max(aMax);
-			
-			if (aMin != Long.MIN_VALUE && aMax != Long.MAX_VALUE) {
-				builder.usage("<" + aMin + "-" + aMax + ">");
-			} else if (aMin != Long.MIN_VALUE) {
-				builder.usage("< >=" + aMin + " >");
-			} else if (aMax != Long.MAX_VALUE) {
-				builder.usage("< <=" + aMax + ">");
-			}
 		} else {
 			builder.min(Long.MIN_VALUE);
 			builder.max(Long.MAX_VALUE);

@@ -22,14 +22,6 @@ public class IntegerCodec extends Codec<Integer> {
 			
 			builder.min(aMin);
 			builder.max(aMax);
-			
-			if (aMin != Integer.MIN_VALUE && aMax != Integer.MAX_VALUE) {
-				builder.usage("<" + aMin + "-" + aMax + ">");
-			} else if (aMin != Integer.MIN_VALUE) {
-				builder.usage("< >=" + aMin + " >");
-			} else if (aMax != Integer.MAX_VALUE) {
-				builder.usage("< <=" + aMax + ">");
-			}
 		} else {
 			builder.min(Integer.MIN_VALUE);
 			builder.max(Integer.MAX_VALUE);
