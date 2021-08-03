@@ -13,6 +13,7 @@ import net.volcano.jdautils.constants.Colors
 abstract class EmbedMenu(
 	var userId: String,
 	var baseEmbed: MessageEmbed,
+	var frontBaseEmbed: MessageEmbed? = null,
 	var download: ByteArray? = null,
 	private val asReply: Boolean = false,
 	private val ephemeral: Boolean = false,
@@ -67,11 +68,16 @@ abstract class EmbedMenu(
 
 	private val defaultFront: MessageEmbed
 		get() {
-			val embed = EmbedBuilder()
-			embed.setTitle("Selection Menu")
-			embed.setDescription("Please select a page to continue.")
-			embed.setColor(Colors.INFO)
-			return embed.build()
+			return if (frontBaseEmbed != null)
+				frontBaseEmbed!!
+			else {
+				val embed = EmbedBuilder()
+				embed.setTitle("Selection Menu")
+				embed.setDescription("Please select a page to continue.")
+				embed.setColor(Colors.INFO)
+				embed.build()
+			}
+
 		}
 
 }

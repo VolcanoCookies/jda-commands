@@ -10,7 +10,7 @@ class EmbedFieldMenuBuilder : EmbedMenuBuilder() {
 	val options: MutableMap<SelectOption, MutableList<Field>> = HashMap()
 
 	override fun buildEmbed(baseEmbed: MessageEmbed): EmbedFieldMenu {
-		return EmbedFieldMenu(options, userId, baseEmbed, download, asReply, ephemeral, expiration)
+		return EmbedFieldMenu(options, userId, baseEmbed, frontBaseEmbed, download, asReply, ephemeral, expiration)
 	}
 
 	fun addField(key: String, title: String, value: String, inline: Boolean = false): EmbedFieldMenuBuilder {

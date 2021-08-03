@@ -13,7 +13,6 @@ class EmbedDescriptionMenuBuilder : EmbedMenuBuilder() {
 
 	override fun buildEmbed(baseEmbed: MessageEmbed): EmbedDescriptionMenu {
 		val embedBuilder = EmbedBuilder(baseEmbed)
-		embedBuilder.setDescription(null)
 		for (page in options.values) {
 			check(page.length <= EMBED_DESCRIPTION_LIMIT) {
 				String.format(
@@ -23,7 +22,16 @@ class EmbedDescriptionMenuBuilder : EmbedMenuBuilder() {
 			}
 			check(embedBuilder.length() + page.length <= EMBED_TOTAL_LIMIT) { "Cannot build an embed with more than " + EMBED_TOTAL_LIMIT + " characters!" }
 		}
-		return EmbedDescriptionMenu(options, userId, baseEmbed, download, asReply, ephemeral, expiration)
+		return EmbedDescriptionMenu(
+			options,
+			userId,
+			baseEmbed,
+			frontBaseEmbed,
+			download,
+			asReply,
+			ephemeral,
+			expiration
+		)
 	}
 
 	fun addOption(key: String, content: String): EmbedDescriptionMenuBuilder {

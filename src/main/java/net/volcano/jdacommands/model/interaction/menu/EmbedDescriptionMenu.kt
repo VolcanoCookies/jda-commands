@@ -14,11 +14,12 @@ class EmbedDescriptionMenu(
 	opts: MutableMap<SelectOption, String>,
 	userId: String,
 	baseEmbed: MessageEmbed,
+	frontBaseEmbed: MessageEmbed? = null,
 	download: ByteArray? = null,
 	asReply: Boolean = false,
 	ephemeral: Boolean = false,
 	expiration: Long = 60L * 30L
-) : EmbedMenu(userId, baseEmbed, download, asReply, ephemeral, expiration) {
+) : EmbedMenu(userId, baseEmbed, frontBaseEmbed, download, asReply, ephemeral, expiration) {
 
 	private val options = opts.mapKeys { it.key.value }
 

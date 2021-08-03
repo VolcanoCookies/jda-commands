@@ -40,8 +40,10 @@ abstract class EmbedMenuBuilder {
 	var asReply: Boolean = false
 	var ephemeral: Boolean = false
 
-	constructor() {}
-	constructor(builder: EmbedBuilder?) : this(builder?.build()) {}
+	var frontBaseEmbed: MessageEmbed? = null
+
+	constructor()
+	constructor(builder: EmbedBuilder?) : this(builder?.build())
 
 	/**
 	 * Creates an EmbedBuilder using fields in an existing embed.
@@ -86,6 +88,11 @@ abstract class EmbedMenuBuilder {
 				color, thumbnail, null, author, null, footer, image, LinkedList(fields)
 			)
 		)
+	}
+
+	fun setFrontBaseEmbed(embedBuilder: EmbedBuilder): EmbedMenuBuilder {
+		frontBaseEmbed = embedBuilder.build()
+		return this
 	}
 
 	fun setDownload(content: CharSequence): EmbedMenuBuilder {
