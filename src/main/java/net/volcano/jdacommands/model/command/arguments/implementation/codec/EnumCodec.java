@@ -3,7 +3,11 @@ package net.volcano.jdacommands.model.command.arguments.implementation.codec;
 import net.volcano.jdacommands.model.ParameterData;
 import net.volcano.jdacommands.model.command.arguments.implementation.argument.EnumArgument;
 import net.volcano.jdacommands.model.command.arguments.interfaces.Codec;
+import net.volcano.jdautils.utils.ListUtilKt;
+import net.volcano.jdautils.utils.StringUtilKt;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
 
 @Component
 public class EnumCodec extends Codec<Enum<?>> {
@@ -29,6 +33,8 @@ public class EnumCodec extends Codec<Enum<?>> {
 		}
 		
 		builder.options(enumClass.getEnumConstants());
+		
+		builder.usage(ListUtilKt.asString(Arrays.asList(constants), " | ", e -> StringUtilKt.capitalize(e.name().toLowerCase())));
 		
 		return builder.build();
 	}

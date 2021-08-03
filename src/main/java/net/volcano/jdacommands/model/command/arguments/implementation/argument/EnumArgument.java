@@ -5,7 +5,6 @@ import net.volcano.jdacommands.exceptions.command.parsing.InvalidArgumentsExcept
 import net.volcano.jdacommands.model.command.arguments.CommandArgument;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 import net.volcano.jdautils.utils.ListUtilKt;
-import net.volcano.jdautils.utils.StringUtilKt;
 
 import java.util.Arrays;
 
@@ -28,8 +27,4 @@ public class EnumArgument extends CommandArgument<Enum<?>> {
 						ListUtilKt.asString(Arrays.asList(options), ", ", Enum::name)));
 	}
 	
-	@Override
-	public String getUsage() {
-		return "<" + ListUtilKt.asString(Arrays.asList(options), " | ", e -> StringUtilKt.capitalize(e.name().toLowerCase())) + ">";
-	}
 }
