@@ -2,6 +2,7 @@ package net.volcano.jdacommands.commands
 
 import net.dv8tion.jda.api.entities.Emoji
 import net.dv8tion.jda.api.requests.RestAction
+import net.volcano.jdacommands.constants.Reactions
 import net.volcano.jdacommands.interfaces.PermissionClient
 import net.volcano.jdacommands.model.command.Command
 import net.volcano.jdacommands.model.command.CommandEvent
@@ -52,6 +53,15 @@ class Help(
 		pager.ephemeral = true
 		pager.setTitle("__**Help**__")
 		pager.setFooter("<Required> [Optional]")
+		pager.addField("Arguments", "<Required> [Optional]")
+		pager.addField(
+			"Manual",
+			"You can always use the 'manual' command to view more information about a specific command."
+		)
+		pager.addField(
+			"Reactions",
+			"${Reactions.WARNING} means the command was not found.\n${Reactions.NO_PERMISSIONS} means the command was found but you are lacking permissions."
+		)
 		commands.filter { it.help != null }
 			.groupBy { it.help.category }
 			.forEach { (cat, com) ->
