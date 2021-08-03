@@ -13,7 +13,9 @@ class EmbedDescriptionMenuBuilder : EmbedMenuBuilder() {
 
 	override fun buildEmbed(baseEmbed: MessageEmbed): EmbedDescriptionMenu {
 		val embedBuilder = EmbedBuilder(baseEmbed)
-		embedBuilder.setDescription(null)
+		if (!asReply) {
+			embedBuilder.setDescription(null)
+		}
 		for (page in options.values) {
 			check(page.length <= EMBED_DESCRIPTION_LIMIT) {
 				String.format(

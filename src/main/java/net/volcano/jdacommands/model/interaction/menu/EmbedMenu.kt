@@ -69,7 +69,10 @@ abstract class EmbedMenu(
 		get() {
 			val embed = EmbedBuilder()
 			embed.setTitle("Selection Menu")
-			embed.setDescription("Please select a page to continue.")
+			if (asReply && baseEmbed.description != null)
+				embed.setDescription(baseEmbed.description!!)
+			else
+				embed.setDescription("Please select a page to continue.")
 			embed.setColor(Colors.INFO)
 			return embed.build()
 		}
