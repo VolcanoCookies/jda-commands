@@ -21,9 +21,4 @@ public class OffsetDateTimeArgument extends CommandArgument<OffsetDateTime> {
 		}
 	}
 	
-	@Override
-	public String getUsage() {
-		return "<Date>";
-	}
-	
 }
