@@ -49,10 +49,8 @@ class Help(
 			.filter { it.help != null }
 
 		val pager = EmbedDescriptionMenuBuilder()
-		pager.asReply = false
 		pager.ephemeral = true
 		pager.setTitle("__**Help**__")
-		pager.setFooter("<Required> [Optional]")
 		pager.addField("Arguments", "<Required> [Optional]")
 		pager.addField(
 			"Manual",
@@ -62,6 +60,7 @@ class Help(
 			"Reactions",
 			"${Reactions.WARNING} means the command was not found.\n${Reactions.NO_PERMISSIONS} means the command was found but you are lacking permissions."
 		)
+		pager.setFooter("Pick a category.")
 		commands.filter { it.help != null }
 			.groupBy { it.help.category }
 			.forEach { (cat, com) ->
