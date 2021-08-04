@@ -8,8 +8,8 @@ import net.volcano.jdacommands.model.command.annotations.CommandMethod
 import net.volcano.jdacommands.model.command.annotations.Help
 import net.volcano.jdacommands.model.interaction.pager.EmbedEntirePagerBuilder
 import net.volcano.jdautils.constants.Colors
+import net.volcano.jdautils.utils.asString
 import net.volcano.jdautils.utils.capitalize
-import net.volcano.jdautils.utils.capitalizeFirst
 import java.time.Instant
 
 @CommandController
@@ -44,13 +44,15 @@ class Manual {
 
 				val help = it.help
 				embed.addField("Usage", it.usageFormatted, false)
-				val parameters = it.arguments.commandArguments.joinToString(" ") { p ->
-					val u = "${p.type.typeName.capitalizeFirst()} : ${p.usage}"
-					if (p.optional) {
-						"[$u]"
+				val parameters = it.arguments.commandArguments.asString("\n") { p ->
+					var u = "´${p.usage}´ : Type[${p.type.typeName.split(".").last()}]"
+					u += p.details?.let { d -> " : $d" } ?: ""
+					u += if (p.optional) {
+						" : optional"
 					} else {
-						"<$u>"
+						" : required"
 					}
+					u
 				}
 				embed.addField("Arguments", parameters, false)
 				embed.addField("Short Description", it.descriptionFormatted, false)
