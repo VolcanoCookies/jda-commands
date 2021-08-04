@@ -45,7 +45,9 @@ class Manual {
 				val help = it.help
 				embed.addField("Usage", it.usageFormatted, false)
 				val parameters = it.arguments.commandArguments.asString("\n") { p ->
-					var u = "´${p.getUsage()}´ : Type[${(p.type as Class<*>).simpleName.split(".").last()}]"
+					var u = "`${
+						p.getUsage().substring(1, p.getUsage().length - 1)
+					}` : Type[${(p.type as Class<*>).simpleName.split(".").last()}]"
 					if (p.details != null && p.details.isNotBlank()) {
 						u += " : ${p.details}"
 					}
