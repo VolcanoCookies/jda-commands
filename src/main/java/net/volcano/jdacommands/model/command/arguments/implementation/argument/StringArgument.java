@@ -28,9 +28,4 @@ public class StringArgument extends CommandArgument<String> {
 		return data.getArg();
 	}
 	
-	@Override
-	public String getUsage() {
-		return "<Text" + (takeRest ? "..." : "") + ">";
-	}
-	
 }
