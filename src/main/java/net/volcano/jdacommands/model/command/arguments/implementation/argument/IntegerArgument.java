@@ -8,8 +8,8 @@ import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentPa
 @SuperBuilder
 public class IntegerArgument extends CommandArgument<Integer> {
 	
-	protected final int min;
-	protected final int max;
+	protected final Integer min;
+	protected final Integer max;
 	
 	@Override
 	public Integer parseValue(ArgumentParsingData data) throws InvalidArgumentsException {
@@ -29,9 +29,9 @@ public class IntegerArgument extends CommandArgument<Integer> {
 			int val = Integer.parseInt(arg);
 			val = isNegative ? -val : val;
 			
-			if (val < min) {
+			if (min != null && val < min) {
 				throw new InvalidArgumentsException(data, "Expected a number greater than, or equal to " + min);
-			} else if (val > max) {
+			} else if (max != null && val > max) {
 				throw new InvalidArgumentsException(data, "Expected a number less than, or equal to " + max);
 			}
 			

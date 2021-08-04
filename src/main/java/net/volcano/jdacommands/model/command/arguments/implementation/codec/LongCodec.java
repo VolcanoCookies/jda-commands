@@ -17,14 +17,11 @@ public class LongCodec extends Codec<Long> {
 		var arg = data.parameter.getAnnotation(Arg.class);
 		
 		if (arg != null) {
-			var aMin = arg.min() == Double.MIN_VALUE ? Long.MIN_VALUE : (long) arg.min();
-			var aMax = arg.max() == Double.MAX_VALUE ? Long.MAX_VALUE : (long) arg.max();
+			var aMin = arg.min() == Double.MIN_VALUE ? null : (long) arg.min();
+			var aMax = arg.max() == Double.MAX_VALUE ? null : (long) arg.max();
 			
 			builder.min(aMin);
 			builder.max(aMax);
-		} else {
-			builder.min(Long.MIN_VALUE);
-			builder.max(Long.MAX_VALUE);
 		}
 		
 		return builder.build();

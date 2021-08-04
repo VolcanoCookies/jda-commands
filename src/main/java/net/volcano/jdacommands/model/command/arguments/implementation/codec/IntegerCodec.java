@@ -17,14 +17,11 @@ public class IntegerCodec extends Codec<Integer> {
 		var arg = data.parameter.getAnnotation(Arg.class);
 		
 		if (arg != null) {
-			var aMin = arg.min() == Double.MIN_VALUE ? Integer.MIN_VALUE : (int) arg.min();
-			var aMax = arg.max() == Double.MAX_VALUE ? Integer.MAX_VALUE : (int) arg.max();
+			var aMin = arg.min() == Double.MIN_VALUE ? null : (int) arg.min();
+			var aMax = arg.max() == Double.MAX_VALUE ? null : (int) arg.max();
 			
 			builder.min(aMin);
 			builder.max(aMax);
-		} else {
-			builder.min(Integer.MIN_VALUE);
-			builder.max(Integer.MAX_VALUE);
 		}
 		
 		return builder.build();
