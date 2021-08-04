@@ -41,4 +41,17 @@ public class DoubleArgument extends CommandArgument<Double> {
 		}
 	}
 	
+	@Override
+	public String getDetails() {
+		if (min != null && max != null) {
+			return min + "-" + max;
+		} else if (min != null) {
+			return "<" + min;
+		} else if (max != null) {
+			return ">" + max;
+		} else {
+			return super.getDetails();
+		}
+	}
+	
 }
