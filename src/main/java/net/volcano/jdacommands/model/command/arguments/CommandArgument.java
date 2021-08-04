@@ -62,4 +62,8 @@ public abstract class CommandArgument<T> {
 		}
 	}
 	
+	public String getDetails() {
+		return "";
+	}
+	
 }
