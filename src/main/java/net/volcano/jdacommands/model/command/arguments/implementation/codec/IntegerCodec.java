@@ -17,8 +17,8 @@ public class IntegerCodec extends Codec<Integer> {
 		var arg = data.parameter.getAnnotation(Arg.class);
 		
 		if (arg != null) {
-			var aMin = arg.min() == Double.MIN_VALUE ? null : (int) arg.min();
-			var aMax = arg.max() == Double.MAX_VALUE ? null : (int) arg.max();
+			var aMin = arg.min() == Long.MIN_VALUE ? null : (int) arg.min();
+			var aMax = arg.max() == Long.MAX_VALUE ? null : (int) arg.max();
 			
 			builder.min(aMin);
 			builder.max(aMax);

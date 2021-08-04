@@ -17,8 +17,8 @@ public class StringCodec extends Codec<String> {
 		var arg = data.parameter.getAnnotation(Arg.class);
 		
 		if (arg != null) {
-			builder.min(arg.min() != Double.MIN_VALUE ? (int) arg.min() : null);
-			builder.max(arg.max() != Double.MAX_VALUE ? (int) arg.max() : null);
+			builder.min(arg.min() != Long.MIN_VALUE ? (int) arg.min() : null);
+			builder.max(arg.max() != Long.MAX_VALUE ? (int) arg.max() : null);
 		}
 		
 		return builder.build();

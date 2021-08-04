@@ -14,12 +14,12 @@ public @interface Arg {
 	/**
 	 * Min value for numerical input
 	 */
-	double min() default Double.MIN_VALUE;
+	long min() default Long.MIN_VALUE;
 	
 	/**
 	 * Max value for numerical input
 	 */
-	double max() default Double.MAX_VALUE;
+	long max() default Long.MAX_VALUE;
 	
 	boolean defaultToCaller() default false;
 	

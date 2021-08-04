@@ -17,8 +17,8 @@ public class DoubleCodec extends Codec<Double> {
 		var arg = data.parameter.getAnnotation(Arg.class);
 		
 		if (arg != null) {
-			builder.min(arg.min() != Double.MIN_VALUE ? arg.min() : null);
-			builder.max(arg.max() != Double.MAX_VALUE ? arg.max() : null);
+			builder.min(arg.min() != Long.MIN_VALUE ? (double) arg.min() : null);
+			builder.max(arg.max() != Long.MAX_VALUE ? (double) arg.max() : null);
 		}
 		
 		return builder.build();
