@@ -2,6 +2,7 @@ package net.volcano.jdacommands.model.command;
 
 import lombok.Builder;
 import net.dv8tion.jda.api.requests.RestAction;
+import net.volcano.jdacommands.exceptions.command.run.CommandException;
 import net.volcano.jdacommands.model.command.arguments.ParsedData;
 
 import java.lang.reflect.InvocationTargetException;
@@ -18,8 +19,7 @@ public class CommandFunction {
 	
 	protected final Object instance;
 	
-	protected RestAction<?> invoke(CommandEvent event, ParsedData data) throws InvocationTargetException,
-			IllegalAccessException {
+	protected RestAction<?> invoke(CommandEvent event, ParsedData data) throws IllegalAccessException, CommandException {
 		
 		Object[] args = new Object[argumentCount];
 		
@@ -37,7 +37,11 @@ public class CommandFunction {
 				return (RestAction<?>) returned;
 			}
 		} catch (InvocationTargetException e) {
-			e.getTargetException().printStackTrace();
+			if (e.getTargetException() instanceof CommandException) {
+				throw (CommandException) e.getTargetException();
+			} else {
+				e.getTargetException().printStackTrace();
+			}
 		}
 		return null;
 	}

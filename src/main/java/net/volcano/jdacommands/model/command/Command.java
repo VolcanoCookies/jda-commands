@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.volcano.jdacommands.exceptions.command.parsing.ArgumentParsingException;
 import net.volcano.jdacommands.exceptions.command.parsing.InvalidArgumentsException;
+import net.volcano.jdacommands.exceptions.command.run.CommandException;
 import net.volcano.jdacommands.interfaces.CommandClient;
 import net.volcano.jdacommands.model.command.arguments.ArgumentList;
 import net.volcano.jdacommands.model.command.arguments.ParsedData;
@@ -15,7 +16,6 @@ import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentPa
 import net.volcano.jdautils.constants.Colors;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
 import java.util.Comparator;
 
@@ -123,8 +123,7 @@ public class Command {
 		log.info("Registered '{}' as a command.", paths[0]);
 	}
 	
-	public RestAction<?> call(CommandEvent event) throws InvocationTargetException,
-			IllegalAccessException {
+	public RestAction<?> call(CommandEvent event) throws IllegalAccessException, CommandException {
 		return method.invoke(event, event.data);
 	}
 	

@@ -30,7 +30,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -431,7 +430,9 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			if (!botOwnerOverriding) {
 				permissionClient.invokeCooldown(event.getAuthor(), event.getGuild(), event.command.permission);
 			}
-		} catch (InvocationTargetException | IllegalAccessException e) {
+		} catch (CommandException e) {
+			terminate(event, e);
+		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
 		
