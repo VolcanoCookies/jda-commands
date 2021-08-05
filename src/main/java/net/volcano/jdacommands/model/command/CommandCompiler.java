@@ -14,10 +14,7 @@ import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
 import net.volcano.jdautils.utils.ClassUtil;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class CommandCompiler {
 	
@@ -150,7 +147,9 @@ public class CommandCompiler {
 			}
 			helpBuilder.examples(help.examples());
 			helpBuilder.details(help.details());
-			helpBuilder.permissions(help.permissions());
+			helpBuilder.permissions(Arrays.stream(help.permissions())
+					.map(p -> "`" + p.permission() + "` : " + p.description())
+					.toArray(String[]::new));
 			
 			builder.help(helpBuilder.build());
 		}
