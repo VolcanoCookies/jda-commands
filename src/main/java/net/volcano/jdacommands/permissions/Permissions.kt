@@ -42,7 +42,7 @@ class PermissionTree(paths: Collection<String> = emptyList()) {
 
 	companion object {
 
-		val NODE_REGEX = Regex("((?:[A-z]+\\.)*(?:[A-z]+|\\*))(?::(\\d{1,32}))?")
+		val NODE_REGEX = Regex("((?:[A-z0-9]+\\.)*(?:[A-z0-9]+|\\*))(?::(\\d{1,32}))?")
 	}
 
 }
