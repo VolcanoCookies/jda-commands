@@ -164,22 +164,12 @@ public class Command {
 	public ParsedData parseArguments(ArgumentParsingData parsingData) throws ArgumentParsingException, InvalidArgumentsException {
 		ParsedData data = arguments.parseArguments(parsingData);
 		data.command = this;
-		data.event = parsingData.event;
+		data.event = parsingData.getEvent();
 		return data;
 	}
 	
 	public static Comparator<Command> argumentComparator() {
-		return (c1, c2) -> {
-			int res = c1.getArguments().size() - c2.getArguments().size();
-			/*if (res == 0) {
-				if (c1.getArguments().lastIsTakeAll() && !c2.getArguments().lastIsTakeAll()) {
-					return 1;
-				} else if (!c1.getArguments().lastIsTakeAll() && c2.getArguments().lastIsTakeAll()) {
-					return -1;
-				}
-			}*/
-			return res;
-		};
+		return Comparator.comparingInt(c -> c.getArguments().getSize());
 	}
 	
 }

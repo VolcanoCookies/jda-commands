@@ -2,13 +2,12 @@ package net.volcano.jdacommands.model
 
 import net.volcano.jdautils.utils.ClassUtil
 import java.lang.reflect.Parameter
-import java.lang.reflect.Type
 
 object ClassUtil {
 
 	@JvmStatic
-	fun getCodecType(clazz: Class<*>): Type {
-		val actualType: Class<*> = getActualType(clazz) as Class<*>
+	fun getCodecClass(clazz: Class<*>): Class<*> {
+		val actualType: Class<*> = getActualClass(clazz)
 
 		return when {
 			actualType.isEnum -> Enum::class.java
@@ -18,18 +17,18 @@ object ClassUtil {
 	}
 
 	@JvmStatic
-	fun getCodecType(parameter: Parameter): Type {
-		return getCodecType(parameter.type)
+	fun getCodecClass(parameter: Parameter): Class<*> {
+		return getCodecClass(parameter.type)
 	}
 
 	@JvmStatic
-	fun getActualType(clazz: Class<*>): Type {
+	fun getActualClass(clazz: Class<*>): Class<*> {
 		return if (clazz.isArray) clazz.componentType else clazz
 	}
 
 	@JvmStatic
-	fun getActualType(parameter: Parameter): Type {
-		return getActualType(parameter.type)
+	fun getActualClass(parameter: Parameter): Class<*> {
+		return getActualClass(parameter.type)
 	}
 
 }
