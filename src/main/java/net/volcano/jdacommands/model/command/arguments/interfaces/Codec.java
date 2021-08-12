@@ -14,15 +14,18 @@ public abstract class Codec<T> {
 	
 	public CommandArgument<T> encodeArgument(ParameterData data) {
 		
-		if (data.codecType != ClassUtil.stripWildcard(ClassUtil.getGenericType(getClass()))) {
-			throw new IllegalArgumentException("Invalid codec used for type.");
+		var expectedType = ClassUtil.stripWildcard(ClassUtil.getGenericType(getClass()));
+		
+		if (data.codecType != expectedType) {
+			throw new IllegalArgumentException("Invalid codec " + data.codecType.getTypeName() + " used for type " + expectedType.getTypeName() + ".");
 		}
 		var arg = buildArgument(data);
 		
 		var ann = data.parameter.getAnnotation(Arg.class);
 		if (ann != null) {
-			if (!ann.usage().equals("DEFAULT"))
+			if (!ann.usage().equals("DEFAULT")) {
 				arg.setUsage(ann.usage());
+			}
 		}
 		
 		arg.setNullable(data.parameter.isAnnotationPresent(Nullable.class));

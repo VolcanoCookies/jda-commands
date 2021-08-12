@@ -24,13 +24,15 @@ public class PairCodec extends Codec<Pair<?, ?>> {
 			throw new IllegalArgumentException("Pair argument needs to have two different types.");
 		}
 		
-		var codec1 = data.codecRegistry.getCodec((Class<?>) ClassUtil.getCodecType(clazz2));
+		var codec1 = data.codecRegistry.getCodec((Class<?>) ClassUtil.getCodecType(clazz1));
 		var codec2 = data.codecRegistry.getCodec((Class<?>) ClassUtil.getCodecType(clazz2));
 		
-		if (codec1 == null)
+		if (codec1 == null) {
 			throw new IllegalArgumentException("Codec for class " + clazz1 + " not found.");
-		if (codec2 == null)
+		}
+		if (codec2 == null) {
 			throw new IllegalArgumentException("Codec for class " + clazz2 + " not found.");
+		}
 		
 		var arg1 = codec1.encodeArgument(new ParameterData(
 				data.parameter,
