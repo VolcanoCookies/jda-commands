@@ -1,34 +1,39 @@
 package net.volcano.jdacommands.model
 
-import net.volcano.jdautils.utils.ClassUtil
-import java.lang.reflect.Parameter
+import net.volcano.jdautils.utils.isEnum
+import net.volcano.jdautils.utils.isPrimitive
+import net.volcano.jdautils.utils.kClass
+import net.volcano.jdautils.utils.primitive
+import kotlin.reflect.KClass
+import kotlin.reflect.KParameter
+import kotlin.reflect.full.isSubclassOf
 
 object ClassUtil {
 
 	@JvmStatic
-	fun getCodecClass(clazz: Class<*>): Class<*> {
-		val actualType: Class<*> = getActualClass(clazz)
+	fun getCodecClass(clazz: KClass<*>): KClass<*> {
+		val actualType = getActualClass(clazz)
 
 		return when {
-			actualType.isEnum -> Enum::class.java
-			actualType.isPrimitive -> ClassUtil.dePrimitivize(actualType)
+			actualType.isEnum -> Enum::class
+			actualType.isPrimitive -> actualType.primitive!!
 			else -> actualType
 		}
 	}
 
 	@JvmStatic
-	fun getCodecClass(parameter: Parameter): Class<*> {
-		return getCodecClass(parameter.type)
+	fun getCodecClass(parameter: KParameter): KClass<*> {
+		return getCodecClass(parameter.type.kClass)
 	}
 
 	@JvmStatic
-	fun getActualClass(clazz: Class<*>): Class<*> {
-		return if (clazz.isArray) clazz.componentType else clazz
+	fun getActualClass(clazz: KClass<*>): KClass<*> {
+		return if (clazz.isSubclassOf(Array::class)) clazz.javaObjectType.componentType.kotlin else clazz
 	}
 
 	@JvmStatic
-	fun getActualClass(parameter: Parameter): Class<*> {
-		return getActualClass(parameter.type)
+	fun getActualClass(parameter: KParameter): KClass<*> {
+		return getActualClass(parameter.type.kClass)
 	}
 
 }

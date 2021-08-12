@@ -4,7 +4,6 @@ import net.dv8tion.jda.api.entities.Emoji
 import net.dv8tion.jda.api.requests.RestAction
 import net.volcano.jdacommands.constants.Reactions
 import net.volcano.jdacommands.interfaces.PermissionClient
-import net.volcano.jdacommands.model.command.Command
 import net.volcano.jdacommands.model.command.CommandEvent
 import net.volcano.jdacommands.model.command.annotations.BotOwnerCanAlwaysExecute
 import net.volcano.jdacommands.model.command.annotations.CommandController
@@ -42,9 +41,9 @@ class Help(
 			}
 			.let {
 				if (event.isFromGuild)
-					it.filter { c -> c.source != Command.Source.PRIVATE }
+					it.filter { c -> c.source != Source.PRIVATE }
 				else
-					it.filter { c -> c.source != Command.Source.GUILD }
+					it.filter { c -> c.source != Source.GUILD }
 			}
 			.filter { it.help != null }
 
@@ -93,9 +92,9 @@ class Help(
 			}
 			.let {
 				if (event.isFromGuild)
-					it.filter { c -> c.source != Command.Source.PRIVATE }
+					it.filter { c -> c.source != Source.PRIVATE }
 				else
-					it.filter { c -> c.source != Command.Source.GUILD }
+					it.filter { c -> c.source != Source.GUILD }
 			}
 			.filter { it.help != null }
 			.filter {

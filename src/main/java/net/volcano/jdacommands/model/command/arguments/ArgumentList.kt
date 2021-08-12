@@ -16,8 +16,9 @@ import java.util.*
 class ArgumentList(
 	val arguments: List<CommandArgument<*>>,
 	val lastIsVarArg: Boolean,
-	val command: Command
 ) {
+
+	lateinit var command: Command
 
 	/**
 	 * Generate usage string based on arguments
@@ -38,19 +39,19 @@ class ArgumentList(
 	@Throws(ArgumentParsingException::class, InvalidArgumentsException::class)
 	fun parseArguments(argumentData: ArgumentParsingData): ParsedData {
 
-		if (size == 0 && argumentData.size() > 0) {
+		if (size == 0 && argumentData.size > 0) {
 			throw TooManyArgumentsException(command, argumentData, 0)
 		}
 
 		// If the input raw argument size is bigger than the expected argument size,
 		// And the last argument is a "Take All" argument,
 		// Trim the raw argument to the expected size, and merge all arguments beyond that size into the last one
-		if (size < argumentData.size() && !lastIsVarArg) {
+		if (size < argumentData.size && !lastIsVarArg) {
 
 			// Check if any of the arguments after, and including, the last one are in parenthesis
 			// If none are, we can merge them, else throw TooManyArgumentsException
 			var inQuotations = false
-			for (i in size - 1 until argumentData.size()) {
+			for (i in size - 1 until argumentData.size) {
 				inQuotations = argumentData.rawArguments[i].inQuotations || inQuotations
 			}
 
@@ -66,11 +67,11 @@ class ArgumentList(
 				)
 
 			} else {
-				throw TooManyArgumentsException(command, argumentData, argumentData.size() - size)
+				throw TooManyArgumentsException(command, argumentData, argumentData.size - size)
 			}
 		}
 
-		if (argumentData.size() < size) {
+		if (argumentData.size < size) {
 			throw MissingArgumentsException(command, argumentData, argumentData.currentArg, size)
 		}
 
@@ -79,11 +80,11 @@ class ArgumentList(
 
 		var last: Any? = null
 		if (lastIsVarArg) {
-			last = Array.newInstance(arguments[size - 1].type as Class<*>, 1 + argumentData.size() - size)
+			last = Array.newInstance(arguments[size - 1].type as Class<*>, 1 + argumentData.size - size)
 		}
 
 		var j = 0
-		for (i in 0 until argumentData.size()) {
+		for (i in 0 until argumentData.size) {
 			if (i >= size - (if (lastIsVarArg) 1 else 0)) {
 				if (lastIsVarArg) {
 					Array.set(last, j++, arguments[size - 1].parseValue(argumentData))

@@ -7,7 +7,7 @@ import net.volcano.jdautils.utils.TOKEN_REGEX
 val ARGUMENT_REGEX =
 	Regex(TOKEN_REGEX, setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.MULTILINE, RegexOption.IGNORE_CASE))
 
-class ArgumentParsingData(
+data class ArgumentParsingData(
 	var event: MessageReceivedEvent,
 	var rawPrefix: String,
 	var rawPath: String,
@@ -37,18 +37,6 @@ class ArgumentParsingData(
 
 	val arg: String?
 		get() = if (rawArguments.size > currentArg) rawArguments[currentArg].value else null
-
-	fun clone(): ArgumentParsingData {
-		val data = ArgumentParsingData(
-			event,
-			rawPrefix,
-			rawPath,
-			rawContent
-		)
-		data.currentArg = currentArg
-		data.command = command
-		return data
-	}
 
 	init {
 		val argumentList: MutableList<RawArgument> = ArrayList()

@@ -1,6 +1,6 @@
 package net.volcano.jdacommands.model.command.annotations
 
-import net.volcano.jdacommands.model.command.Command
+import net.volcano.jdacommands.model.command.Source
 
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
 @Retention(AnnotationRetention.RUNTIME)
@@ -13,7 +13,7 @@ annotation class CommandMethod(
 
 	val permissions: String = "",
 
-	val source: Command.Source = Command.Source.DEFAULT,
+	val source: Source = Source.DEFAULT,
 
 	val sensitive: Boolean = false,
 

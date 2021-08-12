@@ -1,11 +1,11 @@
 package net.volcano.jdacommands.exceptions.command;
 
-import java.lang.reflect.Method;
+import kotlin.reflect.KFunction;
 
 public class CommandCompileException extends Exception {
 	
-	public CommandCompileException(Method commandMethod, String message) {
-		super(commandMethod.getDeclaringClass() + " : " + commandMethod.getName() + " : " + message);
+	public CommandCompileException(KFunction<?> function, String message) {
+		super(function.getClass() + " : " + function.getName() + " : " + message);
 	}
 	
 }

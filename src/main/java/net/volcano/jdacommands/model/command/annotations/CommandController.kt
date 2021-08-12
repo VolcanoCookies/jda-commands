@@ -1,6 +1,6 @@
 package net.volcano.jdacommands.model.command.annotations
 
-import net.volcano.jdacommands.model.command.Command
+import net.volcano.jdacommands.model.command.Source
 import org.springframework.stereotype.Component
 
 @Component
@@ -23,7 +23,7 @@ annotation class CommandController(
 	/**
 	 * @return Base source to apply to all commands under this controller unless they specify otherwise
 	 */
-	val source: Command.Source = Command.Source.DEFAULT,
+	val source: Source = Source.DEFAULT,
 
 	/**
 	 * The default category for this controller commands
