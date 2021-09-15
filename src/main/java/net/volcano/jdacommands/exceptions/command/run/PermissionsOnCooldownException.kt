@@ -3,6 +3,7 @@ package net.volcano.jdacommands.exceptions.command.run
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Guild
 import net.volcano.jdacommands.model.command.Command
+import net.volcano.jdacommands.permissions.Permission
 import net.volcano.jdautils.utils.format
 import java.time.Duration
 import java.time.OffsetDateTime
@@ -12,7 +13,7 @@ import java.time.OffsetDateTime
 class PermissionsOnCooldownException(
 	command: Command?,
 	val guild: Guild?,
-	private val missingPermissions: String,
+	private val missingPermissions: Permission,
 	private val expirationTime: OffsetDateTime
 ) : CommandException(command) {
 
@@ -24,7 +25,7 @@ class PermissionsOnCooldownException(
 					OffsetDateTime.now(),
 					expirationTime
 				).format()
-			} on '$missingPermissions'"
+			} on '${missingPermissions.value}'"
 		)
 		return embedBuilder
 	}
