@@ -2,7 +2,6 @@ package net.volcano.jdacommands.client;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -25,6 +24,7 @@ import net.volcano.jdacommands.model.command.arguments.ParsedData;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 import net.volcano.jdacommands.model.command.arguments.implementation.CodecRegistryImpl;
 import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
+import net.volcano.jdacommands.permissions.PermissionResult;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.lang.Nullable;
@@ -441,6 +441,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		
 		boolean botOwnerOverriding = false;
 		
+		PermissionResult result = null;
+		
 		if (event.command.getBotOwnerCanAlwaysExecute()) {
 			if (ownerId.equals(event.getAuthor().getId())) {
 				botOwnerOverriding = true;
@@ -449,8 +451,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		
 		if (!botOwnerOverriding) {
 			// Check if the user has permissions
-			val queryResult = permissionClient.checkPermissions(event.command.permission, event.getAuthor(), event.getGuild(), event.getTextChannel());
-			if (!queryResult.getHasPermissions()) {
+			result = permissionClient.checkPermissions(event.command.permission, event.getAuthor(), event.getGuild(), event.getTextChannel());
+			if (!result.getHasPermissions()) {
 				try {
 					checkPermissions(event, event.command);
 				} catch (PermissionsOnCooldownException | MissingPermissionsException e) {
@@ -474,7 +476,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 				action.queue();
 			}
 			if (!botOwnerOverriding) {
-				permissionClient.invokeCooldown(event.getAuthor(), event.getGuild(), event.command.permission);
+				permissionClient.invokeCooldown(event.getAuthor(), event.getGuild(), result.getHolder());
 			}
 		} catch (CommandException e) {
 			terminate(event, e);
@@ -506,11 +508,11 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			
 		} else if (t instanceof IncorrectSourceException) {
 			event.respondError("This command can only be run as a " + ((IncorrectSourceException) t)
-					.getRequiredSource() + " message.")
+							.getRequiredSource() + " message.")
 					.queue();
 		} else if (t instanceof CommandRuntimeException) {
 			event.respond(((CommandRuntimeException) t)
-					.getErrorEmbed())
+							.getErrorEmbed())
 					.queue();
 		}
 		
@@ -549,8 +551,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		var guild = event.isFromGuild() ? event.getGuild() : null;
 		var queryResult = permissionClient.checkPermissions(command.permission, event.getAuthor(), guild, event.isFromGuild() ? event.getTextChannel() : null);
 		if (!queryResult.getHasPermissions()) {
-			if (queryResult.getCooldownExpiration() != null) {
-				throw new PermissionsOnCooldownException(command, guild, command.permission, queryResult.getCooldownExpiration());
+			if (queryResult.getExpiration() != null) {
+				throw new PermissionsOnCooldownException(command, guild, command.permission, queryResult.getExpiration());
 			} else {
 				throw new MissingPermissionsException(command, guild, command.permission);
 			}

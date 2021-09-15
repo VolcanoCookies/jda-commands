@@ -11,6 +11,7 @@ import net.volcano.jdacommands.model.command.annotations.Help;
 import net.volcano.jdacommands.model.command.arguments.ArgumentList;
 import net.volcano.jdacommands.model.command.arguments.CommandArgument;
 import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
+import net.volcano.jdacommands.permissions.Permissions;
 import net.volcano.jdautils.utils.ClassUtil;
 
 import java.lang.reflect.Method;
@@ -165,17 +166,17 @@ public class CommandCompiler {
 		builder.method(methodBuilder.build());
 		
 		// Build the permissions for this command
-		var permissions = controller.permissions();
-		if (!permissions.isBlank() && !commandMethod.permissions().isBlank()) {
-			permissions += ".";
+		var permission = controller.permissions();
+		if (!permission.isBlank() && !commandMethod.permissions().isBlank()) {
+			permission += ".";
 		}
-		permissions += commandMethod.permissions();
-		if (permissions.isEmpty()) {
+		permission += commandMethod.permissions();
+		if (permission.isEmpty()) {
 			throw new CommandCompileException(method, "Command permissions are empty, set some and provide them by default instead.");
-		} else if (!permissions.startsWith("command.")) {
-			permissions = "command." + permissions;
+		} else if (!permission.startsWith("command.")) {
+			permission = "command." + permission;
 		}
-		builder.permission(permissions);
+		builder.permission(Permissions.parse(permission).getPermission());
 		
 		// Add command source
 		if (commandMethod.source() == Command.Source.DEFAULT) {

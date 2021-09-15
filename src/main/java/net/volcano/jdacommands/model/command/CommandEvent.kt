@@ -3,10 +3,7 @@ package net.volcano.jdacommands.model.command
 import lombok.Builder
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.MessageBuilder
-import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.entities.Role
-import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.api.entities.*
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
 import net.dv8tion.jda.api.requests.RestAction
 import net.dv8tion.jda.api.requests.restaction.MessageAction
@@ -14,7 +11,6 @@ import net.volcano.jdacommands.exceptions.command.run.MissingPermissionsExceptio
 import net.volcano.jdacommands.exceptions.command.run.PermissionsOnCooldownException
 import net.volcano.jdacommands.interfaces.CommandClient
 import net.volcano.jdacommands.interfaces.Extension
-import net.volcano.jdacommands.interfaces.QueryResult
 import net.volcano.jdacommands.model.IntermediateEvent
 import net.volcano.jdacommands.model.Templates.error
 import net.volcano.jdacommands.model.Templates.info
@@ -25,6 +21,9 @@ import net.volcano.jdacommands.model.interaction.Confirmation
 import net.volcano.jdacommands.model.interaction.Confirmation.Companion.message
 import net.volcano.jdacommands.model.interaction.menu.EmbedMenuBuilder
 import net.volcano.jdacommands.model.interaction.pager.EmbedPagerBuilder
+import net.volcano.jdacommands.permissions.PermissionHolder
+import net.volcano.jdacommands.permissions.PermissionResult
+import net.volcano.jdacommands.permissions.Permissions
 import net.volcano.jdautils.utils.RoleUtil.findRole
 import net.volcano.jdautils.utils.UserUtil
 import javax.annotation.CheckReturnValue
@@ -53,7 +52,7 @@ class CommandEvent @Builder constructor(
 	/**
 	 * The permissions of the user executing the command
 	 */
-	val userPermissions: Set<String> = client.permissionProvider.getPermissions(this)
+	val userPermissions: Set<PermissionHolder> = client.permissionProvider.getPermissions(this)
 
 	/**
 	 * Respond to the command caller in the same channel
@@ -307,8 +306,27 @@ class CommandEvent @Builder constructor(
 	 * @param permission the permissions to check for.
 	 * @return `true` if, and only if, the author has all the permissions.
 	 */
-	fun hasPermissions(permission: String, guild: Guild? = null): QueryResult {
-		return client.permissionClient.checkPermissions(permission, author, guild ?: this.guild)
+	fun hasPermissions(permission: String, guild: Guild? = null, channel: TextChannel? = null): PermissionResult {
+		return client.permissionClient.checkPermissions(
+			Permissions.parse(permission).permission,
+			author,
+			guild ?: this.guild,
+			channel ?: this.textChannel
+		)
+	}
+
+	/**
+	 * Check if the command author has the specified permissions.
+	 *
+	 * @param guild      the guild to check in, or null for global.
+	 * @param permission the permissions to check for.
+	 * @return `true` if, and only if, the author has all the permissions.
+	 */
+	fun hasPermissions(
+		permission: net.volcano.jdacommands.permissions.Permission,
+		guild: Guild? = null
+	): PermissionResult {
+		return client.permissionClient.checkPermissions(permission, author, guild ?: this.guild, null)
 	}
 
 	/**
@@ -325,17 +343,39 @@ class CommandEvent @Builder constructor(
 	 * @throws MissingPermissionsException if the author does not have the required permissions.
 	 */
 	@Throws(MissingPermissionsException::class, PermissionsOnCooldownException::class)
-	fun checkPermission(permission: String, guild: Guild? = null) {
+	fun checkPermission(permission: String, guild: Guild? = null, channel: TextChannel? = null) {
+		checkPermission(Permissions.parse(permission).permission, guild, channel)
+	}
+
+	/**
+	 * Check if the command author has the specified permissions.
+	 *
+	 *
+	 * This checks the server the command was ran in, or globally if ran in dms.
+	 *
+	 *
+	 * This method will throw an error if the author does not have the permissions provided.
+	 *
+	 * @param permission the permissions to check for.
+	 * @param guild      the guild to check in, or null for global.
+	 * @throws MissingPermissionsException if the author does not have the required permissions.
+	 */
+	@Throws(MissingPermissionsException::class, PermissionsOnCooldownException::class)
+	fun checkPermission(
+		permission: net.volcano.jdacommands.permissions.Permission,
+		guild: Guild? = null,
+		channel: TextChannel? = null
+	) {
 		val res = client.permissionClient.checkPermissions(
 			permission,
 			author,
 			guild ?: this.guild,
 			if (guild == this.guild) textChannel else null
 		)
-		if (!res.hasPermissions) {
+		if (!res.holdsPermissions) {
 			throw MissingPermissionsException(null, guild, permission)
 		} else if (res.onCooldown) {
-			throw PermissionsOnCooldownException(null, guild, permission, res.cooldownExpiration!!)
+			throw PermissionsOnCooldownException(null, guild, permission, res.expiration!!)
 		}
 	}
 

@@ -13,6 +13,7 @@ import net.volcano.jdacommands.interfaces.CommandClient;
 import net.volcano.jdacommands.model.command.arguments.ArgumentList;
 import net.volcano.jdacommands.model.command.arguments.ParsedData;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
+import net.volcano.jdacommands.permissions.Permission;
 import net.volcano.jdautils.constants.Colors;
 
 import javax.annotation.Nullable;
@@ -32,7 +33,7 @@ public class Command {
 	/**
 	 * The required permissions for this command
 	 */
-	public final String permission;
+	public final Permission permission;
 	
 	/**
 	 * The source for this command

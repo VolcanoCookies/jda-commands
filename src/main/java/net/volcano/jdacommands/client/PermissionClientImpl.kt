@@ -6,8 +6,7 @@ import net.dv8tion.jda.api.entities.User
 import net.volcano.jdacommands.interfaces.CommandClient
 import net.volcano.jdacommands.interfaces.PermissionClient
 import net.volcano.jdacommands.interfaces.PermissionProvider
-import net.volcano.jdacommands.interfaces.QueryResult
-import net.volcano.jdacommands.permissions.PermissionTree
+import net.volcano.jdacommands.permissions.*
 import net.volcano.jdautils.utils.asString
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -19,116 +18,138 @@ class PermissionClientImpl(
 	val provider: PermissionProvider
 ) : PermissionClient {
 
-	// GuildID -> UserID -> Path -> Expiration Time
-	private val guildCooldowns = ConcurrentHashMap<String, MutableMap<String, MutableMap<String, OffsetDateTime>>>()
+	private data class CooldownKey(
+		val user: User,
+		val guild: Guild?,
+		val permission: Permission
+	) {
 
-	// UserID -> Path -> Expiration Time
-	private val globalCooldowns = ConcurrentHashMap<String, MutableMap<String, OffsetDateTime>>()
+		override fun equals(other: Any?): Boolean {
+			val any = other ?: return false
+			if (any !is CooldownKey) return false
+			return (this.user == any.user) && (this.guild == any.guild) && (this.permission == any.permission)
+		}
+	}
+
+	private data class CooldownEntry(
+		val expiration: OffsetDateTime,
+		val invocation: OffsetDateTime
+	) {
+
+		constructor(cooldown: Long) : this(
+			OffsetDateTime.now().plusSeconds(cooldown),
+			OffsetDateTime.now()
+		)
+
+		val hasExpired: Boolean
+			get() = OffsetDateTime.now().isAfter(expiration)
+	}
+
+	private val cooldowns: MutableMap<CooldownKey, MutableList<CooldownEntry>> = ConcurrentHashMap()
 
 	lateinit var client: CommandClient
 
-	override fun checkPermissions(permission: String, user: User, guild: Guild?, channel: TextChannel?): QueryResult {
-		val perms = PermissionTree(provider.getPermissions(user, guild, channel))
-		return QueryResult(
-			perms.contains(permission) || provider.isOverriding(user.id),
-			getCooldown(user, guild, permission)
+	override fun checkPermissions(
+		permission: Permission,
+		user: User,
+		guild: Guild?,
+		channel: TextChannel?
+	): PermissionResult {
+		val tree = getTree(user, guild, channel)
+		val holder = tree.get(permission) ?: return PermissionResult.NO_PERMISSIONS
+
+		return PermissionResult(
+			true,
+			holder,
+			getCooldownLeft(user, guild, holder),
+			holder.cooldown,
+			holder.limit,
+			holder.limit - getInvocations(user, guild, holder)
 		)
 	}
 
-	override fun putCooldown(user: User, guild: Guild?, permission: String, time: Long): OffsetDateTime {
-		if (time == 0L)
-			return OffsetDateTime.now()
+	override fun invokeCooldown(user: User, guild: Guild?, holder: PermissionHolder) {
+		if (holder.cooldown == 0L) return
+		val key = CooldownKey(user, guild, holder.permission)
+		val expiration = CooldownEntry(holder.cooldown)
 
-		val dateTime = OffsetDateTime.now().plusSeconds(time)
-		if (guild != null) {
-			guildCooldowns.putIfAbsent(guild.id, mutableMapOf())
-			guildCooldowns[guild.id]!!.putIfAbsent(user.id, mutableMapOf())
-			guildCooldowns[guild.id]!![user.id]!![permission] = dateTime
-		} else {
-			globalCooldowns.putIfAbsent(user.id, mutableMapOf())
-			globalCooldowns[user.id]!![permission] = dateTime
-		}
-
-		return dateTime
-	}
-
-	override fun invokeCooldown(user: User, guild: Guild?, permission: String) {
-		val perms = PermissionTree(provider.getPermissions(user, guild))
-		perms.getCooldown(permission)?.let {
-			putCooldown(user, guild, permission, it)
+		synchronized(cooldowns) {
+			if (cooldowns[key] != null)
+				cooldowns[key]!! += expiration
+			else
+				cooldowns[key] = mutableListOf(expiration)
 		}
 	}
 
-	override fun onCooldown(user: User, guild: Guild?, permission: String): Boolean {
-		return if (guild != null) {
-			guildCooldowns[guild.id]?.get(user.id)?.get(permission) != null
-		} else {
-			globalCooldowns[user.id]?.get(permission) != null
-		}
+	override fun onCooldown(user: User, guild: Guild?, holder: PermissionHolder): Boolean {
+		return getCooldownLeft(user, guild, holder) != null
 	}
 
-	override fun getCooldown(user: User, guild: Guild?, permission: String): OffsetDateTime? {
-		return if (guild != null) {
-			guildCooldowns[guild.id]?.get(user.id)?.get(permission)
-		} else {
-			globalCooldowns[user.id]?.get(permission)
-		}
+	override fun getCooldownLeft(user: User, guild: Guild?, holder: PermissionHolder): OffsetDateTime? {
+		val key = CooldownKey(user, guild, holder.permission)
+
+		if (getInvocations(user, guild, holder) < holder.limit) return null
+
+		return cooldowns[key]?.filter { !it.hasExpired }
+			?.sortedBy { it.expiration.toEpochSecond() }
+			?.takeLast(holder.limit)
+			?.firstOrNull()
+			?.expiration
 	}
 
-	override fun getKnownPermissions(): Map<String, String> {
-		return this.client.allCommands.groupBy { it.permission }
+	override fun getInvocations(user: User, guild: Guild?, holder: PermissionHolder): Int {
+		val key = CooldownKey(user, guild, holder.permission)
+		return cooldowns[key]?.count { !it.hasExpired } ?: 0
+	}
+
+	override fun getKnownPermissions(): Map<Permission, String> {
+		val commandPermissions = this.client.allCommands
+			.groupBy { it.permission }
 			.mapValues {
 				if (it.value.size == 1) {
 					"Execute command ${it.value[0].paths[0]}"
 				} else {
 					"Execute commands ${it.value.asString(",") { c -> c.paths[0] }}"
 				}
-			}.plus(this.client.allCommands.flatMap {
-				it.help?.permissions?.map { p -> p.split(":", limit = 2).let { i -> Pair(i[0], i[1]) } } ?: emptyList()
-			})
+			}
+
+		val explicitHelpPermissions = this.client.allCommands
+			.mapNotNull {
+				it.help?.permissions?.map { p ->
+					p.split(":", limit = 2)
+						.let { a -> Pair(Permissions.parse(a[0]).permission, a[1]) }
+				}
+			}
+			.flatten()
+			.toMap()
+
+		return commandPermissions + explicitHelpPermissions
 	}
 
-	@Scheduled(fixedRate = 1000 * 60 * 5)
+	private fun getTree(user: User, guild: Guild?, channel: TextChannel?): PermissionTree {
+		val permissions = provider.getPermissions(user, guild, channel)
+		return PermissionTree(permissions)
+	}
+
+	@Scheduled(fixedRate = 1000 * 60 * 30)
 	fun clearExpiredCooldowns() {
 		val now = OffsetDateTime.now()
 
-		val globalCooldownsIterator = globalCooldowns.iterator()
-
-		while (globalCooldownsIterator.hasNext()) {
-			val permissions = globalCooldownsIterator.next().value
-			val permissionsIterator = permissions.iterator()
-			while (permissionsIterator.hasNext()) {
-				if (permissionsIterator.next().value.isBefore(now))
-					permissionsIterator.remove()
-			}
-			if (permissions.isEmpty())
-				globalCooldownsIterator.remove()
-		}
-
-		val guildCooldownsIterator = guildCooldowns.iterator()
-
-		while (guildCooldownsIterator.hasNext()) {
-			val memberCooldowns = guildCooldownsIterator.next().value
-			val memberCooldownsIterator = memberCooldowns.iterator()
-
-			while (memberCooldownsIterator.hasNext()) {
-				val permissions = memberCooldownsIterator.next().value
-				val permissionsIterator = permissions.iterator()
-
-				while (permissionsIterator.hasNext()) {
-					if (permissionsIterator.next().value.isBefore(now))
-						permissionsIterator.remove()
-				}
-
-				if (permissions.isEmpty())
-					memberCooldownsIterator.remove()
+		synchronized(cooldowns) {
+			val empty = cooldowns.filter { it.value.all { v -> v.hasExpired } }.keys
+			for (key in empty) {
+				cooldowns.remove(key)
 			}
 
-			if (memberCooldowns.isEmpty())
-				guildCooldownsIterator.remove()
-
+			cooldowns.forEach {
+				it.value.removeIf { v -> v.hasExpired }
+			}
 		}
 
+	}
+
+	fun printCooldowns() {
+		println(cooldowns)
 	}
 
 }
