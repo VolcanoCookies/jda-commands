@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.volcano.jdacommands.config.CategoryConfig;
+import net.volcano.jdacommands.config.EmoteConfig;
 import net.volcano.jdacommands.constants.Reactions;
 import net.volcano.jdacommands.exceptions.command.CommandCompileException;
 import net.volcano.jdacommands.exceptions.command.parsing.*;
@@ -68,6 +69,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	
 	private final String ownerId;
 	
+	private final EmoteConfig discordConfig;
+	
 	public CommandClientImpl(JDA jda,
 	                         PermissionProvider permissionProvider,
 	                         PrefixProvider prefixProvider,
@@ -76,6 +79,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	                         PermissionClient permissionClient,
 	                         InteractionClient interactionClient,
 	                         CategoryConfig categoryConfig,
+	                         EmoteConfig discordConfig,
 	                         @Nullable Extension extension,
 	                         ApplicationContext context) throws ExecutionException, InterruptedException {
 		
@@ -85,6 +89,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		this.guildProvider = guildProvider;
 		this.permissionClient = permissionClient;
 		this.interactionClient = interactionClient;
+		this.discordConfig = discordConfig;
 		this.extension = extension;
 		
 		executorService = new ScheduledThreadPoolExecutor(1);
@@ -156,14 +161,55 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			} catch (CommandNotFoundException e) {
 				
 				// Add warning to unknown commands
-				event.getMessage()
-						.addReaction(Reactions.WARNING)
-						.queue();
+				if (discordConfig.getNotFoundEmoteId() != null) {
+					
+					var emote = event.getJDA().getEmoteById(discordConfig.getNotFoundEmoteId());
+					if (emote != null) {
+						event.getMessage()
+								.addReaction(emote)
+								.queue();
+					} else {
+						event.getMessage()
+								.addReaction(Reactions.WARNING)
+								.queue();
+					}
+					
+				}
 				
-			} catch (MissingPermissionsException | PermissionsOnCooldownException e) {
-				event.getMessage()
-						.addReaction(Reactions.NO_PERMISSIONS)
-						.queue();
+			} catch (MissingPermissionsException e) {
+				
+				if (discordConfig.getNoPermissionsEmoteId() != null) {
+					
+					var emote = event.getJDA().getEmoteById(discordConfig.getNoPermissionsEmoteId());
+					if (emote != null) {
+						event.getMessage()
+								.addReaction(emote)
+								.queue();
+					} else {
+						event.getMessage()
+								.addReaction(Reactions.NO_PERMISSIONS)
+								.queue();
+					}
+					
+				}
+				
+			} catch (PermissionsOnCooldownException e) {
+				
+				if (discordConfig.getCooldownEmoteId() != null) {
+					
+					var emote = event.getJDA().getEmoteById(discordConfig.getCooldownEmoteId());
+					if (emote != null) {
+						event.getMessage()
+								.addReaction(emote)
+								.queue();
+					} else {
+						event.getMessage()
+								.addReaction(Reactions.NO_PERMISSIONS)
+								.queue();
+					}
+					
+				}
+				
 			} catch (CommandRuntimeException e) {
 				sendError(e, event);
 			} catch (Exception e) {
@@ -442,9 +488,22 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	public void terminate(CommandEvent event, Throwable t) {
 		
 		if (t instanceof MissingPermissionsException) {
-			event.getMessage()
-					.addReaction(Reactions.NO_PERMISSIONS)
-					.queue();
+			
+			if (discordConfig.getNoPermissionsEmoteId() != null) {
+				
+				var emote = event.getJDA().getEmoteById(discordConfig.getNoPermissionsEmoteId());
+				if (emote != null) {
+					event.getMessage()
+							.addReaction(emote)
+							.queue();
+				} else {
+					event.getMessage()
+							.addReaction(Reactions.NO_PERMISSIONS)
+							.queue();
+				}
+				
+			}
+			
 		} else if (t instanceof IncorrectSourceException) {
 			event.respondError("This command can only be run as a " + ((IncorrectSourceException) t)
 					.getRequiredSource() + " message.")
