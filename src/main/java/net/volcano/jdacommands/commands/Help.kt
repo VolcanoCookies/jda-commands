@@ -1,5 +1,6 @@
 package net.volcano.jdacommands.commands
 
+import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Emoji
 import net.dv8tion.jda.api.requests.RestAction
 import net.volcano.jdacommands.constants.Reactions
@@ -48,19 +49,26 @@ class Help(
 			}
 			.filter { it.help != null }
 
+		val frontEmbed = EmbedBuilder()
+		frontEmbed.setTitle("__**Help**__")
+		frontEmbed.setColor(Colors.HELP)
+		frontEmbed.addField("Arguments", "<Required> [Optional]", false)
+		frontEmbed.addField(
+			"Manual",
+			"You can always use the 'manual' command to view more information about a specific command.",
+			false
+		)
+		frontEmbed.addField(
+			"Reactions",
+			"${Reactions.WARNING} means the command was not found.\n${Reactions.NO_PERMISSIONS} means the command was found but you are lacking permissions.",
+			false
+		)
+		frontEmbed.setDescription("Pick a category.")
+
 		val pager = EmbedDescriptionMenuBuilder()
 		pager.ephemeral = true
 		pager.setTitle("__**Help**__")
-		pager.addField("Arguments", "<Required> [Optional]")
-		pager.addField(
-			"Manual",
-			"You can always use the 'manual' command to view more information about a specific command."
-		)
-		pager.addField(
-			"Reactions",
-			"${Reactions.WARNING} means the command was not found.\n${Reactions.NO_PERMISSIONS} means the command was found but you are lacking permissions."
-		)
-		pager.setFooter("Pick a category.")
+		pager.setFrontBaseEmbed(frontEmbed)
 		commands.filter { it.help != null }
 			.groupBy { it.help.category }
 			.forEach { (cat, com) ->
