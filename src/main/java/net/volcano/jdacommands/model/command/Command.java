@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.requests.RestAction;
 import net.volcano.jdacommands.exceptions.command.parsing.ArgumentParsingException;
 import net.volcano.jdacommands.exceptions.command.parsing.InvalidArgumentsException;
 import net.volcano.jdacommands.exceptions.command.run.CommandException;
+import net.volcano.jdacommands.exceptions.command.run.CommandRuntimeException;
 import net.volcano.jdacommands.interfaces.CommandClient;
 import net.volcano.jdacommands.model.command.arguments.ArgumentList;
 import net.volcano.jdacommands.model.command.arguments.ParsedData;
@@ -124,7 +125,7 @@ public class Command {
 		log.info("Registered '{}' as a command.", paths[0]);
 	}
 	
-	public RestAction<?> call(CommandEvent event) throws IllegalAccessException, CommandException {
+	public RestAction<?> call(CommandEvent event) throws IllegalAccessException, CommandException, CommandRuntimeException {
 		return method.invoke(event, event.data);
 	}
 	

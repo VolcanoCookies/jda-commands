@@ -210,8 +210,6 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 					
 				}
 				
-			} catch (CommandRuntimeException e) {
-				sendError(e, event);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -478,7 +476,7 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 			if (!botOwnerOverriding) {
 				permissionClient.invokeCooldown(event.getAuthor(), event.getGuild(), result.getHolder());
 			}
-		} catch (CommandException e) {
+		} catch (CommandException | CommandRuntimeException e) {
 			terminate(event, e);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
