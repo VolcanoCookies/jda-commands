@@ -31,12 +31,10 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -70,6 +68,8 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 	private final String ownerId;
 	
 	private final EmoteConfig discordConfig;
+	
+	private final List<Predicate<MessageReceivedEvent>> commandEventFilters = new LinkedList<>();
 	
 	public CommandClientImpl(JDA jda,
 	                         PermissionProvider permissionProvider,
@@ -110,6 +110,16 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		
 	}
 	
+	/**
+	 * Added ability to add filters that must pass before a command event is even considered.
+	 * These will be executed right before trying to find what command a user ran.
+	 * <p>
+	 * Filter must return true for event to pass.
+	 */
+	public void addCommandEventFilter(Predicate<MessageReceivedEvent> filter) {
+		commandEventFilters.add(filter);
+	}
+	
 	private static final Pattern INVALID_MESSAGE_REGEX = Pattern.compile("^<((a?:|@[&!]?\\d+|#\\d+)|http).*$", Pattern.DOTALL);
 	
 	@Override
@@ -129,6 +139,12 @@ public class CommandClientImpl extends ListenerAdapter implements CommandClient 
 		// Check if the message starts with the prefix
 		if (!content.startsWith(prefix) || INVALID_MESSAGE_REGEX.matcher(content).matches()) {
 			return;
+		}
+		
+		for (Predicate<MessageReceivedEvent> filter : commandEventFilters) {
+			if (!filter.test(event)) {
+				return;
+			}
 		}
 		
 		// Remove the prefix to find the command
