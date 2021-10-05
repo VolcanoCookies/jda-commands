@@ -14,7 +14,7 @@ public class DoubleArgument extends CommandArgument<Double> {
 	@Override
 	public Double parseValue(ArgumentParsingData data) throws InvalidArgumentsException {
 		
-		if (!data.getArg().matches("-?\\d+")) {
+		if (!data.getArg().matches("-?\\d+(\\.\\d+)?")) {
 			throw new InvalidArgumentsException(data, "Expected a number");
 		}
 		
