@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Guild
 import net.volcano.jdacommands.model.command.Command
 import net.volcano.jdacommands.permissions.Permission
-import net.volcano.jdautils.utils.format
+import net.volcano.jdautilities.utils.format
 import java.time.Duration
 import java.time.OffsetDateTime
 

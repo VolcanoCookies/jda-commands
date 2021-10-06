@@ -2,8 +2,8 @@ package net.volcano.jdacommands.model.menu;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent;
-import net.volcano.jdautils.constants.Colors;
-import net.volcano.jdautils.constants.Reactions;
+import net.volcano.jdautilities.constants.Colors;
+import net.volcano.jdautilities.constants.Reactions;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;

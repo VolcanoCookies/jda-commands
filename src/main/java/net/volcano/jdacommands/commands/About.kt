@@ -6,7 +6,7 @@ import net.volcano.jdacommands.model.command.CommandEvent
 import net.volcano.jdacommands.model.command.annotations.CommandController
 import net.volcano.jdacommands.model.command.annotations.CommandMethod
 import net.volcano.jdacommands.model.command.annotations.Help
-import net.volcano.jdautils.constants.Colors
+import net.volcano.jdautilities.constants.Colors
 import java.util.concurrent.ExecutionException
 
 @CommandController

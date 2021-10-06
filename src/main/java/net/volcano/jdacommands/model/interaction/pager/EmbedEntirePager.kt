@@ -3,8 +3,8 @@ package net.volcano.jdacommands.model.interaction.pager
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.Button
-import net.volcano.jdautils.constants.EMBED_FOOTER_LIMIT
-import net.volcano.jdautils.utils.trim
+import net.volcano.jdautilities.constants.EMBED_FOOTER_LIMIT
+import net.volcano.jdautilities.utils.trim
 
 class EmbedEntirePager(
 	private val embeds: List<MessageEmbed>,

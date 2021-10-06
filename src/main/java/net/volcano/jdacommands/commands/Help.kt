@@ -13,8 +13,8 @@ import net.volcano.jdacommands.model.command.annotations.CommandMethod
 import net.volcano.jdacommands.model.command.annotations.Help
 import net.volcano.jdacommands.model.interaction.menu.EmbedDescriptionMenuBuilder
 import net.volcano.jdacommands.model.interaction.pager.EmbedFieldPagerBuilder
-import net.volcano.jdautils.constants.Colors
-import net.volcano.jdautils.utils.capitalize
+import net.volcano.jdautilities.constants.Colors
+import net.volcano.jdautilities.utils.capitalize
 
 @CommandController
 class Help(

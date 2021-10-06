@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import net.volcano.jdacommands.exceptions.command.parsing.InvalidArgumentsException;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
-import net.volcano.jdautils.utils.StringUtilKt;
+import net.volcano.jdautilities.utils.StringUtilKt;
 
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;

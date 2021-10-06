@@ -8,8 +8,8 @@ import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.interactions.components.Button
 import net.dv8tion.jda.internal.utils.Checks
 import net.dv8tion.jda.internal.utils.Helpers
-import net.volcano.jdautils.constants.EMBED_FIELD_VALUE_LIMIT
-import net.volcano.jdautils.utils.splitAt
+import net.volcano.jdautilities.constants.EMBED_FIELD_VALUE_LIMIT
+import net.volcano.jdautilities.utils.splitAt
 import java.awt.Color
 import java.time.*
 import java.time.temporal.TemporalAccessor

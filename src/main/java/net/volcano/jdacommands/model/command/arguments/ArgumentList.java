@@ -8,7 +8,7 @@ import net.volcano.jdacommands.exceptions.command.parsing.TooManyArgumentsExcept
 import net.volcano.jdacommands.model.command.Command;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 import net.volcano.jdacommands.model.command.arguments.implementation.RawArgument;
-import net.volcano.jdautils.utils.ListUtilKt;
+import net.volcano.jdautilities.utils.ListUtilKt;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;

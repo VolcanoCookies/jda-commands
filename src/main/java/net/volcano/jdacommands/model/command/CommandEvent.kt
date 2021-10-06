@@ -24,8 +24,8 @@ import net.volcano.jdacommands.model.interaction.pager.EmbedPagerBuilder
 import net.volcano.jdacommands.permissions.PermissionHolder
 import net.volcano.jdacommands.permissions.PermissionResult
 import net.volcano.jdacommands.permissions.Permissions
-import net.volcano.jdautils.utils.RoleUtil.findRole
-import net.volcano.jdautils.utils.UserUtil
+import net.volcano.jdautilities.utils.RoleUtil.findRole
+import net.volcano.jdautilities.utils.UserUtil
 import javax.annotation.CheckReturnValue
 
 class CommandEvent @Builder constructor(

@@ -11,8 +11,8 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.internal.utils.Checks;
 import net.dv8tion.jda.internal.utils.Helpers;
-import net.volcano.jdautils.constants.LimitKt;
-import net.volcano.jdautils.utils.StringUtilKt;
+import net.volcano.jdautilities.constants.LimitKt;
+import net.volcano.jdautilities.utils.StringUtilKt;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -2,9 +2,9 @@ package net.volcano.jdacommands.model.interaction.pager
 
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
-import net.volcano.jdautils.constants.EMBED_DESCRIPTION_LIMIT
-import net.volcano.jdautils.constants.EMBED_FIELD_COUNT_LIMIT
-import net.volcano.jdautils.constants.EMBED_TOTAL_LIMIT
+import net.volcano.jdautilities.constants.EMBED_DESCRIPTION_LIMIT
+import net.volcano.jdautilities.constants.EMBED_FIELD_COUNT_LIMIT
+import net.volcano.jdautilities.constants.EMBED_TOTAL_LIMIT
 import kotlin.math.max
 import kotlin.math.min
 

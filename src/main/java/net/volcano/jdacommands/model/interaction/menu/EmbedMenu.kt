@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent
 import net.dv8tion.jda.api.interactions.InteractionHook
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.volcano.jdacommands.model.interaction.InteractionListener
-import net.volcano.jdautils.constants.Colors
+import net.volcano.jdautilities.constants.Colors
 
 abstract class EmbedMenu(
 	var userId: String,

@@ -5,10 +5,10 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu
-import net.volcano.jdautils.constants.SELECTION_OPTION_DESCRIPTION_LIMIT
-import net.volcano.jdautils.constants.SELECTION_OPTION_LABEL_LIMIT
-import net.volcano.jdautils.utils.capitalize
-import net.volcano.jdautils.utils.trim
+import net.volcano.jdautilities.constants.SELECTION_OPTION_DESCRIPTION_LIMIT
+import net.volcano.jdautilities.constants.SELECTION_OPTION_LABEL_LIMIT
+import net.volcano.jdautilities.utils.capitalize
+import net.volcano.jdautilities.utils.trim
 
 class EmbedDescriptionMenu(
 	opts: MutableMap<SelectOption, String>,

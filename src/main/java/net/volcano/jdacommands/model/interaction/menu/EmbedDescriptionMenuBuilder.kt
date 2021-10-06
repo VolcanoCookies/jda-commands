@@ -4,8 +4,8 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Emoji
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption
-import net.volcano.jdautils.constants.EMBED_DESCRIPTION_LIMIT
-import net.volcano.jdautils.constants.EMBED_TOTAL_LIMIT
+import net.volcano.jdautilities.constants.EMBED_DESCRIPTION_LIMIT
+import net.volcano.jdautilities.constants.EMBED_TOTAL_LIMIT
 
 class EmbedDescriptionMenuBuilder : EmbedMenuBuilder() {
 

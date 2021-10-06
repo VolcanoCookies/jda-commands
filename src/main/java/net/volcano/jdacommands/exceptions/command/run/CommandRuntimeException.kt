@@ -1,9 +1,9 @@
 package net.volcano.jdacommands.exceptions.command.run
 
 import net.dv8tion.jda.api.EmbedBuilder
-import net.volcano.jdautils.constants.Colors
-import net.volcano.jdautils.constants.EMBED_DESCRIPTION_LIMIT
-import net.volcano.jdautils.utils.trim
+import net.volcano.jdautilities.constants.Colors
+import net.volcano.jdautilities.constants.EMBED_DESCRIPTION_LIMIT
+import net.volcano.jdautilities.utils.trim
 import java.time.Instant
 
 open class CommandRuntimeException(

@@ -12,7 +12,7 @@ import net.volcano.jdacommands.model.command.arguments.ArgumentList;
 import net.volcano.jdacommands.model.command.arguments.CommandArgument;
 import net.volcano.jdacommands.model.command.arguments.interfaces.CodecRegistry;
 import net.volcano.jdacommands.permissions.Permissions;
-import net.volcano.jdautils.utils.ClassUtil;
+import net.volcano.jdautilities.utils.ClassUtil;
 
 import java.lang.reflect.Method;
 import java.util.*;

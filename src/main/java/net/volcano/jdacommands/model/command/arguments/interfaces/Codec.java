@@ -4,7 +4,7 @@ import net.volcano.jdacommands.model.ParameterData;
 import net.volcano.jdacommands.model.command.annotations.argument.Arg;
 import net.volcano.jdacommands.model.command.annotations.argument.Optional;
 import net.volcano.jdacommands.model.command.arguments.CommandArgument;
-import net.volcano.jdautils.utils.ClassUtil;
+import net.volcano.jdautilities.utils.ClassUtil;
 
 import javax.annotation.Nullable;
 

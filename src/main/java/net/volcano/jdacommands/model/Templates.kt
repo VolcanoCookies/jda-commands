@@ -2,7 +2,7 @@ package net.volcano.jdacommands.model
 
 import net.dv8tion.jda.api.EmbedBuilder
 import net.volcano.jdacommands.model.command.Field
-import net.volcano.jdautils.constants.Colors
+import net.volcano.jdautilities.constants.Colors
 
 object Templates {
 

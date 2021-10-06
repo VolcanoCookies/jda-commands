@@ -1,6 +1,6 @@
 package net.volcano.jdacommands.model
 
-import net.volcano.jdautils.utils.ClassUtil
+import net.volcano.jdautilities.utils.ClassUtil
 import java.lang.reflect.Parameter
 import java.lang.reflect.Type
 

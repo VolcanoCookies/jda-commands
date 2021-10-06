@@ -1,6 +1,6 @@
 package net.volcano.jdacommands.model.command;
 
-import net.volcano.jdautils.Pair;
+import net.volcano.jdautilities.Pair;
 
 import java.util.*;
 

@@ -15,7 +15,7 @@ import net.volcano.jdacommands.model.command.arguments.ArgumentList;
 import net.volcano.jdacommands.model.command.arguments.ParsedData;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
 import net.volcano.jdacommands.permissions.Permission;
-import net.volcano.jdautils.constants.Colors;
+import net.volcano.jdautilities.constants.Colors;
 
 import javax.annotation.Nullable;
 import java.time.Instant;

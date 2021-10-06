@@ -7,7 +7,7 @@ import net.volcano.jdacommands.interfaces.CommandClient
 import net.volcano.jdacommands.interfaces.PermissionClient
 import net.volcano.jdacommands.interfaces.PermissionProvider
 import net.volcano.jdacommands.permissions.*
-import net.volcano.jdautils.utils.asString
+import net.volcano.jdautilities.utils.asString
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime

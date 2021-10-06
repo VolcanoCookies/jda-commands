@@ -7,9 +7,9 @@ import net.volcano.jdacommands.model.command.annotations.CommandController
 import net.volcano.jdacommands.model.command.annotations.CommandMethod
 import net.volcano.jdacommands.model.command.annotations.Help
 import net.volcano.jdacommands.model.interaction.pager.EmbedEntirePagerBuilder
-import net.volcano.jdautils.constants.Colors
-import net.volcano.jdautils.utils.asString
-import net.volcano.jdautils.utils.capitalize
+import net.volcano.jdautilities.constants.Colors
+import net.volcano.jdautilities.utils.asString
+import net.volcano.jdautilities.utils.capitalize
 import java.time.Instant
 
 @CommandController

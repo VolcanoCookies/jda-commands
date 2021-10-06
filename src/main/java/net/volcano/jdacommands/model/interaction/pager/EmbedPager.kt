@@ -13,8 +13,8 @@ import net.dv8tion.jda.api.interactions.components.Button
 import net.dv8tion.jda.api.interactions.components.ButtonStyle
 import net.volcano.jdacommands.constants.Reactions
 import net.volcano.jdacommands.model.interaction.InteractionListener
-import net.volcano.jdautils.constants.EMBED_FOOTER_LIMIT
-import net.volcano.jdautils.utils.trim
+import net.volcano.jdautilities.constants.EMBED_FOOTER_LIMIT
+import net.volcano.jdautilities.utils.trim
 import kotlin.math.max
 import kotlin.math.min
 

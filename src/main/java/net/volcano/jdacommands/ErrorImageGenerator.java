@@ -1,6 +1,6 @@
 package net.volcano.jdacommands;
 
-import net.volcano.jdautils.constants.Colors;
+import net.volcano.jdautilities.constants.Colors;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

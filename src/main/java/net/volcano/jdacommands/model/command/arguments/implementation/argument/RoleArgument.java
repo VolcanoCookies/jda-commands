@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.entities.Role;
 import net.volcano.jdacommands.exceptions.command.parsing.InvalidArgumentsException;
 import net.volcano.jdacommands.model.command.arguments.CommandArgument;
 import net.volcano.jdacommands.model.command.arguments.implementation.ArgumentParsingData;
-import net.volcano.jdautils.utils.RoleUtil;
+import net.volcano.jdautilities.utils.RoleUtil;
 
 @SuperBuilder
 public class RoleArgument extends CommandArgument<Role> {

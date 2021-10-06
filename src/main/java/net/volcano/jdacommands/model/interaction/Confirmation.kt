@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.Button
-import net.volcano.jdautils.constants.Colors
+import net.volcano.jdautilities.constants.Colors
 import java.util.concurrent.CompletableFuture
 
 class Confirmation(
