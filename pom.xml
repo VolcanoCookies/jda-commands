@@ -81,6 +81,14 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>collective-internal</id>
+            <name>Collective Internal</name>
+            <url>https://archiva.centralmind.net/repository/collective-internal/</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <maven.compiler.target>14</maven.compiler.target>
         <maven.compiler.source>14</maven.compiler.source>
@@ -95,6 +103,12 @@
             <name>m2-dv8tion</name>
             <url>https://m2.dv8tion.net/releases</url>
         </repository>
+        <repository>
+            <id>collective-internal</id>
+            <name>Collective Internal</name>
+            <url>https://archiva.centralmind.net</url>
+        </repository>
+
     </repositories>
 
     <dependencies>
