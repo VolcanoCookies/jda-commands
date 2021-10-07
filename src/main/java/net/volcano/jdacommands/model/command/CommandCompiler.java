@@ -1,6 +1,5 @@
 package net.volcano.jdacommands.model.command;
 
-import net.dv8tion.jda.api.requests.RestAction;
 import net.volcano.jdacommands.config.CategoryConfig;
 import net.volcano.jdacommands.exceptions.command.CommandCompileException;
 import net.volcano.jdacommands.model.ParameterData;
@@ -54,9 +53,9 @@ public class CommandCompiler {
 		CommandMethod commandMethod = method.getAnnotation(CommandMethod.class);
 		Command.CommandBuilder builder = Command.builder();
 		
-		if (method.getReturnType() != Void.TYPE && method.getReturnType() != RestAction.class) {
+		/*if (method.getReturnType() != Void.TYPE && method.getReturnType() != RestAction.class) {
 			throw new CommandCompileException(method, "Command method needs to return RestAction or Void!");
-		}
+		}*/
 		
 		List<String> paths = new ArrayList<>();
 		for (String controllerPath : controller.path()) {
