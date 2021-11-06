@@ -21,11 +21,16 @@ import net.volcano.jdacommands.model.interaction.Confirmation
 import net.volcano.jdacommands.model.interaction.Confirmation.Companion.message
 import net.volcano.jdacommands.model.interaction.menu.EmbedMenuBuilder
 import net.volcano.jdacommands.model.interaction.pager.EmbedPagerBuilder
+import net.volcano.jdacommands.model.interaction.selectors.Selector
 import net.volcano.jdacommands.permissions.PermissionHolder
 import net.volcano.jdacommands.permissions.PermissionResult
 import net.volcano.jdacommands.permissions.Permissions
+import net.volcano.jdautilities.constants.Colors
 import net.volcano.jdautilities.utils.RoleUtil.findRole
 import net.volcano.jdautilities.utils.UserUtil
+import net.volcano.jdautilities.utils.formatTrimmed
+import java.time.Duration
+import java.time.Instant
 import javax.annotation.CheckReturnValue
 
 class CommandEvent @Builder constructor(
@@ -272,6 +277,26 @@ class CommandEvent @Builder constructor(
 				client.interactionClient.addListener(it, confirmation)
 				it
 			}
+	}
+
+	/**
+	 * Create a multiple-selection prompt for the user
+	 * @param message the question to ask the user
+	 * @param init [@kotlin.ExtensionFunctionType] Function1<Selector, Unit>
+	 * @return MessageAction
+	 */
+	@CheckReturnValue
+	fun askQuestion(message: String, init: Selector.() -> Unit): MessageAction {
+		val selector = Selector()
+		selector.init()
+		val embed = EmbedBuilder()
+		embed.setTitle("Make a choice.")
+		embed.setDescription(message)
+		embed.setColor(Colors.INFO)
+		embed.setTimestamp(Instant.now())
+		embed.setFooter("Expires in ${Duration.ofSeconds(selector.expiration).formatTrimmed()}")
+		return respond(embed)
+			.setActionRows(selector.row)
 	}
 
 	/**
