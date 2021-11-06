@@ -1,6 +1,5 @@
 package net.volcano.jdacommands.model.interaction.selectors
 
-import dev.minn.jda.ktx.interactions.SelectOption
 import net.dv8tion.jda.api.entities.Emoji
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent
 import net.dv8tion.jda.api.interactions.components.ActionRow
@@ -23,11 +22,9 @@ class Selector : InteractionListener(3600) {
 	var options: Map<String, SelectorOption> = HashMap()
 
 	override fun onInteraction(event: SelectionMenuEvent) {
-		val option = options[event.componentId] ?: return
-
 		val prev = page
 
-		option.func.invoke(event)
+		event.values.forEach { options[it]!!.func.invoke(event) }
 
 		if (page != prev) {
 			event.editComponents(
@@ -74,6 +71,9 @@ class Selector : InteractionListener(3600) {
 		return menu.build()
 	}
 
+	val row: ActionRow
+		get() = ActionRow.of(getPage(page))
+
 	val NEXT = SelectorOption("NEXT", "Next Page") {
 		page = min(pages, page + 1)
 	}
@@ -99,11 +99,9 @@ data class SelectorOption(
 ) {
 
 	fun build(): SelectOption {
-		return SelectOption(
-			name ?: id.trim(SELECTION_OPTION_LABEL_LIMIT),
-			id,
-			description,
-			icon
-		)
+		return SelectOption.of(name ?: id.trim(SELECTION_OPTION_LABEL_LIMIT), id)
+			.withDescription(description)
+			.withDefault(false)
+			.withEmoji(icon)
 	}
 }
